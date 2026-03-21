@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Covert Narc">
+<meta name="theme-color" content="#0c0b09">
+<title>The Covert Narcissist</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap');
+:root{--bg:#0c0b09;--surface:#131109;--card:#1a1712;--border:#252118;--bl:#302a1f;--text:#ede5d5;--muted:#8a7e6a;--dim:#4a4235;--a:#b87350;--ad:#2a1508;--am:#6a3018;--ab:#d4896a;--g1:#b87350;--g1d:#2a1508;--g1m:#6a3018;--g2:#7a9e8a;--g2d:#0e2018;--g2m:#2a5038;--g3:#9e7ab8;--g3d:#1a0e28;--g3m:#4a2a68;--g4:#b8a05a;--g4d:#281e08;--g4m:#685018;--g5:#7a9eb8;--g5d:#0e1828;--g5m:#2a4868;--g6:#b87a7a;--g6d:#280e0e;--g6m:#682a2a;--g7:#9eb87a;--g7d:#182808;--g7m:#486820;--g8:#b8907a;--g8d:#281808;--g8m:#684028}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden}
+.hdr{padding:48px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;background:var(--bg)}
+.hdr-eye{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.hdr-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:28px;font-weight:300;font-style:italic;color:var(--ab);line-height:1}
+.hdr-r{text-align:right}
+.hdr-n{font-family:'Cormorant Garamond',Georgia,serif;font-size:36px;font-weight:300;color:var(--dim);line-height:1}
+.hdr-nl{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-top:2px}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:200}
+.nbt{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;background:none;border:none;cursor:pointer;font-family:'DM Mono','Courier New',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);transition:color .2s}
+.nbt .ni{font-size:16px;line-height:1}
+.nbt.on{color:var(--ab)}
+.pg{display:none;padding:0 0 90px 0;min-height:100vh}
+.pg.on{display:block}
+.srch{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center}
+.si{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:13px;font-weight:300;padding:8px 14px;outline:none}
+.si::placeholder{color:var(--dim);font-style:italic}
+.sc{background:none;border:none;color:var(--dim);cursor:pointer;font-size:16px;padding:4px}
+.dfb{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.di{background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text);font-family:'DM Mono','Courier New',monospace;font-size:10px;padding:5px 8px;outline:none;color-scheme:dark}
+.dl{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.dc{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--a);background:none;border:none;cursor:pointer;padding:4px 8px}
+.gb{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.gb::-webkit-scrollbar{display:none}
+.gc2{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:none;font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;color:var(--dim)}
+.cs{padding:0 16px}
+.csh{display:flex;align-items:center;gap:8px;padding:14px 0 8px;cursor:pointer;user-select:none}
+.csd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.csn{font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;flex:1}
+.csc{font-family:'DM Mono','Courier New',monospace;font-size:10px}
+.cst{font-size:11px;color:var(--dim);transition:transform .2s;display:inline-block}
+.cst.op{transform:rotate(90deg)}
+.cg{display:flex;flex-direction:column;gap:3px;overflow:hidden;transition:max-height .3s ease;margin-bottom:4px}
+.ci{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;cursor:pointer;border:1px solid transparent;background:var(--surface);text-align:left;width:100%}
+.ci:active{opacity:.8}
+.cin{font-size:13px;color:var(--text);flex:1;line-height:1.3}
+.cic{font-family:'DM Mono','Courier New',monospace;font-size:11px;min-width:20px;text-align:right}
+.cii{background:none;border:1px solid var(--border);border-radius:4px;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;flex-shrink:0;font-family:'DM Mono','Courier New',monospace}
+.lfp{margin:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.lfs{font-family:'DM Mono','Courier New',monospace;font-size:10px;color:var(--dim);min-height:13px}
+.ln{background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:14px;font-weight:300;padding:10px 12px;resize:none;outline:none;height:72px;line-height:1.5;width:100%}
+.ln::placeholder{color:var(--dim);font-style:italic}
+.lb{padding:12px;border-radius:6px;border:none;cursor:pointer;font-family:'DM Mono','Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;width:100%}
+.lb.off{background:var(--border);color:var(--dim);cursor:not-allowed}
+.fhd{padding:12px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+.fl{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase}
+.en{margin:0 16px 8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+@keyframes fu{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.en{animation:fu .2s ease}
+.est{width:2px;min-height:32px;border-radius:2px;flex-shrink:0;align-self:stretch;opacity:.8}
+.eb{flex:1;min-width:0}
+.et{display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;flex-wrap:wrap}
+.eg{font-family:'DM Mono','Courier New',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.egr{font-family:'DM Mono','Courier New',monospace;font-size:8px;color:var(--dim)}
+.etm{font-family:'DM Mono','Courier New',monospace;font-size:8px;color:var(--dim);margin-left:auto;white-space:nowrap}
+.eno{font-size:13px;color:var(--muted);line-height:1.6;font-weight:300;margin-top:2px}
+.ea{display:flex;gap:4px;flex-shrink:0;flex-direction:column}
+.ebt{background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px;padding:3px;border-radius:3px}
+.ebt.del:hover{color:#b05050}
+.een{width:100%;background:var(--bg);border:1px solid var(--bl);border-radius:4px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:13px;padding:8px 10px;outline:none;resize:none;margin-top:6px;line-height:1.5}
+.ees{margin-top:6px;padding:6px 14px;border-radius:4px;border:none;background:var(--a);color:#0c0b09;font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.emp{padding:48px 16px;text-align:center;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:15px;color:var(--dim)}
+.dsr{padding:12px 16px;border-bottom:1px solid var(--border)}
+.dsi{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:20px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:13px;font-weight:300;padding:8px 14px;outline:none}
+.dsi::placeholder{color:var(--dim);font-style:italic}
+.dgt{font-family:'Cormorant Garamond',Georgia,serif;font-size:20px;font-weight:300;font-style:italic;padding:20px 16px 10px;border-bottom:1px solid var(--border)}
+.dc2{border-bottom:1px solid var(--border);cursor:pointer}
+.dch{display:flex;align-items:center;gap:10px;padding:14px 16px}
+.dcd{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dcn{font-size:13px;color:var(--text);flex:1}
+.dct{font-size:11px;color:var(--dim);transition:transform .2s;display:inline-block}
+.dct.op{transform:rotate(180deg)}
+.dcb{padding:0 16px 16px;display:none}
+.dcb.op{display:block}
+.dsl{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:5px;margin-top:12px}
+.dsl:first-child{margin-top:0}
+.dtx{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300}
+.dex{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:13px;color:var(--text);line-height:1.6;background:var(--card);border-left:2px solid var(--bl);padding:8px 12px;border-radius:0 4px 4px 0;margin-top:5px;margin-bottom:4px}
+.dsc{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:14px;color:var(--ab);line-height:1.6;background:var(--ad);border-left:2px solid var(--am);padding:8px 12px;border-radius:0 4px 4px 0;margin-top:6px}
+.ip{padding:20px 16px}
+.il{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.ita{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:14px;font-weight:300;padding:14px;resize:none;outline:none;height:120px;line-height:1.6;margin-bottom:12px}
+.ita::placeholder{color:var(--dim);font-style:italic}
+.ibn{width:100%;padding:13px;border-radius:8px;border:none;background:var(--a);color:#0c0b09;font-family:'DM Mono','Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;margin-bottom:20px}
+.ibn:disabled{background:var(--border);color:var(--dim);cursor:not-allowed}
+.ir{display:flex;flex-direction:column;gap:10px}
+.irc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
+.irt{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ird{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.irn{font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;flex:1}
+.irf{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--dim)}
+.irr{font-size:13px;color:var(--muted);line-height:1.6}
+.ilb{margin-top:8px;padding:7px 14px;border-radius:4px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-right:6px}
+.ith{text-align:center;padding:30px 0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;color:var(--dim);font-size:15px}
+.sp{padding:16px}
+.stl{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:12px;margin-top:20px}
+.stl:first-child{margin-top:0}
+.sc2{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:8px}
+.scl{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.scv{font-family:'Cormorant Garamond',Georgia,serif;font-size:32px;font-weight:300;color:var(--text);line-height:1}
+.scs{font-family:'DM Mono','Courier New',monospace;font-size:10px;color:var(--muted);margin-top:4px}
+.sgr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.fr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.fd{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.fla{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.04em}
+.fbt{width:80px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;flex-shrink:0}
+.fbf{height:100%;border-radius:2px;transition:width .6s ease}
+.fnu{font-family:'DM Mono','Courier New',monospace;font-size:10px;color:var(--dim);width:20px;text-align:right;flex-shrink:0}
+.eb2{width:100%;padding:13px;border-radius:8px;border:1px solid var(--border);background:none;color:var(--muted);font-family:'DM Mono','Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.ccf{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+.cci{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:14px;font-weight:300;padding:10px 12px;outline:none;width:100%}
+.cci::placeholder{color:var(--dim);font-style:italic}
+.ccs{background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'DM Mono','Courier New',monospace;font-size:11px;padding:10px 12px;outline:none;appearance:none;width:100%;color-scheme:dark}
+.ccb{padding:11px;border-radius:6px;border:none;background:var(--a);color:#0c0b09;font-family:'DM Mono','Courier New',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+.ccl{display:flex;flex-direction:column;gap:4px;margin-top:8px}
+.cci2{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surface);border:1px solid var(--border);border-radius:6px}
+.cin2{font-size:12px;color:var(--text);flex:1}
+.cdl{background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px;padding:2px 4px}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.mo.op{opacity:1;pointer-events:all}
+.mb{background:var(--card);border:1px solid var(--bl);border-radius:16px 16px 0 0;padding:20px 20px 40px;width:100%;max-height:85vh;overflow-y:auto;transform:translateY(20px);transition:transform .2s;-webkit-overflow-scrolling:touch;position:relative}
+.mo.op .mb{transform:translateY(0)}
+.mh{width:36px;height:4px;background:var(--bl);border-radius:2px;margin:0 auto 16px}
+.mcl{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--dim);cursor:pointer;font-size:20px;padding:4px 8px}
+.mt{font-family:'DM Mono','Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+.mg{font-family:'DM Mono','Courier New',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.msl{font-family:'DM Mono','Courier New',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:6px;margin-top:14px}
+.msl:first-of-type{margin-top:0}
+.mtx{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300}
+.mex{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:13px;color:var(--text);line-height:1.6;background:var(--surface);border-left:2px solid var(--bl);padding:8px 12px;border-radius:0 4px 4px 0;margin-top:5px;margin-bottom:4px}
+.msc{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:14px;color:var(--ab);line-height:1.6;background:var(--ad);border-left:2px solid var(--am);padding:8px 12px;border-radius:0 4px 4px 0;margin-top:6px}
+.tst{position:fixed;bottom:80px;left:16px;right:16px;background:var(--card);border:1px solid var(--bl);border-radius:8px;padding:12px 16px;font-family:'DM Mono','Courier New',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;z-index:9998;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;text-align:center}
+.tst.on{opacity:1;transform:translateY(0)}
+@media(min-width:768px){.hdr{padding:24px 32px 16px}.pg,.bnav{max-width:600px;margin:0 auto}.tst{max-width:568px;left:50%;transform:translateX(-50%) translateY(8px)}.tst.on{transform:translateX(-50%) translateY(0)}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div><div class="hdr-eye">Pattern log &middot; Private</div><div class="hdr-name">The Covert Narcissist</div></div>
+  <div class="hdr-r"><div class="hdr-n" id="tc">0</div><div class="hdr-nl">entries</div></div>
+</div>
+<div class="pg on" id="pg-log">
+  <div class="srch"><input class="si" id="si" placeholder="Search entries..." oninput="fe()"><button class="sc" onclick="cs()">x</button></div>
+  <div class="dfb"><span class="dl">From</span><input type="date" class="di" id="df" onchange="fe()"><span class="dl">To</span><input type="date" class="di" id="dt" onchange="fe()"><button class="dc" onclick="cd()">Clear</button></div>
+  <div class="gb" id="gb"></div>
+  <div id="cats"></div>
+  <div class="lfp">
+    <div class="lfs" id="lfs">Select a category above</div>
+    <textarea class="ln" id="ln" placeholder="Note (optional)..."></textarea>
+    <button class="lb off" id="lb" onclick="logIt()">Log it</button>
+  </div>
+  <div class="fhd"><span class="fl" id="fl">0 entries</span></div>
+  <div id="feed"></div>
+</div>
+<div class="pg" id="pg-def">
+  <div class="dsr"><input class="dsi" placeholder="Search definitions..." oninput="fd(this.value)"></div>
+  <div id="defc"></div>
+</div>
+<div class="pg" id="pg-id">
+  <div class="ip">
+    <div class="il">Describe what happened</div>
+    <textarea class="ita" id="ita" placeholder="Type what AN said or did in plain language..."></textarea>
+    <button class="ibn" id="ibn" onclick="runId()">Identify behavior</button>
+    <div id="idr"></div>
+  </div>
+</div>
+<div class="pg" id="pg-st">
+  <div class="sp" id="stp"></div>
+</div>
+<nav class="bnav">
+  <button class="nbt on" onclick="sw('log')" id="nb-log"><span class="ni">&#x1F4CB;</span>Log</button>
+  <button class="nbt" onclick="sw('def')" id="nb-def"><span class="ni">&#x1F4D6;</span>Definitions</button>
+  <button class="nbt" onclick="sw('id')" id="nb-id"><span class="ni">&#x1F50D;</span>Identify</button>
+  <button class="nbt" onclick="sw('st')" id="nb-st"><span class="ni">&#x1F4CA;</span>Stats</button>
+</nav>
+<div class="mo" id="mo" onclick="cm(event)">
+  <div class="mb" id="mb">
+    <div class="mh"></div>
+    <button class="mcl" onclick="closeM()">x</button>
+    <div id="mc"></div>
+  </div>
+</div>
+<div class="tst" id="tst"></div>
+<script>
+var GROUPS=[
+  {id:'attention',name:'Attention & Centrality',c:1},
+  {id:'hierarchy',name:'Hierarchy & Authority',c:2},
+  {id:'credit',name:'Credit & Narrative Control',c:3},
+  {id:'rejection',name:'Rejection & Withholding',c:4},
+  {id:'deflection',name:'Deflection & Avoidance',c:5},
+  {id:'hm',name:'HM-Specific',c:6},
+  {id:'he',name:'HE-Specific',c:7},
+  {id:'new',name:'With New People',c:8}
+];
+var GC={1:'var(--g1)',2:'var(--g2)',3:'var(--g3)',4:'var(--g4)',5:'var(--g5)',6:'var(--g6)',7:'var(--g7)',8:'var(--g8)'};
+var GCD={1:'var(--g1d)',2:'var(--g2d)',3:'var(--g3d)',4:'var(--g4d)',5:'var(--g5d)',6:'var(--g6d)',7:'var(--g7d)',8:'var(--g8d)'};
+var GCM={1:'var(--g1m)',2:'var(--g2m)',3:'var(--g3m)',4:'var(--g4m)',5:'var(--g5m)',6:'var(--g6m)',7:'var(--g7m)',8:'var(--g8m)'};
+function gc(n){return GC[n]||GC[1]}
+function gcd(n){return GCD[n]||GCD[1]}
+function gcm(n){return GCM[n]||GCM[1]}
+function grpC(gid){var g=GROUPS.find(function(x){return x.id===gid});return g?g.c:1}
+
+var CATS=[
+  {id:'p-startle',g:'attention',l:'Performative startle',
+   w:'A scream or startled reaction disproportionate to the actual stimulus. The room stops and reorganizes around her in under a second. Genuine startle scales with actual threat. This does not.',
+   ex:['Someone walks into the room normally. She screams. Everyone rushes over.',
+       'A door closes at normal volume. She jumps and grabs her chest dramatically.',
+       'A dog barks once outside. She shrieks and makes everyone check on her.'],
+   int:'You are not required to tend to it. Let others respond.',
+   sc:['Let others respond. Keep your energy level.']},
+  {id:'v-self',g:'attention',l:'Vulnerable self-presentation',
+   w:'Strategic self-deprecation that bids for centrality. The self-criticism is the vehicle. The destination is the room reorganizing around her.',
+   ex:['"Mine is probably not as good as yours - can you taste it and tell me what is wrong?"',
+       '"I\'m probably the worst cook here. Everyone else is so talented."',
+       '"I don\'t know why I even try. I always do this wrong."'],
+   int:'You are not obligated to be her evaluator. The humility is performed, not felt.',
+   sc:['"I\'m sure it\'s good." (warm, closed)','"I\'ll have to try it another time."']},
+  {id:'cap-aud',g:'attention',l:'Captive audience enforcement',
+   w:'Delivers monologues and punishes interruption with guilt or withdrawal. Includes narrating something as funny that is not - requiring the room to perform amusement on her behalf.',
+   ex:['"I guess you don\'t care about what I\'m saying." After someone adds a normal comment mid-story.',
+       'Tells a story about a minor inconvenience, laughing throughout, and waits for the room to laugh.',
+       '"Nobody ever lets me finish." Said after being asked a clarifying question.'],
+   int:'This is not a conversation. It is a performance with a required audience.',
+   sc:['Let her finish. Do not fill the silence after. Do not over-validate.']},
+  {id:'con-int',g:'attention',l:'Connection interception',
+   w:'Inserts herself verbally or physically into moments when AA and HM are most connected. Also includes positioning herself between HM and whatever has captured his attention - blocking his line of sight or physical access to the moment.',
+   ex:['AA and HM are laughing together. She calls his name, needs something, introduces a topic.',
+       'HM is watching something on TV. She walks in front of the screen and starts talking.',
+       'HM is engaged in a conversation with a guest. She physically steps between them.'],
+   int:'This is responsive, not random. She felt the connection and moved toward it. Finish your moment before orienting to her.',
+   sc:['Slow your response time. Do not abandon the connection immediately.']},
+  {id:'att-rec',g:'attention',l:'Attention reclamation',
+   w:'Redirects focus back to herself when someone else is receiving strong positive engagement from the room.',
+   ex:['A guest is telling a great story and everyone is laughing. She finds a reason to speak.',
+       'Someone compliments the host\'s cooking. She immediately mentions something she brought.',
+       'A child is performing and getting attention. She comments on her own memory of that age.'],
+   int:'She can share the room up to a threshold. Watch where that threshold is.',
+   sc:['Let the other person\'s moment land fully. Do not help redirect.']},
+  {id:'bib-auth',g:'attention',l:'Biblical/spiritual authority display',
+   w:'References biblical knowledge or spiritual wisdom accumulated through suffering and age. The humility wrapper makes the authority claim unchallengeable.',
+   ex:['"I have learned so much in my old age. God has shown me things through everything I have been through."',
+       '"The Bible says... and I understand that now after all I\'ve experienced."',
+       '"When you get to my age and have suffered like I have, you understand things differently."'],
+   int:'The suffering is real. The deployment of it as authority is strategic.',
+   sc:['"Mm." (receive it without expanding it)']},
+  {id:'cvt-pos',g:'hierarchy',l:'Covert positioning',
+   w:'Subtle hierarchy plays with plausible deniability. The move serves her positioning while leaving nothing to be held accountable for if named.',
+   ex:['Offers help you did not ask for in a way that implies you needed it.',
+       'Comments on something in your home as "interesting" with a tone that means "wrong."',
+       'Directs a question to someone else about something you are clearly the expert on.'],
+   int:'Name it internally. You do not have to respond to the surface. Respond to your own clarity.',
+   sc:['Stay warm. Stay unbothered. No verbal response required.']},
+  {id:'hie-res',g:'hierarchy',l:'Hierarchy reset via warmth',
+   w:'Uses affectionate language to reestablish herself as the senior person in the room. The warmth is real but administered from above.',
+   ex:['"Thanks kids." After a dinner you cooked in your home.',
+       '"You two are doing so well." Said to a married couple in their own house.',
+       '"Look at you all grown up." Said to a 35-year-old professional.'],
+   int:'The warmth is real. The hierarchy move inside it is also real.',
+   sc:['"Mmhm." (neutral acknowledgment)','Smile and redirect.']},
+  {id:'ass-ign',g:'hierarchy',l:'Assumed ignorance projection',
+   w:'Explains things as if it is everyone\'s first time hearing it because she did not know it, so no one could have known it before her.',
+   ex:['Explains a basic cooking technique to a room of trained adults.',
+       'Informs everyone how to drive a route they have all driven a hundred times.',
+       'Describes a well-known historical fact as if she just discovered it.'],
+   int:'Intellectual authority move dressed as sharing. You do not have to perform surprise.',
+   sc:['"Yeah, I\'ve come across that." (matter of fact, no elaboration)']},
+  {id:'rap-sta',g:'hierarchy',l:'Rapid status filing',
+   w:'Establishes credentials or background early when meeting someone new. Files her position before the relationship can form organically.',
+   ex:['Within five minutes: where she is from, her profession, her hardships, her accomplishments.',
+       'Introduces herself by her credentials before her name.',
+       'Immediately finds a way to establish she has more experience than the new person.'],
+   int:'She needs the frame set before impressions form. That urgency is information.',
+   sc:['No response required. Observe the sequence.']},
+  {id:'sta-ass',g:'hierarchy',l:'Status assessment questioning',
+   w:'Asks new people questions that are really hierarchy calculations disguised as interest. She is sorting, not connecting.',
+   ex:['Job, family status, education, and background delivered quickly in early conversation.',
+       '"And what do you do?" asked with a particular attentiveness to the answer.',
+       'Warmth visibly adjusts after the answer - more or less depending on the rank.'],
+   int:'Watch what shifts in her treatment of the person once the assessment lands.',
+   sc:['Observe. Note what changes after she gets her data.']},
+  {id:'cul-aut',g:'hierarchy',l:'Cultural authority positioning',
+   w:'Positions herself as the most authentic cultural or linguistic authority when relevant. With AA she apologizes for Spanish. With new people she wields it.',
+   ex:['Corrects a native speaker\'s pronunciation in front of others.',
+       'References "authentic" regional knowledge to override someone else\'s experience.',
+       'Uses language fluency as a credential to establish superiority in a group.'],
+   int:'Same tool, different function depending on who gives her more leverage.',
+   sc:['Speak Spanish naturally if it arises. You do not need to perform or hide fluency.']},
+  {id:'uns-adv',g:'hierarchy',l:'Unsolicited advisory',
+   w:'Volunteers opinions about your home or choices framed as helpful observation. An authority claim dressed as generosity.',
+   ex:['"You know what would be really good here is..." in a space that is working fine.',
+       '"Have you tried doing it this way?" about a method you have used successfully for years.',
+       'Rearranges something in your kitchen while "just helping."'],
+   int:'Your home is working fine. You did not ask.',
+   sc:['"Mm, I\'ll keep that in mind." (warm, noncommittal, closed)','"We like it this way."']},
+  {id:'rhe-q',g:'hierarchy',l:'Rhetorical questioning',
+   w:'Asks questions she already knows the answer to. Used to test, display knowledge, or set up a correction.',
+   ex:['Asks how you made something she watched you make start to finish.',
+       '"Did you know that..." followed by information she clearly expects to be new.',
+       'Asks about something she was told directly two days ago.'],
+   int:'She is not asking. She is positioning. Answer plainly without over-explaining.',
+   sc:['"Yes." / "No." / "Mm-hmm." (brief, warm, closed)']},
+  {id:'dia-aut',g:'hierarchy',l:'Diagnostic authority',
+   w:'Declares how someone feels or why, without confirmation. Supplies the cause and the diagnosis simultaneously, often implicating others in the same breath.',
+   ex:['"He\'s not feeling well because of the butter." (2 tablespoons of butter.)',
+       '"She\'s tired because you kept her up." Said to a partner without asking either person.',
+       '"He\'s in a bad mood because of what happened earlier." Said before he has spoken a word.'],
+   int:'She owns his inner experience and assigns cause without evidence.',
+   sc:['No response required. Do not defend the butter.']},
+  {id:'crd-red',g:'credit',l:'Credit redirection',
+   w:'When AA receives direct praise she finds the seam to redirect it. Amplifies someone else\'s contribution without lying but by editorializing.',
+   ex:['Guest praises the food. She immediately highlights the one dish someone else contributed.',
+       'Employee gets complimented. Manager finds a way to mention the team\'s support.',
+       'Child wins award. Parent redirects to "all the help they had."'],
+   int:'HE gave you the credit. You do not need her co-sign.',
+   sc:['Receive the original compliment fully. Do not look to her for validation.']},
+  {id:'inf-app',g:'credit',l:'Information appropriation',
+   w:'Retells your or HM\'s information as if she originated it. The source quietly shifts to her in the retelling.',
+   ex:['You told her a fact last week. She shares it with others this week as her discovery.',
+       'A recommendation you made gets retold as hers to a new audience.',
+       'HM\'s story about his own life gets retold by her as if she is the narrator of his experience.'],
+   int:'You know where it came from. That is enough.',
+   sc:['Do not correct publicly. Log it.']},
+  {id:'nar-rev',g:'credit',l:'Narrative revision',
+   w:'Reframes outcomes she did not get so it sounds like the result was her preference all along.',
+   ex:['A plan she pushed for did not happen. Later: "I actually thought the other way was better anyway."',
+       'She did not get invited somewhere. Later: "I would not have wanted to go to that anyway."',
+       'An idea she opposed succeeds. Later: "I always thought that could work."'],
+   int:'You know what happened. The revision does not change it.',
+   sc:['Hold the truth internally. Do not correct the record publicly.']},
+  {id:'cur-nar',g:'credit',l:'Curated family narrative',
+   w:'Presents the family in an image-managed way to new people. The story is controlled before they can form their own impressions.',
+   ex:['Tells a new person about the family\'s closeness, accomplishments, and values with herself centrally positioned.',
+       'Edits out conflict or struggle when describing the family to outsiders.',
+       'Introduces family members in ways that reflect well on her specifically.'],
+   int:'New people get the version she needs them to have.',
+   sc:['You do not have to manage or correct the narrative publicly.']},
+  {id:'bck-hnd',g:'credit',l:'Backhanded compliment',
+   w:'Praise with a quiet qualifier buried in it. The compliment is real enough to accept. The qualifier does damage underneath.',
+   ex:['"I didn\'t know you could cook like this."',
+       '"You look so good - I almost didn\'t recognize you."',
+       '"This is actually really impressive for someone your age."'],
+   int:'You can receive the compliment and release the qualifier.',
+   sc:['"Thank you." (receive only the compliment, full stop)']},
+  {id:'cmp-dis',g:'credit',l:'Comparative dismissal',
+   w:'References how things were done better or differently elsewhere when something does not go her way.',
+   ex:['"In Mexico City we always did it this way..."',
+       '"My mother never would have done it like that."',
+       '"Where I\'m from this is considered the proper way."'],
+   int:'A verdict dressed as information.',
+   sc:['"Mm, interesting." (flat, warm, noncommittal)','"We like how we do it."']},
+  {id:'exc-app',g:'credit',l:'Excitement appropriation',
+   w:'When someone else is excited, she cuts them off, briefly narrates their excitement as if she shares it, then pivots to herself as the main subject.',
+   ex:['HE shares good news. She says "yes yes I know I love that" then talks about herself for three minutes.',
+       'A guest shares an achievement. She immediately relates a similar achievement of her own.',
+       'Someone describes a great experience. She interrupts to describe a similar one she had.'],
+   int:'He never gets to fully inhabit his own moment.',
+   sc:['Let the excited person finish. Do not fill space she creates.']},
+  {id:'wrm-dis',g:'rejection',l:'Warmth/distance switch',
+   w:'Alternates closeness and coldness unpredictably. The warmth is never stable enough to fully trust. The distance is never speakable.',
+   ex:['Warm and engaged at dinner. Noticeably cooler the next morning with no apparent trigger.',
+       'Hugs you warmly on arrival. Barely acknowledges you two hours later.',
+       'Initiates closeness. Then withdraws without explanation and acts as if nothing changed.'],
+   int:'Both are her regulation tools. You do not have to chase the warmth or manage the distance.',
+   sc:['Match warmth when present. Do not pursue it when it withdraws.']},
+  {id:'wgt-sil',g:'rejection',l:'Weighted silence',
+   w:'Goes quiet in a way that fills the room after not getting her way. The tell is whether it triggers someone else to repair.',
+   ex:['A plan she wanted does not happen. She says nothing but the temperature in the room drops.',
+       'Someone disagrees with her. She does not respond but her presence shifts noticeably.',
+       'A decision is made without her input. She becomes very quiet and still.'],
+   int:'You are not the target and not the repair person. Watch who moves.',
+   sc:['Do not fill the silence. Stay even.']},
+  {id:'sub-pen',g:'rejection',l:'Subtle penalty withdrawal',
+   w:'Becomes slightly less warm, slightly less engaged after not getting her way. A quiet consequence for whoever crossed her.',
+   ex:['After being declined on something, she becomes measurably less present for the rest of the evening.',
+       'Someone expresses an opinion she disagrees with. Her engagement drops a noticeable degree.',
+       'A request is ignored. She responds to everyone else in the room but that person less.'],
+   int:'The withdrawal is designed to create anxiety around her approval. You do not need it.',
+   sc:['Stay even. Do not chase the warmth back.']},
+  {id:'ref-rec',g:'rejection',l:'Refusal to receive',
+   w:'Consistently declines what AA specifically offers while sourcing or accepting the same things from elsewhere. Avoids being placed in a position of gratitude toward AA in AA\'s own home.',
+   ex:['Declines offered fruit. Buys a large quantity of the same fruit independently. Declines the prepared fruit dessert.',
+       'Refuses offered coffee. Brought her own French press and makes her own.',
+       'Declines a seat at the table you set. Rearranges to sit where she prefers.'],
+   int:'She did not want the thing. She wanted to not receive it from you.',
+   sc:['Offer once, warmly. Let it go after.']},
+  {id:'bod-sur',g:'rejection',l:'Body surveillance',
+   w:'Comments on or monitors what AA eats, drinks, or how much. Makes you self-conscious at your own table in your own home.',
+   ex:['"Oh you\'re having another one?" said with a light tone.',
+       '"Are you sure you want that?" about food you are eating in your own kitchen.',
+       'A noticeable glance at your plate followed by a comment about portions.'],
+   int:'Your body, your table, your choices.',
+   sc:['"I\'m good, thanks." (warm, closed)']},
+  {id:'exc-spa',g:'rejection',l:'Exclusionary Spanish',
+   w:'Speaks Spanish to create a moment of exclusion first, then performs the apology. The apology is the second half of the same move.',
+   ex:['Says something clearly relevant to the room in Spanish. Then: "Sorry, I don\'t know how to say that in English."',
+       'Has a side conversation in Spanish in a mixed group then performs regret about it.',
+       'Uses the language shift as a way to signal a boundary before apologizing for it.'],
+   int:'The exclusion came first. The apology is the cover.',
+   sc:['Respond in Spanish if you choose. Or let it go.']},
+  {id:'spa-apo',g:'rejection',l:'Spanish apology',
+   w:'After six years of correction, still apologizes for speaking Spanish to AA. The apology is not about uncertainty - it restates a version of AA she prefers.',
+   ex:['"Sorry Abri, I said that in Spanish - I don\'t know how to say all that in English."',
+       'Six years of the same apology after six years of the same correction.',
+       'Apologizes for a language AA has already confirmed she understands fluently.'],
+   int:'This is a narrative she maintains, not a memory lapse.',
+   sc:['"All good." (flat, warm, move on)','"I understood." (direct, no elaboration)']},
+  {id:'str-omi',g:'rejection',l:'Strategic omission',
+   w:'Goes noticeably quiet or skirts around a specific topic or person when they are introduced into conversation.',
+   ex:['AA mentions her mom. AN goes quiet or quickly redirects.',
+       'A topic that positions AA favorably comes up. She changes the subject.',
+       'Someone brings up AA\'s accomplishments. She finds a reason to shift the focus.'],
+   int:'The silence around certain people or topics is information.',
+   sc:['You can mention your mom as often as you want. Watch what she does with it.']},
+  {id:'non-apo',g:'deflection',l:'Non-apology apology',
+   w:'"I\'m sorry you felt that way." The form of an apology without the substance. Responsibility quietly transferred outward.',
+   ex:['"I\'m sorry, I was just trying to help."',
+       '"I\'m sorry you took it that way - I didn\'t mean anything by it."',
+       '"I\'m sorry if I upset you." (No acknowledgment of what actually happened.)'],
+   int:'A real apology contains accountability. This contains an explanation.',
+   sc:['"Mm." (receive without validating it as a full apology)','Do not say it\'s okay if it was not okay.']},
+  {id:'his-gri',g:'deflection',l:'Historical grievance deflection',
+   w:'Surfaces an unrelated past event when something in the present does not go her way.',
+   ex:['Current issue comes up. Suddenly a thing from two years ago is on the table.',
+       'A reasonable request is made. She responds with something that happened last Christmas.',
+       'A direct question is asked. The answer involves relitigating something from a different year.'],
+   int:'The deflection puts everyone on defense. You do not have to litigate the past.',
+   sc:['"That\'s a separate conversation." (calm, warm, firm)']},
+  {id:'nvb-edi',g:'deflection',l:'Nonverbal editorializing',
+   w:'A breath, a small sound, a quiet expression that communicates displeasure without being speakable.',
+   ex:['A decision is made she did not want. She says nothing but exhales audibly.',
+       'Something is said she disagrees with. A small "mm" escapes.',
+       'An outcome she did not want is announced. Her face does something brief that everyone catches.'],
+   int:'You heard it. So did everyone. She knows that. That is why it works.',
+   sc:['Do not respond to the sound. Continue as if it was not there.']},
+  {id:'cvt-sur',g:'deflection',l:'Covert surveillance glance',
+   w:'When she did not originate an idea she goes quiet, then glances at you when she thinks you cannot see. She is gathering data and recalibrating.',
+   ex:['Someone else\'s idea gets a strong reaction. She goes quiet. Then the glance toward you.',
+       'You say something that lands well. A quick look to see how you received the response.',
+       'A plan proceeds without her input. She observes silently and tracks reactions.'],
+   int:'The silence is calculation. She is figuring out her next move.',
+   sc:['Stay natural. Do not signal you caught it. Log it.']},
+  {id:'img-rep',g:'deflection',l:'Image repair via generosity',
+   w:'Overcorrects into visible warmth or generosity immediately after showing displeasure. Overwrites the moment so the room\'s last memory is warmth.',
+   ex:['She was clearly off for twenty minutes. Then: sudden warmth, a generous gesture.',
+       'After a tense moment she appears with food or a gift.',
+       'Following visible irritation she becomes performatively kind to the exact person she was cold toward.'],
+   int:'The generosity is for the room\'s perception of her, not for you.',
+   sc:['Receive it warmly. Do not match the elevated energy. Stay even.']},
+  {id:'he-tri',g:'deflection',l:'HE triangulation',
+   w:'Pulls HE in as an indirect witness or validator when she does not get her way.',
+   ex:['Something does not go her way. She makes a comment to HE that recruits him as witness.',
+       'A disagreement happens. She tells HE about it in a way that positions her favorably.',
+       'She gives HE a look that communicates her displeasure without saying anything to the room.'],
+   int:'This is not your conflict to manage.',
+   sc:['Do not insert yourself. Let HE navigate his own lane.']},
+  {id:'prf-acc',g:'deflection',l:'Performed acceptance',
+   w:'"No no it\'s okay." Slightly too polished to be genuine. Everyone knows it but nobody can name it.',
+   ex:['"No really, it\'s fine." Delivered with a smile that does not reach.',
+       '"Of course, whatever you think is best." Said in a tone that communicates the opposite.',
+       '"I don\'t mind at all." Followed immediately by weighted silence.'],
+   int:'You feel the unresolved tension. That is real. You do not have to chase or resolve it.',
+   sc:['Take the acceptance at face value publicly. Do not work to make it genuine.']},
+  {id:'ovc-apo',g:'deflection',l:'Overconsumption with performative apology',
+   w:'Uses all of something in AA\'s home then looks at AA and apologizes for it. The apology maintains deniability but the action already happened.',
+   ex:['Uses the last of the dish soap, makes eye contact, apologizes with a small laugh.',
+       'Finishes the last of a food item from the fridge and then draws attention to the apology.',
+       'Takes the last of something from a shared space and performs regret afterward.'],
+   int:'She said sorry so nothing can be held. But she used it all. Both things are true.',
+   sc:['Accept the apology warmly. Replace the item at your own pace.']},
+  {id:'hm-arc',g:'hm',l:'Relational archaeology',
+   w:'Uses inside references, nicknames, or shared language with HM in front of AA. Surfaces the pre-AA HM to remind everyone she was there first.',
+   ex:['A nickname from childhood delivered to HM in front of AA.',
+       'A shared reference that predates AA, introduced casually into conversation.',
+       '"Remember when you used to..." stories told directly to HM with AA present.'],
+   int:'She was there first. That is true. It does not diminish where he is now or who he chose.',
+   sc:['You do not need to insert yourself. You are already the primary relationship.']},
+  {id:'hm-car',g:'hm',l:'Caregiving boundary erosion',
+   w:'Manages HM\'s physical needs or comfort during visits as if that role is still hers.',
+   ex:['"Hijo you need to eat more." Handling his plate without being asked.',
+       '"You look tired, you need to rest." Said to a grown married man.',
+       'Brings him food, adjusts his blanket, comments on his health unprompted.'],
+   int:'He has a wife. She has a son. Those are different roles.',
+   sc:['"I\'ve got it." (warm, firm, no explanation)']},
+  {id:'hm-phy',g:'hm',l:'Physical reclamation',
+   w:'Touches HM in ways that linger or happen more frequently than the context calls for.',
+   ex:['Fixes his collar, touches his arm repeatedly, smooths his hair.',
+       'Extended hug hello that is notably longer than with others.',
+       'Finds reasons to make physical contact throughout the visit.'],
+   int:'You felt it because it was there.',
+   sc:['No response required. Log frequency.']},
+  {id:'hm-rol',g:'hm',l:'Role displacement',
+   w:'Steps into AA\'s role as HM\'s wife by doing things for him that would normally be hers to do.',
+   ex:['The French press in AA\'s kitchen. Cooking something specifically for him.',
+       'Handling something domestic for him that AA would normally handle.',
+       'Bringing things for him that are AA\'s role to provide in their home.'],
+   int:'She brought her apparatus into your space. That is the whole sentence.',
+   sc:['"I\'ve got it." (warm, calm, step in)']},
+  {id:'hm-acc',g:'hm',l:'Access control',
+   w:'Manages who gets access to HM and when. Delivers invitations to his own spaces as if she controls entry.',
+   ex:['Tells AA she can come to HM\'s own workplace - framed as checking if she would enjoy it.',
+       'Plans around HM without including AA and presents the inclusion as optional.',
+       'Monopolizes HM\'s time so that others - including HE - get very little of it.'],
+   int:'That is his job. You are his wife. The invitation should not have come from her.',
+   sc:['You can insert yourself into plans that involve your husband.']},
+  {id:'hm-fin',g:'hm',l:'Financial disclosure as intimacy',
+   w:'Shares financial details with HM in a way that creates a private channel bypassing AA.',
+   ex:['Long explanation of her Mexican social security and life insurance directed at HM specifically.',
+       'Discusses her savings and retirement plans with him as if AA is not present.',
+       'Shares financial concerns or details in a context that excludes AA from the conversation.'],
+   int:'This creates a loyalty tension. He holds information about her that you may not.',
+   sc:['Ask HM later privately. "What was that about?" (neutral, curious)']},
+  {id:'hm-gra',g:'hm',l:'Gratitude as tethering',
+   w:'Expresses gratitude in a way that converts HM\'s accomplishments into something that exists in service of his parents.',
+   ex:['"Not a lot of parents have a son who knows so much. Me and HE have improved so much because of you."',
+       '"Everything you\'ve become has been such a gift to us."',
+       '"We are so lucky to have you. I don\'t know where we would be."'],
+   int:'His growth belongs to him. Gratitude that routes it back to her is still a tether.',
+   sc:['No response required. Let HM receive it and watch how he does.']},
+  {id:'hm-sac',g:'hm',l:'Sacrifice ledger',
+   w:'Brings up sacrifices she made for HM unprompted and casually. A running emotional tab of what he owes her.',
+   ex:['"I gave up so much for you boys." Woven into a casual conversation.',
+       '"Everything I did, I did for this family." Said with no apparent prompt.',
+       '"You have no idea what I went through to give you the life you had."'],
+   int:'The debt is never named directly so it can never be paid or addressed. That is by design.',
+   sc:['Do not engage the ledger. Do not validate or challenge it.']},
+  {id:'hm-apr',g:'hm',l:'Approval seeking as ritual',
+   w:'Seeks HM\'s opinion on small things she does not genuinely need input on. Keeps him in the position of being who she turns to.',
+   ex:['"Hijo what do you think I should order?" for something she has eaten a hundred times.',
+       '"Does this look okay?" asked specifically to HM.',
+       '"What do you think I should do about this?" about a decision she has clearly already made.'],
+   int:'The ask is not about the decision. It is about maintaining the dynamic.',
+   sc:['You can offer your own input if you want.']},
+  {id:'hm-dsg',g:'hm',l:'Distance guilt',
+   w:'Frames missing HM in a way that makes him feel responsible for her emotional pain around the distance.',
+   ex:['"It\'s just so hard when you\'re not around. I don\'t know how I manage."',
+       '"I count the days until I see you. It\'s been so hard."',
+       '"I don\'t say anything but it really affects me when you\'re far."'],
+   int:'He grew up. He did not abandon her. The framing does not make that distinction.',
+   sc:['Do not validate the guilt frame. Do not challenge it publicly.']},
+  {id:'hm-prx',g:'hm',l:'Proxy communication',
+   w:'Says things to HM or HE that are clearly meant for AA to hear. Delivers the message and maintains full deniability.',
+   ex:['"Hijo make sure you\'re taking care of yourself." Said while AA is in earshot in her own well-run home.',
+       '"You should make sure you\'re eating well." Said to HM as AA stands nearby.',
+       '"I hope you\'re being appreciated." Said in a context where AA will hear it.'],
+   int:'You are the actual audience. You do not have to respond as if the message was not for you.',
+   sc:['You can respond to the room directly. Or let it go and log it.']},
+  {id:'hm-dep',g:'hm',l:'Departure extraction',
+   w:'Goodbyes become extended emotional productions requiring HM to comfort and reassure her before she can leave.',
+   ex:['A goodbye that takes 30 minutes, tearful, with one more thing she needed to say.',
+       'Begins to leave then returns multiple times with small items to address.',
+       'Cries at goodbye in a way that requires HM to hold her and reassure her before she can go.'],
+   int:'The visit ends the same way it ran throughout.',
+   sc:['Say your goodbye warmly and early. Let the extraction happen without your participation.']},
+  {id:'hm-prp',g:'hm',l:'HM as prop',
+   w:'Displays HM more prominently when new people are present. His presence becomes part of her presentation.',
+   ex:['Stands closer to him, references him more, touches him more when strangers are watching.',
+       'Introduces him in a way that positions his accomplishments as hers to be proud of.',
+       'Uses him as a credential in conversation with new people.'],
+   int:'He is being used as a credential in front of new audiences.',
+   sc:['No response required. Observe.']},
+  {id:'hm-chi',g:'hm',l:'Childhood centralization',
+   w:'Retells HM\'s childhood stories directly to him in front of AA, positioning herself as the protagonist of his origin story.',
+   ex:['Tells a story about HM\'s childhood directly to HM while AA is in the room.',
+       '"Remember when you were little and..." told as if AA is not present.',
+       'Describes HM\'s formative experiences in a way that makes her the central character.'],
+   int:'His origin story is real. His current story is yours. Both can be true.',
+   sc:['Listen warmly. You do not have to compete with his history.']},
+  {id:'hm-svl',g:'hm',l:'Strategic vulnerability',
+   w:'Physical or emotional distress that flares at notable moments, particularly when attention is directed elsewhere.',
+   ex:['AA and HM are having a good moment. Suddenly she is not feeling well.',
+       'A plan proceeds that does not center her. She becomes emotionally overwhelmed.',
+       'HM gives AA a compliment. She mentions a pain or problem shortly after.'],
+   int:'The timing is the data, not the symptom.',
+   sc:['Let others respond. Keep your energy steady.']},
+  {id:'he-sen',g:'he',l:'Sentence completion',
+   w:'Finishes HE\'s sentences or arrives at his point before he does. After decades she has his patterns mapped.',
+   ex:['HE begins a thought. She completes it before he gets there, often incorrectly.',
+       '"What HE means is..." said before HE has finished explaining.',
+       'Speaks over the end of his sentences consistently.'],
+   int:'She owns his thoughts before he finishes having them.',
+   sc:['No response required. Observe.']},
+  {id:'he-def',g:'he',l:'Deference check',
+   w:'HE automatically looks to AN before responding or deciding, even on small things.',
+   ex:['Someone asks HE a direct question. He glances at AN before answering.',
+       'A decision is offered to HE. He looks at AN before accepting.',
+       'HE begins to form an opinion then seems to edit it after making eye contact with her.'],
+   int:'This is the outcome of the control system, not weakness.',
+   sc:['You can direct questions to HE directly and wait for his answer.']},
+  {id:'he-his',g:'he',l:'Shared history revisionism',
+   w:'Narrates their shared history in a way that centers herself as the one who held everything together.',
+   ex:['"I carried this family. I don\'t know where we would be without everything I did."',
+       '"HE was there but I was the one who kept things going."',
+       '"Everything that worked out, I made sure of."'],
+   int:'She was the breadwinner. That is true. The way a true thing is deployed strategically is still control.',
+   sc:['No response required.']},
+  {id:'he-fin',g:'he',l:'Financial authority display',
+   w:'References money or financial decisions in ways that subtly remind HE of who holds the resources.',
+   ex:['Discusses her SSA benefits and finances in a context that positions her as the economic center.',
+       'References her income or benefits when HE is present in a way that marks the hierarchy.',
+       'Makes financial decisions aloud and presents them as settled without consulting HE.'],
+   int:'His legal status and financial dependency are real structural facts in this relationship.',
+   sc:['Observe. Note HE\'s response when it happens.']},
+  {id:'he-ppg',g:'he',l:'Public/private warmth gap',
+   w:'Treats HE warmly in front of others but shifts noticeably in tone in lower-stakes moments.',
+   ex:['Warm and affectionate when guests are present. Cooler, more directive when it is just the family.',
+       'Public displays of affection toward HE that do not match the private dynamic.',
+       'The warmth visibly performs for an audience and reduces when the audience leaves.'],
+   int:'The public warmth is image management. The baseline is what happens when the audience reduces.',
+   sc:['Observe the gap. That is the data.']},
+  {id:'he-ctl',g:'he',l:'Full control repertoire',
+   w:'Has every response available when HE pushes back: correction most common, then silence, performed hurt, or escalation.',
+   ex:['HE contradicts something. She corrects him smoothly in front of others.',
+       'HE disagrees. She goes quiet in a way that fills the room.',
+       'HE holds a position. She becomes visibly hurt until he backs down.'],
+   int:'He has learned not to push back because every option produces a cost.',
+   sc:['Observe which response she uses and what triggered it.']},
+  {id:'he-jok',g:'he',l:'Jokes at HE\'s expense',
+   w:'Makes jokes at HE\'s expense framed as affectionate teasing. He laughs along because that is the script.',
+   ex:['"HE always does this - he just can\'t help it." (laughs) HE laughs too.',
+       'A story about HE\'s limitations told as a fond anecdote while he sits there.',
+       'His ADHD moments narrated publicly as charming but in a way that reduces him.'],
+   int:'He cannot respond without seeming like he cannot take a joke.',
+   sc:['Do not co-sign the joke. Neutral.']},
+  {id:'he-emi',g:'he',l:'Emotional interpretation',
+   w:'Declares how HE feels or explains his reactions to others before he can speak for himself.',
+   ex:['"He\'s just tired." Said before HE has indicated anything about his state.',
+       '"He doesn\'t really like that, he just won\'t say so." Said while HE is present.',
+       '"What he means is..." said before HE has finished speaking.'],
+   int:'She owns his inner world. He does not get to explain himself.',
+   sc:['You can ask HE directly what he thinks or feels.']},
+  {id:'he-spk',g:'he',l:'Speaking for HE',
+   w:'Answers questions directed at HE before he can respond.',
+   ex:['Someone asks HE something directly. AN answers first.',
+       'A question hangs in the air waiting for HE. She answers it.',
+       'HE opens his mouth to respond. She speaks before he finishes the first word.'],
+   int:'He is being mediated. She controls what he outputs to the room.',
+   sc:['You can direct a follow-up to HE specifically. "What do you think, HE?"']},
+  {id:'he-cor',g:'he',l:'Publicly correcting HE',
+   w:'Corrects HE\'s stories, facts, or word choices in front of others.',
+   ex:['HE is telling a story. She interrupts: "No, it wasn\'t like that. It was..."',
+       '"That\'s not right." Said to HE while he is mid-sentence in front of guests.',
+       'A small factual detail he gets wrong gets corrected publicly and in full.'],
+   int:'He gets smaller every time this happens in public.',
+   sc:['No response required. Observe and note frequency.']},
+  {id:'he-dec',g:'he',l:'Deciding for HE',
+   w:'States HE\'s preferences or needs as fact without consulting him.',
+   ex:['"He doesn\'t want that." Said before HE has been asked.',
+       '"He\'ll have the same as me." Said to a server or host.',
+       '"He needs to go to bed early." Said as if HE is not present to make that call.'],
+   int:'He has been decided for so long that sometimes he does not notice.',
+   sc:['You can ask HE directly what he wants.']},
+  {id:'he-val',g:'he',l:'HE as validator',
+   w:'Directs stories or opinions specifically at HE, waiting for his visible agreement before moving on.',
+   ex:['She tells a story, looking at HE, pausing when she needs a nod or laugh.',
+       'Makes eye contact with HE specifically after statements that need confirmation.',
+       'Looks to HE for a reaction before deciding how to continue.'],
+   int:'HM has developed some distance from this role. She shifted the dependency to HE.',
+   sc:['Observe how HE responds. Watch the cost of withholding validation.']},
+  {id:'he-nar',g:'he',l:'Narrating HE as subject',
+   w:'Talks about HE to others while he is present, making him a character in her story.',
+   ex:['"HE is like this - he always does that - you know how he is." Said while HE is right there.',
+       'Describes HE\'s habits, quirks, and history to guests as if he cannot speak for himself.',
+       'Uses HE as an anecdote while he sits in the room.'],
+   int:'He gets objectified in conversation while present to speak for himself.',
+   sc:['You can include HE directly. "HE, is that how you see it?"']},
+  {id:'he-con',g:'he',l:'Constrained self in her presence',
+   w:'HE is noticeably more relaxed, more himself, more animated when AN is not in the room or not focused on him.',
+   ex:['The espresso love. The Jinx enthusiasm. The watch talk. Fuller when AN\'s attention is elsewhere.',
+       'A different laugh. More stories. More presence. When she leaves the room.',
+       'Eye contact with others increases. Body language opens. Voice relaxes.'],
+   int:'The real HE is intact. He just does not get much room to occupy himself around her.',
+   sc:['Give HE room when she is not watching.']},
+  {id:'np-chr',g:'new',l:'Elevated charm performance',
+   w:'New people get the best version of the performance. With AA she has stopped performing because the baseline is established.',
+   ex:['Notably warmer, funnier, more engaged with a stranger than her baseline with AA.',
+       'The energy and effort visible with new people is not present in the existing relationships.',
+       'Stories she would not tell in the regular group come out easily for new people.'],
+   int:'The contrast between what new people see and what you see is information.',
+   sc:['Stay your baseline warm self.']},
+  {id:'np-cal',g:'new',l:'Performance calibration',
+   w:'Visibly amplifies what is landing with a new person. Tracks approval and turns toward whatever produced it.',
+   ex:['A new person laughs at something. She immediately does more of whatever caused it.',
+       'Warmth increases in real time as positive signals come back from the new person.',
+       'She notices what the new person responds to and leans into it visibly.'],
+   int:'This is narcissistic supply acquisition. You can watch the mechanism in real time.',
+   sc:['Observe without engaging.']},
+  {id:'np-par',g:'new',l:'Parallel provisioning',
+   w:'Declines what AA offers, then acquires the same thing independently. Avoids being in a position of gratitude toward AA.',
+   ex:['Declines the fruit. Buys a large quantity of the same fruit.',
+       'Refuses the offered coffee. Brought her own apparatus and makes her own.',
+       'Declines the offered seat. Rearranges to sit where she prefers independently.'],
+   int:'She did not want the thing. She wanted to not receive it from you.',
+   sc:['Offer once, warmly. Let it go after.']},
+  {id:'np-und',g:'new',l:'Subtle undermining via humor',
+   w:'Makes subtly undermining comments about AA to new people framed as jokes.',
+   ex:['A light comment about AA that gets a small laugh but leaves a quiet impression.',
+       'A "teasing" remark about AA said in a context where new people have no history to push back.',
+       'An observation about AA framed as fond but landing as a reduction.'],
+   int:'Log the specific wording when possible. The subtlety is the point.',
+   sc:['"Ha." (acknowledge without co-signing)','Or redirect naturally.']}
+];
+
+var SEC_OPEN={};
+GROUPS.forEach(function(g){SEC_OPEN[g.id]=true});
+var state={sel:null,fgrp:null,q:'',df:'',dt:'',editing:null,entries:[],custom:[]};
+
+function save(){try{localStorage.setItem('tcn4',JSON.stringify(state.entries))}catch(e){}try{localStorage.setItem('tcn4c',JSON.stringify(state.custom))}catch(e){}}
+function load(){try{var e=localStorage.getItem('tcn4');if(e)state.entries=JSON.parse(e)}catch(e){}try{var c=localStorage.getItem('tcn4c');if(c)state.custom=JSON.parse(c)}catch(e){}}
+function allCats(){return CATS.concat(state.custom)}
+function gColor(gid){var g=GROUPS.find(function(x){return x.id===gid});return g?g.c:1}
+
+function sw(p){
+  document.querySelectorAll('.pg').forEach(function(x){x.classList.remove('on')});
+  document.querySelectorAll('.nbt').forEach(function(x){x.classList.remove('on')});
+  var pg=document.getElementById('pg-'+p);
+  var nb=document.getElementById('nb-'+p);
+  if(pg)pg.classList.add('on');
+  if(nb)nb.classList.add('on');
+  if(p==='st')renderStats();
+  if(p==='def')renderDefs('');
+  window.scrollTo(0,0);
+}
+
+function rGB(){
+  var bar=document.getElementById('gb');
+  if(!bar)return;
+  var html='<button class="gc2" style="'+((!state.fgrp)?'background:var(--a);color:#0c0b09;border-color:var(--a)':'')+'" onclick="setFG(null)">All</button>';
+  GROUPS.forEach(function(g){
+    var on=state.fgrp===g.id;
+    html+='<button class="gc2" style="'+(on?'background:'+gc(g.c)+';color:#0c0b09;border-color:'+gc(g.c):'')+'" onclick="setFG(\''+g.id+'\')">'+g.name+'</button>';
+  });
+  bar.innerHTML=html;
+}
+
+function setFG(gid){state.fgrp=gid;state.sel=null;rGB();rCats();uForm()}
+
+function rCats(){
+  var el=document.getElementById('cats');
+  if(!el)return;
+  var groups=state.fgrp?GROUPS.filter(function(g){return g.id===state.fgrp}):GROUPS;
+  var html='';
+  groups.forEach(function(g){
+    var col=g.c;
+    var cats=allCats().filter(function(c){return c.g===g.id});
+    var cnt=state.entries.filter(function(e){return e.grp===g.id}).length;
+    var op=SEC_OPEN[g.id]!==false;
+    html+='<div class="cs"><div class="csh" onclick="togSec(\''+g.id+'\')"><div class="csd" style="background:'+gc(col)+'"></div><span class="csn" style="color:'+gc(col)+'">'+g.name+'</span><span class="csc" style="color:'+gc(col)+'">'+cnt+'</span><span class="cst'+(op?' op':'')+'">v</span></div>';
+    html+='<div class="cg" style="max-height:'+(op?'3000px':'0px')+'">';
+    cats.forEach(function(cat){
+      var count=state.entries.filter(function(e){return e.cid===cat.id}).length;
+      var sel=state.sel===cat.id;
+      var bg=sel?'background:'+gcd(col)+';border-color:'+gcm(col):'';
+      html+='<div class="ci" style="'+bg+'" onclick="selCat(\''+cat.id+'\')"><span class="cin">'+cat.l+'</span><span class="cic" style="color:'+(count>0?gc(col):'var(--dim)')+'>'+(count||'-')+'</span><button class="cii" onclick="event.stopPropagation();openM(\''+cat.id+'\')">i</button></div>';
+    });
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+function togSec(gid){SEC_OPEN[gid]=SEC_OPEN[gid]===false?true:false;rCats()}
+function selCat(id){state.sel=(state.sel===id)?null:id;rCats();uForm()}
+
+function uForm(){
+  var s=document.getElementById('lfs');
+  var b=document.getElementById('lb');
+  if(!s||!b)return;
+  if(state.sel){
+    var cat=allCats().find(function(c){return c.id===state.sel});
+    var col=gColor(cat.g);
+    s.textContent=cat.l;s.style.color=gc(col);
+    b.className='lb';b.style.background=gc(col);b.style.color='#0c0b09';
+  }else{
+    s.textContent='Select a category above';s.style.color='var(--dim)';
+    b.className='lb off';b.style.background='';b.style.color='';
+  }
+}
+
+function logIt(){
+  if(!state.sel)return;
+  var cat=allCats().find(function(c){return c.id===state.sel});
+  var note=document.getElementById('ln').value.trim();
+  var g=GROUPS.find(function(x){return x.id===cat.g});
+  state.entries.unshift({id:Date.now(),cid:cat.id,cl:cat.l,grp:cat.g,gn:g?g.name:cat.g,note:note,ts:new Date().toISOString()});
+  document.getElementById('ln').value='';
+  save();rAll();toast('Logged.');
+}
+
+function delEntry(id){state.entries=state.entries.filter(function(e){return e.id!==id});save();rAll();toast('Removed.')}
+function startEdit(id){state.editing=id;rFeed()}
+function saveEdit(id){
+  var ta=document.getElementById('ee-'+id);
+  if(!ta)return;
+  state.entries=state.entries.map(function(e){return e.id===id?Object.assign({},e,{note:ta.value.trim()}):e});
+  state.editing=null;save();rFeed();toast('Updated.');
+}
+
+function fe(){state.q=document.getElementById('si').value.toLowerCase();state.df=document.getElementById('df').value;state.dt=document.getElementById('dt').value;rFeed()}
+function cs(){document.getElementById('si').value='';state.q='';rFeed()}
+function cd(){document.getElementById('df').value='';document.getElementById('dt').value='';state.df='';state.dt='';rFeed()}
+
+function getFE(){
+  return state.entries.filter(function(e){
+    if(state.fgrp&&e.grp!==state.fgrp)return false;
+    if(state.q&&!e.cl.toLowerCase().includes(state.q)&&!e.note.toLowerCase().includes(state.q)&&!e.gn.toLowerCase().includes(state.q))return false;
+    if(state.df&&new Date(e.ts)<new Date(state.df))return false;
+    if(state.dt){var t=new Date(state.dt);t.setHours(23,59,59);if(new Date(e.ts)>t)return false}
+    return true;
+  });
+}
+
+function rFeed(){
+  var entries=getFE();
+  var tc=document.getElementById('tc');
+  var fl=document.getElementById('fl');
+  if(tc)tc.textContent=state.entries.length;
+  if(fl)fl.textContent=entries.length+' entr'+(entries.length===1?'y':'ies');
+  var feed=document.getElementById('feed');
+  if(!feed)return;
+  if(entries.length===0){feed.innerHTML='<div class="emp">Nothing logged yet.</div>';return}
+  var html='';
+  entries.forEach(function(e){
+    var col=gColor(e.grp);
+    var dt=new Date(e.ts);
+    var tm=dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' - '+dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    var isEd=state.editing===e.id;
+    html+='<div class="en"><div class="est" style="background:'+gc(col)+'"></div><div class="eb"><div class="et"><span class="eg" style="background:'+gcd(col)+';color:'+gc(col)+';border:1px solid '+gcm(col)+'">'+e.cl+'</span><span class="egr">'+e.gn+'</span><span class="etm">'+tm+'</span></div>';
+    if(!isEd&&e.note)html+='<div class="eno">'+e.note+'</div>';
+    if(isEd)html+='<textarea class="een" id="ee-'+e.id+'" rows="3">'+e.note+'</textarea><button class="ees" onclick="saveEdit('+e.id+')">Save</button>';
+    html+='</div><div class="ea"><button class="ebt" onclick="startEdit('+e.id+')">edit</button><button class="ebt del" onclick="delEntry('+e.id+')">x</button></div></div>';
+  });
+  feed.innerHTML=html;
+}
+
+function rAll(){rGB();rCats();rFeed();uForm()}
+
+function openM(catId){
+  var cat=allCats().find(function(c){return c.id===catId});
+  if(!cat)return;
+  var col=gColor(cat.g);
+  var g=GROUPS.find(function(x){return x.id===cat.g});
+  var html='<div class="mt" style="color:'+gc(col)+'">'+cat.l+'</div>';
+  html+='<div class="mg">'+(g?g.name:'')+'</div>';
+  html+='<div class="msl">What this behavior is</div><div class="mtx">'+(cat.w||'')+'</div>';
+  if(cat.ex&&cat.ex.length){
+    html+='<div class="msl">Examples</div>';
+    cat.ex.forEach(function(e){html+='<div class="mex">'+e+'</div>'});
+  }
+  html+='<div class="msl">Internal reminder</div><div class="mtx">'+(cat.int||'')+'</div>';
+  if(cat.sc&&cat.sc.length){html+='<div class="msl">How to respond</div>';cat.sc.forEach(function(s){html+='<div class="msc">'+s+'</div>'})}
+  document.getElementById('mc').innerHTML=html;
+  document.getElementById('mo').classList.add('op');
+}
+function cm(e){if(e.target===document.getElementById('mo'))closeM()}
+function closeM(){document.getElementById('mo').classList.remove('op')}
+
+function renderDefs(q){
+  var ql=(q||'').toLowerCase();
+  var html='';
+  GROUPS.forEach(function(g){
+    var col=g.c;
+    var cats=allCats().filter(function(c){return c.g===g.id&&(!ql||c.l.toLowerCase().includes(ql)||(c.w||'').toLowerCase().includes(ql))});
+    if(!cats.length)return;
+    html+='<div class="dgt" style="color:'+gc(col)+'">'+g.name+'</div>';
+    cats.forEach(function(cat){
+      html+='<div class="dc2" onclick="togDef(\'dd-'+cat.id+'\')"><div class="dch"><div class="dcd" style="background:'+gc(col)+'"></div><span class="dcn">'+cat.l+'</span><span class="dct" id="ddt-'+cat.id+'">v</span></div>';
+      html+='<div class="dcb" id="dd-'+cat.id+'">';
+      html+='<div class="dsl">What this behavior is</div><div class="dtx">'+(cat.w||'')+'</div>';
+      if(cat.ex&&cat.ex.length){html+='<div class="dsl">Examples</div>';cat.ex.forEach(function(e){html+='<div class="dex">'+e+'</div>'})}
+      html+='<div class="dsl">Internal reminder</div><div class="dtx">'+(cat.int||'')+'</div>';
+      if(cat.sc&&cat.sc.length){html+='<div class="dsl">How to respond</div>';cat.sc.forEach(function(s){html+='<div class="dsc">'+s+'</div>'})}
+      html+='</div></div>';
+    });
+  });
+  var defc=document.getElementById('defc');
+  if(defc)defc.innerHTML=html;
+}
+function togDef(id){
+  var b=document.getElementById(id);if(!b)return;
+  var op=b.classList.contains('op');
+  b.classList.toggle('op',!op);
+  var t=document.getElementById(id.replace('dd-','ddt-'));
+  if(t)t.classList.toggle('op',!op);
+}
+function fd(q){renderDefs(q)}
+
+function runId(){
+  var input=document.getElementById('ita').value.trim();
+  if(!input)return;
+  var btn=document.getElementById('ibn');
+  var res=document.getElementById('idr');
+  btn.disabled=true;
+  var kw={
+    'p-startle':['scream','screamed','screaming','shriek','shrieked','jumped','startled','flinched','yelp','yelled','loud noise','shrieked'],
+    'v-self':['not as good','maybe not','probably not','taste it','tell me what is wrong','my cooking','my coffee','not like yours','not great','so humble','not good enough'],
+    'cap-aud':['interrupted','dont care','do not care','dont want to hear','nobody listens','let me finish','monologue','talking over','stopped listening','lecture','not funny','laughed alone','laughed at herself','forced laugh','no one laughed','pretend to laugh'],
+    'con-int':['interrupted us','came over','called his name','needed something','broke the moment','inserted herself','stepped in','between us','blocked','walked in front','positioned herself','line of sight','blocking view','blocked his view','stood in front','visual field'],
+    'att-rec':['changed the subject','brought it back','redirected','took over','center of attention','shifted focus','pulled attention back'],
+    'bib-auth':['bible','biblical','god told me','spiritual','faith','lord','prayer','scripture','church','blessed','old age','been through so much','wisdom','learned so much'],
+    'cvt-pos':['subtle','passive','implied','hinting','positioning','undermining','manipulating','framing','covert'],
+    'hie-res':['thanks kids','good job kids','condescending','patronizing','treating like a child','talking down to'],
+    'ass-ign':['already knew that','already know that','obvious','everyone knows','of course','explaining like','as if i didnt know','informed us','told us all'],
+    'uns-adv':['unsolicited','didnt ask','did not ask','you should','you need to','your home','your kitchen','your space','nobody asked her'],
+    'rhe-q':['already knew the answer','knew the answer','testing','rhetorical','set up','leading question'],
+    'dia-aut':['declared','said he felt','said she felt','blamed','because of the food','because of what you cooked','butter','caused by your','diagnosed him','its the food','two tablespoons'],
+    'crd-red':['took credit','redirected the praise','hiram made','he made it','she made it about him','gave him credit','your cooking your effort'],
+    'inf-app':['said it was her idea','claimed she knew','as if she knew','already told her','told her before','appropriated','took the idea'],
+    'nar-rev':['changed her story','said it was fine all along','said she wanted that anyway','revised','rewrote','now she says','pretending she wanted','rewriting'],
+    'bck-hnd':['i didnt know you could','didnt expect that from you','surprised you could','almost didnt recognize you','better than i thought','not bad for','actually good for'],
+    'cmp-dis':['in mexico','back home','where im from','my country','my mother used to','my grandmother','the right way to do it','the proper way','traditionally','where i grew up'],
+    'exc-app':['cut him off','cut her off','made it about herself','interrupted his excitement','took over the moment','hijacked','stole the moment'],
+    'wrm-dis':['hot and cold','back and forth','suddenly distant','cold to me','pulled away','warm then cold','inconsistent','unpredictable','switched on me'],
+    'wgt-sil':['went quiet','went silent','stopped talking','said nothing','silence filled','room got tense','felt the tension','atmosphere changed','heavy silence'],
+    'sub-pen':['less warm after','colder after','pulling back','withdrew from','punishing me','punished','consequence','ignoring me now'],
+    'ref-rec':['refused my offer','declined what i offered','said no thank you','would not take it','bought her own','got her own instead','brought her own','same thing but hers','parallel','refused the fruit','declined the fruit','pears','bought pears'],
+    'bod-sur':['watching what i eat','commented on my food','how much i ate','having another one','eating again','watching my plate','food shaming','what i ordered'],
+    'exc-spa':['spoke spanish','said it in spanish','exclusion','left me out','i didnt understand','did not understand','then translated','then apologized'],
+    'spa-apo':['sorry for the spanish','sorry abri','sorry i said that in spanish','apologized for speaking spanish','i already told her','six years','she knows i understand'],
+    'str-omi':['went quiet when i mentioned','stopped talking when','skirted around','avoided the topic','changed subject when','my mom','my mother','avoids talking about'],
+    'non-apo':['sorry you felt that way','sorry if you','sorry but i was just','just trying to help','did not mean to upset','not my fault','qualified apology','said sorry but'],
+    'his-gri':['brought up the past','old argument','years ago','remember when','that time back','dug up old','unrelated past','past issue','different issue entirely'],
+    'nvb-edi':['sighed','sighing','made a sound','noise she made','mmm sound','hmm sound','exhaled loudly','rolled her eyes','expression on her face','under her breath'],
+    'cvt-sur':['glanced at me','glanced my way','looked at me','side eye','peeking at me','surveillance','watching me when','covert look','checking my reaction'],
+    'img-rep':['suddenly nice after','over nice suddenly','overcompensating','generous right after','kind right after','switched to nice','too nice now','brought something'],
+    'he-tri':['told hector','went to hector','hector knows about it','pulled hector in','using hector','recruited hector','hector as witness'],
+    'prf-acc':['said its fine','no no its fine','performed acceptance','fake smile','forced smile','obviously not fine','pretending to be okay'],
+    'ovc-apo':['used it all','used everything','finished it all','ran out because of her','all gone','apologized for using','sorry for using it all','used up'],
+    'hm-arc':['nickname for hiram','pet name','childhood name','inside joke with him','reference before me','before i was around','growing up together','when he was young'],
+    'hm-car':['his plate','you need to eat hijo','eat more hijo','you look tired hijo','managing his health','his needs','tending to him','taking care of him'],
+    'hm-phy':['touched hiram','touching him','his hair','his collar','his arm','too much touching','lingered on him','held onto him','kept touching him'],
+    'hm-rol':['did it for hiram','cooked for hiram','handled it for him','took over for him','french press','brought her apparatus','doing my job','my role as wife'],
+    'hm-acc':['gatekeeping hiram','permission to see him','invited me like a child','managing his time','monopolizing him','controlling access','she invites me'],
+    'hm-fin':['insurance to hiram','social security to hiram','finances to hiram','money to hiram','her benefits','financial details','her ssa','her savings to him'],
+    'hm-gra':['thank you hijo','not a lot of parents','because of you hijo','me and your dad improved','grateful to you hijo','we improved because of you'],
+    'hm-sac':['i gave up so much','i sacrificed','what i did for you','i worked so hard','everything i did','for you boys','gave everything for','what i went through for'],
+    'hm-apr':['what do you think hijo','your opinion hijo','should i hijo','does this look good hijo','asking hiram for approval','needs hiram to decide'],
+    'hm-dsg':['miss you so much','hard without you','dont know how i manage','so lonely','hard to be away from you','distance is hard','when you are not here i'],
+    'hm-prx':['meant for me to hear','said it to him but','directed at him for me','through hiram','make sure you take care','take care of yourself hijo','talking to him about me'],
+    'hm-dep':['long goodbye','would not leave','kept saying goodbye','tearful goodbye','crying at goodbye','prolonged goodbye','one more thing to say','extended departure'],
+    'hm-prp':['showing hiram off','presenting him','standing next to him','talking about him to impress','credential','look at my son','displaying hiram'],
+    'hm-chi':['when hiram was little','as a child hiram','childhood story about','baby hiram','young hiram','raised him','i raised you'],
+    'hm-svl':['suddenly sick when','suddenly tired when','not feeling well when','headache when','distress when','emotional when we were close','overwhelmed when'],
+    'he-sen':['finished his sentence','completed his thought','said it for hector','before hector could','cut hector off','she knew what he meant','anticipated hector','finished hectors sentence','finished hector'],
+    'he-def':['hector looked at her','hector checked with her','hector glanced at her','hector asked her first','hector waited for her','hector deferred'],
+    'he-his':['i held this family together','i carried this family','without me this family','i did everything','i kept us together','i sacrificed for this family'],
+    'he-fin':['her money','she earns','she provides for the family','breadwinner','who pays','her benefits support','her income supports'],
+    'he-ppg':['different with hector in private','colder to hector without','switches with hector','public warmth with hector','when others left her tone'],
+    'he-ctl':['corrected hector','that is not right hector','that is not what happened hector','correcting him','she corrected hector'],
+    'he-jok':['joke about hector','made fun of hector','laughed at hector','teasing hector','at hectors expense','embarrassed hector','hector laughed along'],
+    'he-emi':['hector feels','hector thinks','hector is tired','hector does not like','speaking for hectors feelings','hectors emotions','what hector means'],
+    'he-spk':['spoke for hector','answered for hector','before hector could answer','she answered his question','jumped in for hector'],
+    'he-cor':['corrected hectors story','that is wrong hector','it was different hector','correcting hectors facts','she corrected what hector said'],
+    'he-dec':['hector does not want','hector will have','hector likes this','deciding for hector','ordering for hector','chose for hector'],
+    'he-val':['looking at hector for','waiting for hector to','needs hector to agree','hector to validate','waiting for hectors reaction'],
+    'he-nar':['talking about hector while','describing hector to','he is like this she said','you know how hector is','narrating hector','as if hector is not there'],
+    'he-con':['hector different without her','hector more relaxed without','hector more himself when','hector more animated when','when she left hector','without ana hector'],
+    'np-chr':['with the new person','with strangers','with guests','charming with them','performance for them','turned it on for','best behavior for','showing off for new'],
+    'np-cal':['tracking their reaction','adjusting for them','calibrating for','more of what worked','playing to them','reading them','performing for the new'],
+    'np-par':['bought her own instead','got her own instead','refused my offer','would not accept from me','independent from me','same thing but not from me'],
+    'np-und':['joke about me to them','comment about me to them','said something about me','light jab about me','subtle dig at me','framed as joke about me','in front of the new person']
+  };
+
+  var scores={};
+  var cats=allCats();
+  cats.forEach(function(c){scores[c.id]=0});
+  var inp=input.toLowerCase();
+  Object.keys(kw).forEach(function(catId){
+    kw[catId].forEach(function(phrase){
+      if(inp.indexOf(phrase)!==-1){
+        scores[catId]=(scores[catId]||0)+(phrase.indexOf(' ')!==-1?2:1);
+      }
+    });
+  });
+
+  var ranked=[];
+  Object.keys(scores).forEach(function(id){if(scores[id]>0)ranked.push([id,scores[id]])});
+  ranked.sort(function(a,b){return b[1]-a[1]});
+  ranked=ranked.slice(0,5);
+
+  if(ranked.length===0){
+    res.innerHTML='<div class="ith">No clear match found. Try more specific words, or browse the Definitions tab.</div>';
+    btn.disabled=false;return;
+  }
+
+  var html='<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">'+ranked.length+' possible match'+(ranked.length===1?'':'es')+' found</div>';
+  ranked.forEach(function(r){
+    var cat=cats.find(function(c){return c.id===r[0]});
+    if(!cat)return;
+    var col=gColor(cat.g);
+    var g=GROUPS.find(function(x){return x.id===cat.g});
+    var conf=r[1]>=4?'strong match':r[1]>=2?'possible match':'weak match';
+    html+='<div class="irc"><div class="irt"><div class="ird" style="background:'+gc(col)+'"></div><span class="irn" style="color:'+gc(col)+'">'+cat.l+'</span><span class="irf">'+conf+'</span></div>';
+    html+='<div class="irr">'+(cat.w||'')+'</div>';
+    if(cat.ex&&cat.ex.length)html+='<div style="font-family:\'Cormorant Garamond\',Georgia,serif;font-style:italic;font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;border-left:2px solid var(--border);padding-left:10px">'+cat.ex[0]+'</div>';
+    html+='<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--dim);margin-top:8px;text-transform:uppercase;letter-spacing:.08em">'+(g?g.name:'')+'</div>';
+    html+='<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="ilb" onclick="qLog(\''+r[0]+'\')">Log this</button><button class="ilb" onclick="openM(\''+r[0]+'\')">Full definition</button></div></div>';
+  });
+  res.innerHTML=html;
+  btn.disabled=false;
+}
+
+function qLog(catId){
+  var cat=allCats().find(function(c){return c.id===catId});
+  if(!cat)return;
+  var note=document.getElementById('ita').value.trim();
+  var g=GROUPS.find(function(x){return x.id===cat.g});
+  state.entries.unshift({id:Date.now(),cid:cat.id,cl:cat.l,grp:cat.g,gn:g?g.name:cat.g,note:note,ts:new Date().toISOString()});
+  save();
+  var tc=document.getElementById('tc');
+  if(tc)tc.textContent=state.entries.length;
+  toast('Logged from identify.');
+}
+
+function renderStats(){
+  var total=state.entries.length;
+  var today=new Date().toDateString();
+  var todayCnt=state.entries.filter(function(e){return new Date(e.ts).toDateString()===today}).length;
+  var wkCnt=state.entries.filter(function(e){return(new Date()-new Date(e.ts))/(1000*60*60*24)<=7}).length;
+  var catCts={};state.entries.forEach(function(e){catCts[e.cid]=(catCts[e.cid]||0)+1});
+  var topCats=Object.entries(catCts).sort(function(a,b){return b[1]-a[1]}).slice(0,8);
+  var grpCts={};state.entries.forEach(function(e){grpCts[e.grp]=(grpCts[e.grp]||0)+1});
+  var dayCts={};state.entries.forEach(function(e){var d=new Date(e.ts).toLocaleDateString('en-US',{month:'short',day:'numeric'});dayCts[d]=(dayCts[d]||0)+1});
+  var topDay=Object.entries(dayCts).sort(function(a,b){return b[1]-a[1]})[0];
+  var html='<div class="stl">Overview</div>';
+  html+='<div class="sgr"><div class="sc2"><div class="scl">Total entries</div><div class="scv">'+total+'</div></div><div class="sc2"><div class="scl">Today</div><div class="scv">'+todayCnt+'</div></div><div class="sc2"><div class="scl">This week</div><div class="scv">'+wkCnt+'</div></div><div class="sc2"><div class="scl">Categories used</div><div class="scv">'+Object.keys(catCts).length+'</div></div></div>';
+  if(topDay)html+='<div class="sc2"><div class="scl">Most active day</div><div class="scv" style="font-size:22px">'+topDay[0]+'</div><div class="scs">'+topDay[1]+' entries</div></div>';
+  if(topCats.length){
+    html+='<div class="stl">Most frequent behaviors</div>';
+    var mx=topCats[0][1];
+    topCats.forEach(function(tc2){
+      var cat=allCats().find(function(c){return c.id===tc2[0]});if(!cat)return;
+      var col=gColor(cat.g);
+      html+='<div class="fr"><div class="fd" style="background:'+gc(col)+'"></div><div class="fla">'+cat.l+'</div><div class="fbt"><div class="fbf" style="width:'+Math.round((tc2[1]/mx)*100)+'%;background:'+gc(col)+'"></div></div><div class="fnu">'+tc2[1]+'</div></div>';
+    });
+  }
+  html+='<div class="stl">By group</div>';
+  var gmx=Math.max.apply(null,Object.values(grpCts).concat([1]));
+  GROUPS.forEach(function(g){
+    var cnt=grpCts[g.id]||0;
+    html+='<div class="fr"><div class="fd" style="background:'+gc(g.c)+'"></div><div class="fla">'+g.name+'</div><div class="fbt"><div class="fbf" style="width:'+Math.round((cnt/gmx)*100)+'%;background:'+gc(g.c)+'"></div></div><div class="fnu">'+cnt+'</div></div>';
+  });
+  html+='<div class="stl">Export</div><button class="eb2" onclick="expJSON()">Download as JSON</button><button class="eb2" onclick="expCSV()">Download as CSV</button>';
+  html+='<div class="stl">Custom categories</div><div class="ccf"><input class="cci" id="ccn" placeholder="Category name..."><select class="ccs" id="ccg">'+GROUPS.map(function(g){return'<option value="'+g.id+'">'+g.name+'</option>'}).join('')+'</select><button class="ccb" onclick="addCC()">Add category</button></div>';
+  if(state.custom.length){html+='<div class="ccl">';state.custom.forEach(function(c){html+='<div class="cci2"><span class="cin2">'+c.l+'</span><button class="cdl" onclick="delCC(\''+c.id+'\')">x</button></div>'});html+='</div>'}
+  var stp=document.getElementById('stp');if(stp)stp.innerHTML=html;
+}
+
+function addCC(){
+  var n=document.getElementById('ccn').value.trim();var g=document.getElementById('ccg').value;
+  if(!n)return;
+  var id='cc-'+Date.now();
+  state.custom.push({id:id,g:g,l:n,w:'Custom category.',ex:[],int:'You defined this pattern.',sc:[]});
+  document.getElementById('ccn').value='';save();renderStats();rCats();toast('Category added.');
+}
+function delCC(id){state.custom=state.custom.filter(function(c){return c.id!==id});save();renderStats();rCats();toast('Removed.')}
+
+function expJSON(){
+  var d=JSON.stringify({entries:state.entries,exported:new Date().toISOString()},null,2);
+  var b=new Blob([d],{type:'application/json'});var u=URL.createObjectURL(b);
+  var a=document.createElement('a');a.href=u;a.download='tcn-export.json';a.click();URL.revokeObjectURL(u);
+}
+function expCSV(){
+  var rows=[['Date','Time','Category','Group','Note']];
+  state.entries.forEach(function(e){
+    var dt=new Date(e.ts);
+    rows.push([dt.toLocaleDateString('en-US'),dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}),e.cl,e.gn,'"'+(e.note||'').replace(/"/g,'""')+'"']);
+  });
+  var csv=rows.map(function(r){return r.join(',')}).join('\n');
+  var b=new Blob([csv],{type:'text/csv'});var u=URL.createObjectURL(b);
+  var a=document.createElement('a');a.href=u;a.download='tcn-export.csv';a.click();URL.revokeObjectURL(u);
+}
+
+function toast(msg){var t=document.getElementById('tst');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},1600)}
+
+window.addEventListener('DOMContentLoaded',function(){load();rAll()});
+</script>
+</body>
+</html>
