@@ -860,7 +860,7 @@ var SEC_OPEN={};
 GROUPS.forEach(function(g){SEC_OPEN[g.id]=true;});
 var ALERT_THRESHOLD=10;
 var _qlSel=null;
-var _blSel=null;
+var _blSel=[];
 
 var state={sel:[],fgrp:null,q:'',df:'',dt:'',editing:null,entries:[],custom:[],catNotes:{},theme:'auto'};
 
@@ -1302,6 +1302,7 @@ function openBacklog(){
   var dateStr=new Date(dateVal+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
   var h='<div class="mt" style="color:var(--ab)">Back Log</div>';
   h+='<div class="mg">Logging to: '+dateStr+'</div>';
+  h+='<div id="bl-chips" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;min-height:0"></div>';
   h+='<div class="ql-list">';
   GROUPS.forEach(function(g){
     var col=g.c;var cats=allCats().filter(function(c){return c.g===g.id;});
@@ -1315,26 +1316,54 @@ function openBacklog(){
   h+='</div>';
   h+='<textarea class="ql-note" id="bl-note" placeholder="Note (optional)..."></textarea>';
   h+='<button class="ql-sub off" id="bl-sub" onclick="blLog(this)" data-date="'+dateVal+'">Log to this date</button>';
-  _blSel=null;
+  _blSel=[];
   document.getElementById('mc').innerHTML=h;
   document.getElementById('mo').classList.add('op');
 }
 function blSel(el){
-  _blSel=el.getAttribute('data-cid');var col=parseInt(el.getAttribute('data-col'));
-  document.querySelectorAll('.ql-btn').forEach(function(b){b.classList.remove('on');b.style.borderColor='transparent';b.style.background='var(--surface)';});
-  el.classList.add('on');el.style.borderColor=gcm(col);el.style.background=gcd(col);
-  var sub=document.getElementById('bl-sub');if(sub){sub.className='ql-sub';sub.style.background=gc(col);sub.style.color='#0c0b09';}
+  var id=el.getAttribute('data-cid');var col=parseInt(el.getAttribute('data-col'));
+  var idx=_blSel.indexOf(id);
+  if(idx===-1){_blSel.push(id);}else{_blSel.splice(idx,1);}
+  document.querySelectorAll('.ql-btn').forEach(function(b){
+    var bid=b.getAttribute('data-cid');
+    var bcol=parseInt(b.getAttribute('data-col'));
+    var sel=_blSel.indexOf(bid)!==-1;
+    b.style.borderColor=sel?gcm(bcol):'transparent';
+    b.style.background=sel?gcd(bcol):'var(--surface)';
+  });
+  var chips=document.getElementById('bl-chips');
+  if(chips){
+    chips.innerHTML=_blSel.map(function(cid){
+      var cat=allCats().find(function(c){return c.id===cid;});
+      if(!cat)return '';
+      var ccol=gColor(cat.g);
+      return '<span style="font-family:\'DM Mono\',monospace;font-size:9px;padding:2px 8px;border-radius:3px;background:'+gcd(ccol)+';color:'+gc(ccol)+';border:1px solid '+gcm(ccol)+'">'+cat.l+'</span>';
+    }).join('');
+  }
+  var sub=document.getElementById('bl-sub');
+  if(sub){
+    if(_blSel.length>0){
+      var fcol=gColor(allCats().find(function(c){return c.id===_blSel[0];}).g);
+      sub.className='ql-sub';sub.style.background=gc(fcol);sub.style.color='#0c0b09';
+      sub.textContent=_blSel.length===1?'Log to this date':'Log '+_blSel.length+' categories to this date';
+    } else {
+      sub.className='ql-sub off';sub.style.background='';sub.style.color='';
+      sub.textContent='Log to this date';
+    }
+  }
 }
 function blLog(el){
-  if(!_blSel)return;
+  if(!_blSel.length)return;
   var dateVal=el.getAttribute('data-date');
-  var cat=allCats().find(function(c){return c.id===_blSel;});if(!cat)return;
   var note=document.getElementById('bl-note').value.trim();
-  var g=GROUPS.find(function(x){return x.id===cat.g;});
   var ts=new Date(dateVal+'T12:00:00').toISOString();
-  state.entries.push({id:Date.now(),cid:cat.id,cl:cat.l,grp:cat.g,gn:g?g.name:cat.g,note:note,ts:ts});
+  _blSel.forEach(function(cid){
+    var cat=allCats().find(function(c){return c.id===cid;});if(!cat)return;
+    var g=GROUPS.find(function(x){return x.id===cat.g;});
+    state.entries.push({id:Date.now()+Math.random(),cid:cat.id,cl:cat.l,grp:cat.g,gn:g?g.name:cat.g,note:note,ts:ts});
+  });
   state.entries.sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
-  _blSel=null;closeM();save();rAll();renderHistory();toast('Back-logged.');
+  _blSel=[];closeM();save();rAll();renderHistory();toast('Back-logged.');
 }
 
 function genSummary(){
