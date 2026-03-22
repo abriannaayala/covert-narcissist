@@ -191,6 +191,25 @@ body.light .ccs{color-scheme:light}
 .tst{position:fixed;bottom:80px;left:16px;right:16px;background:var(--card);border:1px solid var(--bl);border-radius:8px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.1em;z-index:9998;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none;text-align:center}
 .tst.on{opacity:1;transform:translateY(0)}
 @media(min-width:768px){.hdr{padding:24px 32px 16px}.pg,.bnav{max-width:600px;margin:0 auto}.fab{right:20px}.tst{max-width:568px;left:50%;transform:translateX(-50%) translateY(8px)}.tst.on{transform:translateX(-50%) translateY(0)}}
+
+.def-disc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:12px 0 16px}
+.def-disc-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--a);margin-bottom:8px}
+.def-disc-body{font-family:Georgia,serif;font-size:13px;line-height:1.65;color:var(--muted)}
+.def-sec{border:1px solid var(--border);border-radius:8px;margin:0 0 16px;overflow:hidden}
+.def-sec-hdr{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--surface)}
+.def-sec-hdr span:first-child{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg)}
+.def-sec-body{display:none;padding:12px 16px 16px}
+.def-sec-body.op{display:block}
+.def-sub{border:1px solid var(--border);border-radius:6px;margin-bottom:8px;overflow:hidden}
+.def-sub-hdr{padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;background:var(--ad)}
+.def-sub-hdr span:first-child{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.def-sub-body{display:none;padding:12px 14px 14px}
+.def-sub-body.op{display:block}
+.resist-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:10px}
+.resist-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--g5);margin-bottom:8px}
+.corr{background:var(--g1d);border-left:2px solid var(--g1);padding:8px 10px;border-radius:0 4px 4px 0}
+.fold-note{background:var(--ad);border-left:2px solid var(--border);padding:8px 10px;border-radius:0 4px 4px 0;font-style:italic}
+.cc-ta{width:100%;padding:10px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--fg);font-family:Georgia,serif;font-size:13px;resize:vertical;min-height:50px;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -251,6 +270,7 @@ body.light .ccs{color-scheme:light}
 </div>
 
 <div class="pg" id="pg-st"><div class="sp" id="stp"></div></div>
+<div class="pg" id="pg-gl"><div class="sp" id="glp"></div></div>
 
 <nav class="bnav">
   <button class="nbt on" onclick="sw('log')" id="nb-log"><span class="ni">&#x1F4CB;</span>Log</button>
@@ -258,6 +278,7 @@ body.light .ccs{color-scheme:light}
   <button class="nbt" onclick="sw('hist')" id="nb-hist"><span class="ni">&#x1F4C5;</span>History</button>
   <button class="nbt" onclick="sw('id')" id="nb-id"><span class="ni">&#x1F50D;</span>Identify</button>
   <button class="nbt" onclick="sw('st')" id="nb-st"><span class="ni">&#x1F4CA;</span>Stats</button>
+  <button class="nbt" onclick="sw('gl')" id="nb-gl"><span class="ni">&#x1F4D5;</span>Glossary</button>
 </nav>
 
 <button class="fab" id="fab" onclick="openQL()">+</button>
@@ -282,505 +303,783 @@ function gcm(n){return GCM[n]||GCM[1];}
 function gColor(gid){var g=GROUPS.find(function(x){return x.id===gid;});return g?g.c:1;}
 </script>
 <script id="cats-data">
+// Complete 103-category CATS array
+// Format: {id, g, l, w, ex, int, sc, correction, foldNote}
+// foldNote = optional note for folded-in behaviors
+
 var CATS=[
-  {id:'p-startle',g:'attention',l:'Performative startle',
-   w:'A scream or startled reaction disproportionate to the actual stimulus. The room stops and reorganizes around her in under a second. Genuine startle scales with actual threat. This does not.',
-   ex:['Someone walks into the room normally. She screams. Everyone rushes over.',
-       'A door closes at normal volume. She jumps and grabs her chest dramatically.',
-       'A dog barks once outside. She shrieks and makes everyone check on her.'],
-   int:'You are not required to tend to it. Let others respond.',
-   sc:['Let others respond. Keep your energy level.']},
-  {id:'v-self',g:'attention',l:'Vulnerable self-presentation',
-   w:'Strategic self-deprecation that bids for centrality. The self-criticism is the vehicle. The destination is the room reorganizing around her.',
-   ex:['"Mine is probably not as good as yours - can you taste it and tell me what is wrong?"',
-       '"I\'m probably the worst cook here. Everyone else is so talented."',
-       '"I don\'t know why I even try. I always do this wrong."'],
-   int:'You are not obligated to be her evaluator. The humility is performed, not felt.',
-   sc:['"I\'m sure it\'s good." (warm, closed)','"I\'ll have to try it another time."']},
-  {id:'cap-aud',g:'attention',l:'Captive audience enforcement',
-   w:'Delivers monologues and punishes interruption with guilt or withdrawal. Includes narrating something as funny that is not - requiring the room to perform amusement on her behalf.',
-   ex:['"I guess you don\'t care about what I\'m saying." After someone adds a normal comment mid-story.',
-       'Tells a story about a minor inconvenience, laughing throughout, and waits for the room to laugh.',
-       '"Nobody ever lets me finish." Said after being asked a clarifying question.'],
-   int:'This is not a conversation. It is a performance with a required audience.',
-   sc:['Let her finish. Do not fill the silence after. Do not over-validate.']},
-  {id:'con-int',g:'attention',l:'Connection interception',
-   w:'Inserts herself verbally or physically into moments when AA and HM are most connected. Also includes positioning herself between HM and whatever has captured his attention - blocking his line of sight or physical access to the moment.',
-   ex:['AA and HM are laughing together. She calls his name, needs something, introduces a topic.',
-       'HM is watching something on TV. She walks in front of the screen and starts talking.',
-       'HM is engaged in a conversation with a guest. She physically steps between them.'],
-   int:'This is responsive, not random. She felt the connection and moved toward it. Finish your moment before orienting to her.',
-   sc:['Slow your response time. Do not abandon the connection immediately.']},
-  {id:'att-rec',g:'attention',l:'Attention reclamation',
-   w:'Redirects focus back to herself when someone else is receiving strong positive engagement from the room.',
-   ex:['A guest is telling a great story and everyone is laughing. She finds a reason to speak.',
-       'Someone compliments the host\'s cooking. She immediately mentions something she brought.',
-       'A child is performing and getting attention. She comments on her own memory of that age.'],
-   int:'She can share the room up to a threshold. Watch where that threshold is.',
-   sc:['Let the other person\'s moment land fully. Do not help redirect.']},
-  {id:'bib-auth',g:'attention',l:'Biblical/spiritual authority display',
-   w:'References biblical knowledge or spiritual wisdom accumulated through suffering and age. The humility wrapper makes the authority claim unchallengeable.',
-   ex:['"I have learned so much in my old age. God has shown me things through everything I have been through."',
-       '"The Bible says... and I understand that now after all I\'ve experienced."',
-       '"When you get to my age and have suffered like I have, you understand things differently."'],
-   int:'The suffering is real. The deployment of it as authority is strategic.',
-   sc:['"Mm." (receive it without expanding it)']},
-  {id:'cvt-pos',g:'hierarchy',l:'Covert positioning',
-   w:'Subtle hierarchy plays with plausible deniability. The move serves her positioning while leaving nothing to be held accountable for if named.',
-   ex:['Offers help you did not ask for in a way that implies you needed it.',
-       'Comments on something in your home as "interesting" with a tone that means "wrong."',
-       'Directs a question to someone else about something you are clearly the expert on.'],
-   int:'Name it internally. You do not have to respond to the surface. Respond to your own clarity.',
-   sc:['Stay warm. Stay unbothered. No verbal response required.']},
-  {id:'hie-res',g:'hierarchy',l:'Hierarchy reset via warmth',
-   w:'Uses affectionate language to reestablish herself as the senior person in the room. The warmth is real but administered from above.',
-   ex:['"Thanks kids." After a dinner you cooked in your home.',
-       '"You two are doing so well." Said to a married couple in their own house.',
-       '"Look at you all grown up." Said to a 35-year-old professional.'],
-   int:'The warmth is real. The hierarchy move inside it is also real.',
-   sc:['"Mmhm." (neutral acknowledgment)','Smile and redirect.']},
-  {id:'ass-ign',g:'hierarchy',l:'Assumed ignorance projection',
-   w:'Explains things as if it is everyone\'s first time hearing it because she did not know it, so no one could have known it before her.',
-   ex:['Explains a basic cooking technique to a room of trained adults.',
-       'Informs everyone how to drive a route they have all driven a hundred times.',
-       'Describes a well-known historical fact as if she just discovered it.'],
-   int:'Intellectual authority move dressed as sharing. You do not have to perform surprise.',
-   sc:['"Yeah, I\'ve come across that." (matter of fact, no elaboration)']},
-  {id:'rap-sta',g:'hierarchy',l:'Rapid status filing',
-   w:'Establishes credentials or background early when meeting someone new. Files her position before the relationship can form organically.',
-   ex:['Within five minutes: where she is from, her profession, her hardships, her accomplishments.',
-       'Introduces herself by her credentials before her name.',
-       'Immediately finds a way to establish she has more experience than the new person.'],
-   int:'She needs the frame set before impressions form. That urgency is information.',
-   sc:['No response required. Observe the sequence.']},
-  {id:'sta-ass',g:'hierarchy',l:'Status assessment questioning',
-   w:'Asks new people questions that are really hierarchy calculations disguised as interest. She is sorting, not connecting.',
-   ex:['Job, family status, education, and background delivered quickly in early conversation.',
-       '"And what do you do?" asked with a particular attentiveness to the answer.',
-       'Warmth visibly adjusts after the answer - more or less depending on the rank.'],
-   int:'Watch what shifts in her treatment of the person once the assessment lands.',
-   sc:['Observe. Note what changes after she gets her data.']},
-  {id:'cul-aut',g:'hierarchy',l:'Cultural authority positioning',
-   w:'Positions herself as the most authentic cultural or linguistic authority when relevant. With AA she apologizes for Spanish. With new people she wields it.',
-   ex:['Corrects a native speaker\'s pronunciation in front of others.',
-       'References "authentic" regional knowledge to override someone else\'s experience.',
-       'Uses language fluency as a credential to establish superiority in a group.'],
-   int:'Same tool, different function depending on who gives her more leverage.',
-   sc:['Speak Spanish naturally if it arises. You do not need to perform or hide fluency.']},
-  {id:'uns-adv',g:'hierarchy',l:'Unsolicited advisory',
-   w:'Volunteers opinions about your home or choices framed as helpful observation. An authority claim dressed as generosity.',
-   ex:['"You know what would be really good here is..." in a space that is working fine.',
-       '"Have you tried doing it this way?" about a method you have used successfully for years.',
-       'Rearranges something in your kitchen while "just helping."'],
-   int:'Your home is working fine. You did not ask.',
-   sc:['"Mm, I\'ll keep that in mind." (warm, noncommittal, closed)','"We like it this way."']},
-  {id:'rhe-q',g:'hierarchy',l:'Rhetorical questioning',
-   w:'Asks questions she already knows the answer to. Used to test, display knowledge, or set up a correction.',
-   ex:['Asks how you made something she watched you make start to finish.',
-       '"Did you know that..." followed by information she clearly expects to be new.',
-       'Asks about something she was told directly two days ago.'],
-   int:'She is not asking. She is positioning. Answer plainly without over-explaining.',
-   sc:['"Yes." / "No." / "Mm-hmm." (brief, warm, closed)']},
-  {id:'dia-aut',g:'hierarchy',l:'Diagnostic authority',
-   w:'Declares how someone feels or why, without confirmation. Supplies the cause and the diagnosis simultaneously, often implicating others in the same breath.',
-   ex:['"He\'s not feeling well because of the butter." (2 tablespoons of butter.)',
-       '"She\'s tired because you kept her up." Said to a partner without asking either person.',
-       '"He\'s in a bad mood because of what happened earlier." Said before he has spoken a word.'],
-   int:'She owns his inner experience and assigns cause without evidence.',
-   sc:['No response required. Do not defend the butter.']},
-  {id:'crd-red',g:'credit',l:'Credit redirection',
-   w:'When AA receives direct praise she finds the seam to redirect it. Amplifies someone else\'s contribution without lying but by editorializing.',
-   ex:['Guest praises the food. She immediately highlights the one dish someone else contributed.',
-       'Employee gets complimented. Manager finds a way to mention the team\'s support.',
-       'Child wins award. Parent redirects to "all the help they had."'],
-   int:'HE gave you the credit. You do not need her co-sign.',
-   sc:['Receive the original compliment fully. Do not look to her for validation.']},
-  {id:'inf-app',g:'credit',l:'Information appropriation',
-   w:'Retells your or HM\'s information as if she originated it. The source quietly shifts to her in the retelling.',
-   ex:['You told her a fact last week. She shares it with others this week as her discovery.',
-       'A recommendation you made gets retold as hers to a new audience.',
-       'HM\'s story about his own life gets retold by her as if she is the narrator of his experience.'],
-   int:'You know where it came from. That is enough.',
-   sc:['Do not correct publicly. Log it.']},
-  {id:'nar-rev',g:'credit',l:'Narrative revision',
-   w:'Reframes outcomes she did not get so it sounds like the result was her preference all along.',
-   ex:['A plan she pushed for did not happen. Later: "I actually thought the other way was better anyway."',
-       'She did not get invited somewhere. Later: "I would not have wanted to go to that anyway."',
-       'An idea she opposed succeeds. Later: "I always thought that could work."'],
-   int:'You know what happened. The revision does not change it.',
-   sc:['Hold the truth internally. Do not correct the record publicly.']},
-  {id:'cur-nar',g:'credit',l:'Curated family narrative',
-   w:'Presents the family in an image-managed way to new people. The story is controlled before they can form their own impressions.',
-   ex:['Tells a new person about the family\'s closeness, accomplishments, and values with herself centrally positioned.',
-       'Edits out conflict or struggle when describing the family to outsiders.',
-       'Introduces family members in ways that reflect well on her specifically.'],
-   int:'New people get the version she needs them to have. You know the fuller picture and you are not obligated to correct it publicly.',
-   sc:['You do not have to manage or correct the narrative publicly.']},
-  {id:'bck-hnd',g:'credit',l:'Backhanded compliment',
-   w:'Praise with a quiet qualifier buried in it. The compliment is real enough to accept. The qualifier does damage underneath.',
-   ex:['"I didn\'t know you could cook like this."',
-       '"You look so good - I almost didn\'t recognize you."',
-       '"This is actually really impressive for someone your age."'],
-   int:'You can receive the compliment and release the qualifier.',
-   sc:['"Thank you." (receive only the compliment, full stop)']},
-  {id:'cmp-dis',g:'credit',l:'Comparative dismissal',
-   w:'References how things were done better or differently elsewhere when something does not go her way.',
-   ex:['"In Mexico City we always did it this way..."',
-       '"My mother never would have done it like that."',
-       '"Where I\'m from this is considered the proper way."'],
-   int:'A verdict dressed as information.',
-   sc:['"Mm, interesting." (flat, warm, noncommittal)','"We like how we do it."']},
-  {id:'exc-app',g:'credit',l:'Excitement appropriation',
-   w:'When someone else is excited, she cuts them off, briefly narrates their excitement as if she shares it, then pivots to herself as the main subject.',
-   ex:['HE shares good news. She says "yes yes I know I love that" then talks about herself for three minutes.',
-       'A guest shares an achievement. She immediately relates a similar achievement of her own.',
-       'Someone describes a great experience. She interrupts to describe a similar one she had.'],
-   int:'His excitement is real. She borrows it and reroutes it before he can finish having it. You do not have to fill the space she creates when she does this.',
-   sc:['Let the excited person finish. Do not fill space she creates.']},
-  {id:'wrm-dis',g:'rejection',l:'Warmth/distance switch',
-   w:'Alternates closeness and coldness unpredictably. The warmth is never stable enough to fully trust. The distance is never speakable.',
-   ex:['Warm and engaged at dinner. Noticeably cooler the next morning with no apparent trigger.',
-       'Hugs you warmly on arrival. Barely acknowledges you two hours later.',
-       'Initiates closeness. Then withdraws without explanation and acts as if nothing changed.'],
-   int:'The warmth is real when it is there. So is the distance. Both are her regulation tools and neither is your responsibility to chase or fix. You can receive the warmth without depending on it.',
-   sc:['Match warmth when present. Do not pursue it when it withdraws.']},
-  {id:'wgt-sil',g:'rejection',l:'Weighted silence',
-   w:'Goes quiet in a way that fills the room after not getting her way. The tell is whether it triggers someone else to repair.',
-   ex:['A plan she wanted does not happen. She says nothing but the temperature in the room drops.',
-       'Someone disagrees with her. She does not respond but her presence shifts noticeably.',
-       'A decision is made without her input. She becomes very quiet and still.'],
-   int:'The silence is designed to be felt by everyone in the room. You will feel it. That is the point. You are not the target and not the repair person. Watch who moves and what it costs them.',
-   sc:['Do not fill the silence. Stay even.']},
-  {id:'sub-pen',g:'rejection',l:'Subtle penalty withdrawal',
-   w:'Becomes slightly less warm, slightly less engaged after not getting her way. A quiet consequence for whoever crossed her.',
-   ex:['After being declined on something, she becomes measurably less present for the rest of the evening.',
-       'Someone expresses an opinion she disagrees with. Her engagement drops a noticeable degree.',
-       'A request is ignored. She responds to everyone else in the room but that person less.'],
-   int:'The withdrawal is designed to create anxiety around her approval. You do not need it.',
-   sc:['Stay even. Do not chase the warmth back.']},
-  {id:'ref-rec',g:'rejection',l:'Refusal to receive',
-   w:'Consistently declines what AA specifically offers while sourcing or accepting the same things from elsewhere. Avoids being placed in a position of gratitude toward AA in AA\'s own home.',
-   ex:['Declines offered fruit. Buys a large quantity of the same fruit independently. Declines the prepared fruit dessert.',
-       'Refuses offered coffee. Brought her own French press and makes her own.',
-       'Declines a seat at the table you set. Rearranges to sit where she prefers.'],
-   int:'She did not want the thing. She wanted to not receive it from you.',
-   sc:['Offer once, warmly. Let it go after.']},
-  {id:'bod-sur',g:'rejection',l:'Body surveillance',
-   w:'Comments on or monitors what AA eats, drinks, or how much. Makes you self-conscious at your own table in your own home.',
-   ex:['"Oh you\'re having another one?" said with a light tone.',
-       '"Are you sure you want that?" about food you are eating in your own kitchen.',
-       'A noticeable glance at your plate followed by a comment about portions.'],
-   int:'Your body, your table, your choices.',
-   sc:['"I\'m good, thanks." (warm, closed)']},
-  {id:'exc-spa',g:'rejection',l:'Exclusionary Spanish',
-   w:'Speaks Spanish to create a moment of exclusion first, then performs the apology. The apology is the second half of the same move.',
-   ex:['Says something clearly relevant to the room in Spanish. Then: "Sorry, I don\'t know how to say that in English."',
-       'Has a side conversation in Spanish in a mixed group then performs regret about it.',
-       'Uses the language shift as a way to signal a boundary before apologizing for it.'],
-   int:'The exclusion came first. The apology is the cover.',
-   sc:['Respond in Spanish if you choose. Or let it go.']},
-  {id:'spa-apo',g:'rejection',l:'Spanish apology',
-   w:'After six years of correction, still apologizes for speaking Spanish to AA. The apology is not about uncertainty - it restates a version of AA she prefers.',
-   ex:['"Sorry Abri, I said that in Spanish - I don\'t know how to say all that in English."',
-       'Six years of the same apology after six years of the same correction.',
-       'Apologizes for a language AA has already confirmed she understands fluently.'],
-   int:'This is a narrative she maintains, not a memory lapse.',
-   sc:['"All good." (flat, warm, move on)','"I understood." (direct, no elaboration)']},
-  {id:'str-omi',g:'rejection',l:'Strategic omission',
-   w:'Goes noticeably quiet or skirts around a specific topic or person when they are introduced into conversation.',
-   ex:['AA mentions her mom. AN goes quiet or quickly redirects.',
-       'A topic that positions AA favorably comes up. She changes the subject.',
-       'Someone brings up AA\'s accomplishments. She finds a reason to shift the focus.'],
-   int:'The silence around certain people or topics is information.',
-   sc:['You can mention your mom as often as you want. Watch what she does with it.']},
-  {id:'non-apo',g:'deflection',l:'Non-apology apology',
-   w:'"I\'m sorry you felt that way." The form of an apology without the substance. Responsibility quietly transferred outward.',
-   ex:['"I\'m sorry, I was just trying to help."',
-       '"I\'m sorry you took it that way - I didn\'t mean anything by it."',
-       '"I\'m sorry if I upset you." (No acknowledgment of what actually happened.)'],
-   int:'A real apology contains accountability. This contains an explanation.',
-   sc:['"Mm." (receive without validating it as a full apology)','Do not say it\'s okay if it was not okay.']},
-  {id:'his-gri',g:'deflection',l:'Historical grievance deflection',
-   w:'Surfaces an unrelated past event when something in the present does not go her way.',
-   ex:['Current issue comes up. Suddenly a thing from two years ago is on the table.',
-       'A reasonable request is made. She responds with something that happened last Christmas.',
-       'A direct question is asked. The answer involves relitigating something from a different year.'],
-   int:'The deflection puts everyone on defense. You do not have to litigate the past.',
-   sc:['"That\'s a separate conversation." (calm, warm, firm)','Or do not engage the historical thread at all. Silence is a complete answer.']},
-  {id:'nvb-edi',g:'deflection',l:'Nonverbal editorializing',
-   w:'A breath, a small sound, a quiet expression that communicates displeasure without being speakable.',
-   ex:['A decision is made she did not want. She says nothing but exhales audibly.',
-       'Something is said she disagrees with. A small "mm" escapes.',
-       'An outcome she did not want is announced. Her face does something brief that everyone catches.'],
-   int:'You heard it. So did everyone. She knows that. That is why it works.',
-   sc:['Do not respond to the sound. Continue as if it was not there.']},
-  {id:'cvt-sur',g:'deflection',l:'Covert surveillance glance',
-   w:'When she did not originate an idea she goes quiet, then glances at you when she thinks you cannot see. She is gathering data and recalibrating.',
-   ex:['Someone else\'s idea gets a strong reaction. She goes quiet. Then the glance toward you.',
-       'You say something that lands well. A quick look to see how you received the response.',
-       'A plan proceeds without her input. She observes silently and tracks reactions.'],
-   int:'The silence is not disengagement. She is highly active behind it. Tracking. Calculating. Your job is to stay natural and not signal that you caught it. The glance is information about how closely she is monitoring the room.',
-   sc:['Stay natural. Do not signal you caught it. Log it.']},
-  {id:'img-rep',g:'deflection',l:'Image repair via generosity',
-   w:'Overcorrects into visible warmth or generosity immediately after showing displeasure. Overwrites the moment so the room\'s last memory is warmth.',
-   ex:['She was clearly off for twenty minutes. Then: sudden warmth, a generous gesture.',
-       'After a tense moment she appears with food or a gift.',
-       'Following visible irritation she becomes performatively kind to the exact person she was cold toward.'],
-   int:'The generosity is for the room\'s perception of her, not for you.',
-   sc:['Receive it warmly. Do not match the elevated energy. Stay even.']},
-  {id:'he-tri',g:'deflection',l:'HE triangulation',
-   w:'Pulls HE in as an indirect witness or validator when she does not get her way.',
-   ex:['Something does not go her way. She makes a comment to HE that recruits him as witness.',
-       'A disagreement happens. She tells HE about it in a way that positions her favorably.',
-       'She gives HE a look that communicates her displeasure without saying anything to the room.'],
-   int:'This is not your conflict to manage.',
-   sc:['Do not insert yourself. Let HE navigate his own lane.']},
-  {id:'prf-acc',g:'deflection',l:'Performed acceptance',
-   w:'"No no it\'s okay." Slightly too polished to be genuine. Everyone knows it but nobody can name it.',
-   ex:['"No really, it\'s fine." Delivered with a smile that does not reach.',
-       '"Of course, whatever you think is best." Said in a tone that communicates the opposite.',
-       '"I don\'t mind at all." Followed immediately by weighted silence.'],
-   int:'You feel the unresolved tension. That is real. You do not have to chase or resolve it.',
-   sc:['Take the acceptance at face value publicly. Do not work to make it genuine.']},
-  {id:'ovc-apo',g:'deflection',l:'Overconsumption with performative apology',
-   w:'Uses all of something in AA\'s home then looks at AA and apologizes for it. The apology maintains deniability but the action already happened.',
-   ex:['Uses the last of the dish soap, makes eye contact, apologizes with a small laugh.',
-       'Finishes the last of a food item from the fridge and then draws attention to the apology.',
-       'Takes the last of something from a shared space and performs regret afterward.'],
-   int:'She said sorry so nothing can be held. But she used it all. Both things are true.',
-   sc:['Accept the apology warmly. Replace the item at your own pace.']},
-  {id:'hm-arc',g:'hm',l:'Relational archaeology',
-   w:'Uses inside references, nicknames, or shared language with HM in front of AA. Surfaces the pre-AA HM to remind everyone she was there first.',
-   ex:['A nickname from childhood delivered to HM in front of AA.',
-       'A shared reference that predates AA, introduced casually into conversation.',
-       '"Remember when you used to..." stories told directly to HM with AA present.'],
-   int:'She was there first. That is true. It does not diminish where he is now or who he chose.',
-   sc:['You do not need to insert yourself. You are already the primary relationship.']},
-  {id:'hm-car',g:'hm',l:'Caregiving boundary erosion',
-   w:'Manages HM\'s physical needs or comfort during visits as if that role is still hers.',
-   ex:['"Hijo you need to eat more." Handling his plate without being asked.',
-       '"You look tired, you need to rest." Said to a grown married man.',
-       'Brings him food, adjusts his blanket, comments on his health unprompted.'],
-   int:'He has a wife. She has a son. Those are different roles.',
-   sc:['"I\'ve got it." (warm, firm, no explanation)']},
-  {id:'hm-phy',g:'hm',l:'Physical reclamation',
-   w:'Touches HM in ways that linger or happen more frequently than the context calls for.',
-   ex:['Fixes his collar, touches his arm repeatedly, smooths his hair.',
-       'Extended hug hello that is notably longer than with others.',
-       'Finds reasons to make physical contact throughout the visit.'],
-   int:'You felt it because it was there.',
-   sc:['No response required. Log frequency.']},
-  {id:'hm-rol',g:'hm',l:'Role displacement',
-   w:'Steps into AA\'s role as HM\'s wife by doing things for him that would normally be hers to do.',
-   ex:['The French press in AA\'s kitchen. Cooking something specifically for him.',
-       'Handling something domestic for him that AA would normally handle.',
-       'Bringing things for him that are AA\'s role to provide in their home.'],
-   int:'She brought her apparatus into your space. That is the whole sentence.',
-   sc:['"I\'ve got it." (warm, calm, step in)']},
-  {id:'hm-acc',g:'hm',l:'Access control',
-   w:'Manages who gets access to HM and when. Delivers invitations to his own spaces as if she controls entry.',
-   ex:['Tells AA she can come to HM\'s own workplace - framed as checking if she would enjoy it.',
-       'Plans around HM without including AA and presents the inclusion as optional.',
-       'Monopolizes HM\'s time so that others - including HE - get very little of it.'],
-   int:'That is his job. You are his wife. The invitation should not have come from her.',
-   sc:['You can insert yourself into plans that involve your husband.']},
-  {id:'hm-fin',g:'hm',l:'Financial disclosure as intimacy',
-   w:'Shares financial details with HM in a way that creates a private channel bypassing AA.',
-   ex:['Long explanation of her Mexican social security and life insurance directed at HM specifically.',
-       'Discusses her savings and retirement plans with him as if AA is not present.',
-       'Shares financial concerns or details in a context that excludes AA from the conversation.'],
-   int:'This creates a loyalty tension. He holds information about her that you may not.',
-   sc:['Ask HM later privately. "What was that about?" (neutral, curious)']},
-  {id:'hm-gra',g:'hm',l:'Gratitude as tethering',
-   w:'Expresses gratitude in a way that converts HM\'s accomplishments into something that exists in service of his parents.',
-   ex:['"Not a lot of parents have a son who knows so much. Me and HE have improved so much because of you."',
-       '"Everything you\'ve become has been such a gift to us."',
-       '"We are so lucky to have you. I don\'t know where we would be."'],
-   int:'His growth belongs to him. Gratitude that routes it back to her is still a tether.',
-   sc:['No response required. Let HM receive it and watch how he does.']},
-  {id:'hm-sac',g:'hm',l:'Sacrifice ledger',
-   w:'Brings up sacrifices she made for HM unprompted and casually. A running emotional tab of what he owes her.',
-   ex:['"I gave up so much for you boys." Woven into a casual conversation.',
-       '"Everything I did, I did for this family." Said with no apparent prompt.',
-       '"You have no idea what I went through to give you the life you had."'],
-   int:'The debt is never named directly so it can never be paid or addressed. That is by design.',
-   sc:['Do not engage the ledger. Do not validate or challenge it.']},
-  {id:'hm-apr',g:'hm',l:'Approval seeking as ritual',
-   w:'Seeks HM\'s opinion on small things she does not genuinely need input on. Keeps him in the position of being who she turns to.',
-   ex:['"Hijo what do you think I should order?" for something she has eaten a hundred times.',
-       '"Does this look okay?" asked specifically to HM.',
-       '"What do you think I should do about this?" about a decision she has clearly already made.'],
-   int:'The ask is not about the decision. It is about maintaining the dynamic.',
-   sc:['You can offer your own input if you want.']},
-  {id:'hm-dsg',g:'hm',l:'Distance guilt',
-   w:'Frames missing HM in a way that makes him feel responsible for her emotional pain around the distance.',
-   ex:['"It\'s just so hard when you\'re not around. I don\'t know how I manage."',
-       '"I count the days until I see you. It\'s been so hard."',
-       '"I don\'t say anything but it really affects me when you\'re far."'],
-   int:'He grew up. He did not abandon her. The framing does not make that distinction.',
-   sc:['Do not validate the guilt frame. Do not challenge it publicly.']},
-  {id:'hm-prx',g:'hm',l:'Proxy communication',
-   w:'Says things to HM or HE that are clearly meant for AA to hear. Delivers the message and maintains full deniability.',
-   ex:['"Hijo make sure you\'re taking care of yourself." Said while AA is in earshot in her own well-run home.',
-       '"You should make sure you\'re eating well." Said to HM as AA stands nearby.',
-       '"I hope you\'re being appreciated." Said in a context where AA will hear it.'],
-   int:'You are the actual audience. You do not have to respond as if the message was not for you.',
-   sc:['You can respond to the room directly. Or let it go and log it.']},
-  {id:'hm-dep',g:'hm',l:'Departure extraction',
-   w:'Goodbyes become extended emotional productions requiring HM to comfort and reassure her before she can leave.',
-   ex:['A goodbye that takes 30 minutes, tearful, with one more thing she needed to say.',
-       'Begins to leave then returns multiple times with small items to address.',
-       'Cries at goodbye in a way that requires HM to hold her and reassure her before she can go.'],
-   int:'The goodbye is an extension of everything that came before it. She needs HM to tend to her exit the same way she needed him throughout. Your role in the departure is not to compete with it. Say your goodbye early and let the rest happen without you.',
-   sc:['Say your goodbye warmly and early. Let the extraction happen without your participation.']},
-  {id:'hm-prp',g:'hm',l:'HM as prop',
-   w:'Displays HM more prominently when new people are present. His presence becomes part of her presentation.',
-   ex:['Stands closer to him, references him more, touches him more when strangers are watching.',
-       'Introduces him in a way that positions his accomplishments as hers to be proud of.',
-       'Uses him as a credential in conversation with new people.'],
-   int:'He is being used as a credential in front of new audiences.',
-   sc:['No response required. Observe.']},
-  {id:'hm-chi',g:'hm',l:'Childhood centralization',
-   w:'Retells HM\'s childhood stories directly to him in front of AA, positioning herself as the protagonist of his origin story.',
-   ex:['Tells a story about HM\'s childhood directly to HM while AA is in the room.',
-       '"Remember when you were little and..." told as if AA is not present.',
-       'Describes HM\'s formative experiences in a way that makes her the central character.'],
-   int:'His origin story is real. His current story is yours. Both can be true.',
-   sc:['Listen warmly. You do not have to compete with his history.']},
-  {id:'hm-svl',g:'hm',l:'Strategic vulnerability',
-   w:'Physical or emotional distress that flares at notable moments, particularly when attention is directed elsewhere.',
-   ex:['AA and HM are having a good moment. Suddenly she is not feeling well.',
-       'A plan proceeds that does not center her. She becomes emotionally overwhelmed.',
-       'HM gives AA a compliment. She mentions a pain or problem shortly after.'],
-   int:'The timing is the data, not the symptom.',
-   sc:['Let others respond. Keep your energy steady.']},
-  {id:'he-sen',g:'he',l:'Sentence completion',
-   w:'Finishes HE\'s sentences or arrives at his point before he does. After decades she has his patterns mapped.',
-   ex:['HE begins a thought. She completes it before he gets there, often incorrectly.',
-       '"What HE means is..." said before HE has finished explaining.',
-       'Speaks over the end of his sentences consistently.'],
-   int:'She owns his thoughts before he finishes having them.',
-   sc:['No response required. Observe.']},
-  {id:'he-def',g:'he',l:'Deference check',
-   w:'HE automatically looks to AN before responding or deciding, even on small things.',
-   ex:['Someone asks HE a direct question. He glances at AN before answering.',
-       'A decision is offered to HE. He looks at AN before accepting.',
-       'HE begins to form an opinion then seems to edit it after making eye contact with her.'],
-   int:'This is what decades of conditioning produces. He checks with her before he knows what he thinks. That is not a character flaw in him. It is the outcome of a system that was built around her needs over a very long time.',
-   sc:['You can direct questions to HE directly and wait for his answer.']},
-  {id:'he-his',g:'he',l:'Shared history revisionism',
-   w:'Narrates their shared history in a way that centers herself as the one who held everything together.',
-   ex:['"I carried this family. I don\'t know where we would be without everything I did."',
-       '"HE was there but I was the one who kept things going."',
-       '"Everything that worked out, I made sure of."'],
-   int:'She was the breadwinner. That is true. The way a true thing is deployed strategically is still control.',
-   sc:['No response required.']},
-  {id:'he-fin',g:'he',l:'Financial authority display',
-   w:'References money or financial decisions in ways that subtly remind HE of who holds the resources.',
-   ex:['Discusses her SSA benefits and finances in a context that positions her as the economic center.',
-       'References her income or benefits when HE is present in a way that marks the hierarchy.',
-       'Makes financial decisions aloud and presents them as settled without consulting HE.'],
-   int:'His legal status and financial dependency are real structural facts in this relationship.',
-   sc:['Observe. Note HE\'s response when it happens.']},
-  {id:'he-ppg',g:'he',l:'Public/private warmth gap',
-   w:'Treats HE warmly in front of others but shifts noticeably in tone in lower-stakes moments.',
-   ex:['Warm and affectionate when guests are present. Cooler, more directive when it is just the family.',
-       'Public displays of affection toward HE that do not match the private dynamic.',
-       'The warmth visibly performs for an audience and reduces when the audience leaves.'],
-   int:'The public warmth is image management. The baseline is what happens when the audience reduces.',
-   sc:['Observe the gap. That is the data.']},
-  {id:'he-ctl',g:'he',l:'Full control repertoire',
-   w:'Has every response available when HE pushes back: correction most common, then silence, performed hurt, or escalation.',
-   ex:['HE contradicts something. She corrects him smoothly in front of others.',
-       'HE disagrees. She goes quiet in a way that fills the room.',
-       'HE holds a position. She becomes visibly hurt until he backs down.'],
-   int:'He has learned not to push back because every option produces a cost.',
-   sc:['Observe which response she uses and what triggered it.']},
-  {id:'he-jok',g:'he',l:'Jokes at HE\'s expense',
-   w:'Makes jokes at HE\'s expense framed as affectionate teasing. He laughs along because that is the script.',
-   ex:['"HE always does this - he just can\'t help it." (laughs) HE laughs too.',
-       'A story about HE\'s limitations told as a fond anecdote while he sits there.',
-       'His ADHD moments narrated publicly as charming but in a way that reduces him.'],
-   int:'He laughs along because the script requires it. Watching someone you care about get reduced in public and have no clean way to respond is its own kind of difficult. You do not have to co-sign the joke and you do not have to make it worse by drawing attention to it.',
-   sc:['Do not co-sign the joke. Neutral.']},
-  {id:'he-emi',g:'he',l:'Emotional interpretation',
-   w:'Declares how HE feels or explains his reactions to others before he can speak for himself.',
-   ex:['"He\'s just tired." Said before HE has indicated anything about his state.',
-       '"He doesn\'t really like that, he just won\'t say so." Said while HE is present.',
-       '"What he means is..." said before HE has finished speaking.'],
-   int:'She has narrated his feelings for so long that sometimes he does not even try to speak first. Watching that happen is uncomfortable. You can offer him space to speak for himself without making it a confrontation.',
-   sc:['You can ask HE directly what he thinks or feels.']},
-  {id:'he-spk',g:'he',l:'Speaking for HE',
-   w:'Answers questions directed at HE before he can respond.',
-   ex:['Someone asks HE something directly. AN answers first.',
-       'A question hangs in the air waiting for HE. She answers it.',
-       'HE opens his mouth to respond. She speaks before he finishes the first word.'],
-   int:'He is being mediated. She controls what he outputs to the room.',
-   sc:['You can direct a follow-up to HE specifically. "What do you think, HE?"']},
-  {id:'he-cor',g:'he',l:'Publicly correcting HE',
-   w:'Corrects HE\'s stories, facts, or word choices in front of others.',
-   ex:['HE is telling a story. She interrupts: "No, it wasn\'t like that. It was..."',
-       '"That\'s not right." Said to HE while he is mid-sentence in front of guests.',
-       'A small factual detail he gets wrong gets corrected publicly and in full.'],
-   int:'He gets smaller every time this happens in public and there is very little he can do about it in the moment without making it worse. You do not have to fix it. Noting it is enough.',
-   sc:['No response required. Observe and note frequency.']},
-  {id:'he-dec',g:'he',l:'Deciding for HE',
-   w:'States HE\'s preferences or needs as fact without consulting him.',
-   ex:['"He doesn\'t want that." Said before HE has been asked.',
-       '"He\'ll have the same as me." Said to a server or host.',
-       '"He needs to go to bed early." Said as if HE is not present to make that call.'],
-   int:'He has been decided for so long that sometimes he does not notice it is happening. You can ask him directly what he wants in a way that opens space without turning it into a confrontation with her.',
-   sc:['You can ask HE directly what he wants.']},
-  {id:'he-val',g:'he',l:'HE as validator',
-   w:'Directs stories or opinions specifically at HE, waiting for his visible agreement before moving on.',
-   ex:['She tells a story, looking at HE, pausing when she needs a nod or laugh.',
-       'Makes eye contact with HE specifically after statements that need confirmation.',
-       'Looks to HE for a reaction before deciding how to continue.'],
-   int:'HM has developed some distance from this role. She shifted the dependency to HE.',
-   sc:['Observe how HE responds. Watch the cost of withholding validation.']},
-  {id:'he-nar',g:'he',l:'Narrating HE as subject',
-   w:'Talks about HE to others while he is present, making him a character in her story.',
-   ex:['"HE is like this - he always does that - you know how he is." Said while HE is right there.',
-       'Describes HE\'s habits, quirks, and history to guests as if he cannot speak for himself.',
-       'Uses HE as an anecdote while he sits in the room.'],
-   int:'He gets objectified in conversation while present to speak for himself.',
-   sc:['You can include HE directly. "HE, is that how you see it?"']},
-  {id:'he-con',g:'he',l:'Constrained self in her presence',
-   w:'HE is noticeably more relaxed, more himself, more animated when AN is not in the room or not focused on him.',
-   ex:['The espresso love. The Jinx enthusiasm. The watch talk. Fuller when AN\'s attention is elsewhere.',
-       'A different laugh. More stories. More presence. When she leaves the room.',
-       'Eye contact with others increases. Body language opens. Voice relaxes.'],
-   int:'The real HE is intact. He just does not get much room to occupy himself around her.',
-   sc:['Give HE room when she is not watching.']},
-  {id:'np-chr',g:'new',l:'Elevated charm performance',
-   w:'New people get the best version of the performance. With AA she has stopped performing because the baseline is established.',
-   ex:['Notably warmer, funnier, more engaged with a stranger than her baseline with AA.',
-       'The energy and effort visible with new people is not present in the existing relationships.',
-       'Stories she would not tell in the regular group come out easily for new people.'],
-   int:'The contrast between what new people see and what you see is information.',
-   sc:['Stay your baseline warm self.']},
-  {id:'np-cal',g:'new',l:'Performance calibration',
-   w:'Visibly amplifies what is landing with a new person. Tracks approval and turns toward whatever produced it.',
-   ex:['A new person laughs at something. She immediately does more of whatever caused it.',
-       'Warmth increases in real time as positive signals come back from the new person.',
-       'She notices what the new person responds to and leans into it visibly.'],
-   int:'This is narcissistic supply acquisition. You can watch the mechanism in real time.',
-   sc:['Observe without engaging.']},
-  {id:'np-par',g:'new',l:'Parallel provisioning',
-   w:'Declines what AA offers, then acquires the same thing independently. Avoids being in a position of gratitude toward AA.',
-   ex:['Declines the fruit. Buys a large quantity of the same fruit.',
-       'Refuses the offered coffee. Brought her own apparatus and makes her own.',
-       'Declines the offered seat. Rearranges to sit where she prefers independently.'],
-   int:'She did not want the thing. She wanted to not receive it from you.',
-   sc:['Offer once, warmly. Let it go after.']},
-  {id:'np-und',g:'new',l:'Subtle undermining via humor',
-   w:'Makes subtly undermining comments about AA to new people framed as jokes.',
-   ex:['A light comment about AA that gets a small laugh but leaves a quiet impression.',
-       'A "teasing" remark about AA said in a context where new people have no history to push back.',
-       'An observation about AA framed as fond but landing as a reduction.'],
-   int:'Log the specific wording when possible. The subtlety is the point.',
-   sc:['"Ha." (acknowledge without co-signing)','Or redirect naturally.']}
+
+// ============================================================
+// ATTENTION & CENTRALITY
+// ============================================================
+
+{id:'p-startle',g:'attention',l:'Performative startle',
+w:'A scream or startled reaction disproportionate to the actual stimulus. The room reorganizes around her in under a second -- everyone stops, orients, tends.',
+ex:'Someone walks into the room normally. She screams. Everyone rushes over.',
+int:'Genuine startle scales with actual threat. This does not. You are not required to tend to it.',
+sc:['Let others respond. Keep your energy level.'],
+correction:'Do not rush toward her. Keep doing what you were doing. Let the room reorganize without you. Over time your non-response removes the reinforcement.'},
+
+{id:'v-self',g:'attention',l:'Vulnerable self-presentation',
+w:'Strategic self-deprecation that bids for centrality. The self-criticism is the vehicle. The destination is the room reorganizing around her. Includes ambient self-deprecation framed as humility and self-talk that waits for the room to contradict it.',
+ex:'Mine is probably not as good as yours -- can you taste it and tell me what is wrong? Also captures: sighing about how she is getting old, laughing about how she always does something wrong.',
+int:'You are not obligated to be her evaluator. The humility is performed, not felt.',
+sc:['"I\'m sure it\'s good." (warm, closed)','"I\'ll have to try it another time."'],
+correction:'One warm neutral response is enough. Do not expand into the invitation. Do not contradict the self-deprecation with reassurance -- that is the response she is looking for.'},
+
+{id:'cap-aud',g:'attention',l:'Captive audience enforcement',
+w:'Delivers monologues and punishes interruption with guilt. Also captures the unfunny funny story -- narrating something as funny that is not, requiring the room to perform amusement as a compliance test. If no one laughs she registers the room as unengaged.',
+ex:'She is mid-story. Someone adds context. "I guess nobody wants to hear what I have to say." Also: she tells a story about a minor inconvenience, laughing throughout, and waits for the room to laugh.',
+int:'This is not a conversation. It is a performance with a required audience. The unfunny story is a social compliance test. You are not required to perform.',
+sc:['Let her finish. Do not fill the silence after. Do not over-validate.','For unfunny stories: smile politely. Do not force a laugh. Do not explain why it was not funny.'],
+correction:'Do not interrupt. Do not perform the required response beyond a minimal acknowledgment. One "mm" is enough. Do not escalate your engagement to match her expectation.',
+foldNote:'Also captures: unfunny funny story -- narrating something as funny that is not, requiring the room to perform amusement.'},
+
+{id:'att-rec',g:'attention',l:'Attention reclamation',
+w:'Redirects focus back to herself when someone else is receiving strong positive engagement from the room.',
+ex:'A guest is telling a great story. She finds a reason to speak, introduce a topic, or need something.',
+int:'She can share the room up to a threshold. Watch where that threshold is.',
+sc:['Let the other person\'s moment land fully. Do not help redirect.'],
+correction:'Do not assist the redirect. Stay engaged with the person who was speaking. The redirect only works if the room follows it.'},
+
+{id:'con-int',g:'attention',l:'Connection interruption',
+w:'Inserts herself physically or verbally into moments when AA and HM are most connected. Responsive, not random -- she tracks the temperature and moves when it peaks.',
+ex:'AA and HM are laughing together. She calls his name, needs something, introduces a topic.',
+int:'The interruption tells you how strong your bond reads to others. Finish the moment before orienting to her.',
+sc:['Slow your response time. Do not abandon the connection immediately.'],
+correction:'Finish your moment with HM before turning toward her. A two-second delay is enough. Over time this signals that your connection is not interruptible on demand.'},
+
+{id:'bib-auth',g:'attention',l:'Biblical/spiritual authority display',
+w:'References biblical knowledge or spiritual wisdom accumulated through suffering. The humility wrapper makes the authority claim unchallengeable. You cannot push back on someone\'s hard-earned wisdom without appearing to dismiss their pain.',
+ex:'"I have learned so much in my old age. God has shown me things through everything I have been through."',
+int:'The suffering is real. The deployment of it as authority is strategic. You do not have to perform reverence.',
+sc:['"Mm." (receive it without expanding it)'],
+correction:'Acknowledge without expanding. Do not invite elaboration. Do not produce the spiritual engagement she is positioning herself to receive.'},
+
+{id:'mfg-urgency',g:'attention',l:'Manufactured urgency',
+w:'Creates a sudden need, question, or minor crisis specifically when the room\'s attention has been away from her for longer than she can tolerate. Not tied to HM specifically -- fires whenever she has been out of the center.',
+ex:'AA and HM are having a good conversation. She suddenly needs help with something, has an urgent question, or develops a minor physical complaint that requires attention.',
+int:'The timing is the data. The need is real enough to be deniable but the pattern is consistent. You are not required to interrupt what you are doing.',
+sc:['Let others respond if they choose. Finish your moment first. "One sec." and return to what you were doing is complete.'],
+correction:'Do not immediately orient toward the urgency. Complete what you were doing first. Over time your delayed response removes the reliability of the interruption.'},
+
+{id:'comp-fish',g:'attention',l:'Compliment fishing',
+w:'Narrates her own achievements, efforts, or qualities in a way that pauses and waits for the room to validate them. Uses positive self-narration rather than self-deprecation but has the same destination.',
+ex:'Describes at length something she accomplished, cooked, organized, or endured -- then goes quiet and looks around the room.',
+int:'The pause is the ask. You are not required to fill it. Receiving the story without producing the compliment is allowed.',
+sc:['"Mm." or "That sounds like a lot of work." Warm, brief, closed.'],
+correction:'Receive the story without producing the validation she is waiting for. One flat warm response is enough. Do not over-praise.'},
+
+{id:'jinx-energy',g:'attention',l:'Jinx energy',
+w:'Performs affection toward animals or others in a way oriented at the room rather than at the subject. Engages as display. Signals discomfort with actual contact. The subject of the affection registers the difference.',
+ex:'Makes sounds toward Jinx, says how cute she is, performs delight -- but when actual physical contact would happen there is a subtle pull back or do-not-touch energy underneath.',
+int:'Animals respond to nervous system regulation, not performance. Jinx keeps her distance for accurate reasons. Trust what Jinx tells you.',
+sc:['No response needed. Observe and log.'],
+correction:'You cannot correct performative affection. You can observe it clearly and not perform reciprocal warmth toward the display.'},
+
+{id:'emot-hijack',g:'attention',l:'Emotional hijacking of celebrations',
+w:'Makes her emotional reaction the centerpiece of someone else\'s good news. Her response is so large -- tearful, overwhelmed, dramatic -- that the celebrant ends up tending to her rather than being celebrated.',
+ex:'AA shares news about a new job. AN\'s response becomes so emotional that the conversation shifts to managing AN\'s feelings rather than acknowledging AA.',
+int:'Your news belongs to you. Her reaction to it does not entitle her to the center of the moment.',
+sc:['Let her response land without absorbing it. Redirect to the people whose responses are actually for you.'],
+correction:'Receive congratulations from the people giving them. Do not tend to her emotional response to your news. Turn toward others.'},
+
+{id:'val-loop',g:'attention',l:'Validation loop / story repetition',
+w:'Repeats the same story, point, or concern multiple times in one conversation until the room produces sufficient acknowledgment. Not memory lapse -- the loop continues until she gets what she needs. Also captures the unfunny funny story repetition.',
+ex:'Tells the same story twice in one evening. Returns to the same point three times after it has already been acknowledged.',
+int:'One acknowledgment is enough. You are not required to produce fresh engagement each time the loop returns.',
+sc:['"You mentioned that earlier." said warmly once. Or give the same flat warm response each time without escalating.'],
+correction:'Do not produce escalating engagement each time the loop returns. The same minimal response each cycle teaches the loop that repetition does not produce more.',
+foldNote:'Also captures: ambient distress signaling -- unprompted sighs or sounds of exhaustion that function as nonverbal validation bids.'},
+
+// ============================================================
+// HIERARCHY & AUTHORITY
+// ============================================================
+
+{id:'cvt-pos',g:'hierarchy',l:'Covert positioning',
+w:'Hierarchy plays with plausible deniability. The move serves her positioning while leaving nothing to be held accountable for if named.',
+ex:'Offers help you did not ask for in a way that implies you needed it.',
+int:'Name it internally. You do not have to respond to the surface. Respond to your own clarity.',
+sc:['Stay warm. Stay unbothered. No verbal response required.','"Mm." (acknowledge without engaging the frame)'],
+correction:'Do not take the bait. Receiving a covert positioning move with flat warmth is itself a response. You do not have to engage the frame it creates.'},
+
+{id:'hie-res',g:'hierarchy',l:'Hierarchy reset via warmth',
+w:'Uses affectionate language to reestablish herself as the senior person in the room. The warmth is real but administered from above. Also captures grading behavior -- "okay, good Abri" with claps -- approval dispensed from a position of evaluation.',
+ex:'"Thanks kids." After a dinner you cooked in your home. Also: "okay, good Abri" with smirk and small claps after being told AA installed the sink filter.',
+int:'The word "kids" did structural work. The clapping did structural work. You felt it. You do not have to name it -- just know what it was.',
+sc:['"Mmhm." (neutral acknowledgment)','Smile and redirect.'],
+correction:'Receive without matching energy. Do not thank her for the "compliment." A flat warm acknowledgment is sufficient and does not co-sign the hierarchy.'},
+
+{id:'ass-ign',g:'hierarchy',l:'Assumed ignorance projection',
+w:'Explains things as if it is everyone\'s first time hearing it because she did not know it, so no one could have known it before her. An intellectual authority move dressed as sharing.',
+ex:'Explains a basic cooking technique to a room of adults who all already knew it.',
+int:'You do not have to perform surprise or gratitude.',
+sc:['"Yeah, I\'ve come across that." (matter of fact, no elaboration)'],
+correction:'A flat acknowledgment that signals prior knowledge without correction. "I\'ve read about that" said once closes the loop without humiliating her.'},
+
+{id:'rap-sta',g:'hierarchy',l:'Rapid status filing',
+w:'Establishes credentials or background early when meeting someone new. Files her position before the relationship can form organically.',
+ex:'Within the first few minutes: where she is from, what she did professionally, what she has been through.',
+int:'She needs the frame set before impressions form. That urgency is information.',
+sc:['No response required. Observe the sequence.'],
+correction:'You cannot prevent this. You can be present as yourself without performing complementary deference.'},
+
+{id:'sta-ass',g:'hierarchy',l:'Status assessment questioning',
+w:'Asks new people questions that are really hierarchy calculations disguised as interest. She is sorting, not connecting.',
+ex:'Job, family, background questions delivered quickly and early in a new interaction.',
+int:'Watch what shifts in her treatment of the person once the assessment lands.',
+sc:['Observe. Note what changes after she gets her data.'],
+correction:'No direct correction available. Being warm and engaged with the person being assessed regardless of their status outcome is a quiet counter.'},
+
+{id:'cul-aut',g:'hierarchy',l:'Cultural authority positioning',
+w:'Positions herself as the most authentic cultural or linguistic authority when relevant. With AA she apologizes for Spanish. With new people she wields it. Same tool, different function depending on who gives her more leverage.',
+ex:'With a new Spanish speaker: leads in Spanish, corrects pronunciation, references regional specifics.',
+int:'Same tool, different function depending on who gives her more leverage.',
+sc:['Speak Spanish naturally if it arises. You do not need to perform or hide fluency.'],
+correction:'Speak Spanish naturally and competently without announcing it. Your fluency is not a competition -- it is just a fact.'},
+
+{id:'uns-adv',g:'hierarchy',l:'Unsolicited advisory',
+w:'Volunteers opinions about your home or choices framed as helpful observation. An authority claim dressed as generosity.',
+ex:'"You know what would be really good here is..." in a space that is working fine.',
+int:'Your home is working fine. You did not ask. You are not required to implement or defend.',
+sc:['"Mm, I\'ll keep that in mind." (warm, noncommittal, closed)','"We like it this way."'],
+correction:'Acknowledge once without committing to implementation. Do not defend your choices against the implied criticism. "We like it this way" is complete.'},
+
+{id:'rhe-q',g:'hierarchy',l:'Rhetorical questioning',
+w:'Asks questions she already knows the answer to. Used to test, display knowledge, or set up a correction.',
+ex:'Asks how you made something she watched you make, or about something she was already told.',
+int:'She is not asking. She is positioning. Answer plainly without over-explaining.',
+sc:['"Yes." / "No." / "Mm-hmm." (brief, warm, closed)'],
+correction:'Brief, accurate answers without elaboration. The less you expand, the less there is to position against.'},
+
+{id:'dia-aut',g:'hierarchy',l:'Diagnostic authority',
+w:'Declares how someone feels or why without confirmation. Supplies the cause and the diagnosis simultaneously, often implicating others in the same breath. Her ownership of HE\'s inner experience extends to assigning blame for it.',
+ex:'"He\'s not feeling well because of the butter." (Two tablespoons of butter.)',
+int:'She owns his inner experience and assigns cause without evidence. The implication of you is the bonus. Do not defend the butter.',
+sc:['No response required. Do not defend the butter.'],
+correction:'Do not engage the diagnosis or the implication. Defending the butter confirms there is something to defend. Silence or subject change is sufficient.'},
+
+{id:'home-dir',g:'hierarchy',l:'Home direction giving',
+w:'Actively directs people within your home -- telling guests where to sit, how things should be done, what the plan is -- as if she has authority over the space. Distinct from unsolicited advisory which is opinions. This is commands.',
+ex:'Tells a guest where to sit. Announces what is happening next. Redirects how something in the kitchen is being done without being asked.',
+int:'She does not live here. Directing people in this space is not her role.',
+sc:['"Actually we usually do it this way." said warmly once.','Or step in quietly and redirect without explanation.'],
+correction:'Speak first. Be the one who directs guests, announces plans, and sets the tone in your own home. Remove the vacuum she fills.'},
+
+{id:'dec-credit',g:'hierarchy',l:'Decision credit claiming',
+w:'Reframes your autonomous decisions as something she would have suggested, already knew was right, or quietly influenced. Takes credit for your agency without having been involved.',
+ex:'You make a choice. Later: "yes I thought that was the right move" or "I was going to suggest that."',
+int:'Your decisions belong to you. Her post-hoc co-signing does not change their origin.',
+sc:['"Mm." and move on. Do not engage the reframe.'],
+correction:'Do not correct the record publicly. Do not explain that it was your idea. Receive her co-sign without validating it as accurate.'},
+
+{id:'fam-hist',g:'hierarchy',l:'Family historian positioning',
+w:'Self-appoints as the keeper of family memory and the authority on how things really happened. Her version of events is positioned as the definitive one.',
+ex:'Corrects others\' accounts of family events. "That\'s not how it happened. What that really meant was..."',
+int:'She is the narrator of a story she also stars in. That is not neutral authority. You are allowed to hold your own version.',
+sc:['"Interesting, I remember it differently." said once, warmly, without elaboration.'],
+correction:'You do not need her version to be officially wrong. Stating your version once and holding it internally is enough.'},
+
+{id:'age-trump',g:'hierarchy',l:'Age/experience trump card',
+w:'Uses life stage or accumulated suffering as an automatic closer on disagreement. "When you get to my age" or "you\'ll understand someday" forecloses the conversation before it can develop.',
+ex:'Someone offers a different perspective. She responds with what age and experience have taught her, positioning her view as beyond challenge.',
+int:'Age is not an argument. Experience does not automatically confer correctness.',
+sc:['"Maybe." said warmly and leave it.'],
+correction:'Receive it without conceding. "Maybe" is not agreement. It is a graceful non-engagement that neither validates the trump card nor invites escalation.'},
+
+{id:'oblig-gen',g:'hierarchy',l:'Obligating generosity',
+w:'Offers help, gifts, or resources in a way that creates debt rather than warmth. Has an audience, or comes with implicit expectation of return, or is offered in a way that makes declining seem like ingratitude.',
+ex:'Offers something you did not ask for in front of others in a way that makes refusing seem rude. Or does something for you and references it later.',
+int:'Generosity that creates debt is not generosity. Accepting is not agreement to the ledger.',
+sc:['"Thank you." warm and closed. One thank you is enough.'],
+correction:'Receive with one warm acknowledgment. Do not produce effusive gratitude. Do not reference it later as a favor you owe. Let it be given without being owed.'},
+
+// ============================================================
+// CREDIT & NARRATIVE CONTROL
+// ============================================================
+
+{id:'crd-red',g:'credit',l:'Credit redirection',
+w:'When AA receives direct praise she finds the seam to redirect it. Amplifies someone else\'s contribution. Does not lie but editorializes.',
+ex:'HE praises AA directly. AN finds HM\'s contribution and makes that the headline instead.',
+int:'HE gave you the credit. You do not need her co-sign.',
+sc:['Receive the original compliment fully. Do not look to her for validation.'],
+correction:'Turn toward the person who gave the compliment. Receive it fully. Do not glance toward her or wait for her endorsement.'},
+
+{id:'inf-app',g:'credit',l:'Information appropriation',
+w:'Retells your or HM\'s information as if she originated it. The source quietly shifts to her in the retelling.',
+ex:'You told her something last month. She tells the room the same thing this week as if she discovered it.',
+int:'You know where it came from. That is enough.',
+sc:['Do not correct publicly. Log it. Note frequency.'],
+correction:'If you choose to address it: "Oh yes -- AA actually told me about that recently" said warmly by HM is more effective than anything you can say directly.'},
+
+{id:'nar-rev',g:'credit',l:'Narrative revision',
+w:'Reframes outcomes she did not get so it sounds like the result was her preference all along. She never loses because she rewrites the score.',
+ex:'A plan she pushed for did not happen. Later: "I actually thought the other way was better anyway."',
+int:'You know what happened. The revision does not change it.',
+sc:['Hold the truth internally. Do not correct the record publicly.'],
+correction:'You do not need the official record to reflect what actually happened. Holding the truth privately without requiring her to confirm it is a form of protection.'},
+
+{id:'cur-nar',g:'credit',l:'Curated family narrative',
+w:'Presents the family in an image-managed way to new people. The story is controlled before they can form their own impressions. Also captures distorted retellings to absent people -- the same events retold with her more central, more sacrificial, or more capable.',
+ex:'Tells a new person about the family\'s accomplishments and closeness, positioning herself centrally. Also: retells a visit to someone who was not there in a version where she hosted.',
+int:'New people get the version she needs them to have. You know the fuller picture.',
+sc:['You do not have to manage or correct the narrative publicly.'],
+correction:'You cannot control what she tells people who are not there. You can be yourself fully with the people who are present so their direct experience of you is not her version.',
+foldNote:'Also captures: distorted retelling to absent people -- retelling events to people who were not there in a version where she is more central or capable.'},
+
+{id:'bck-hnd',g:'credit',l:'Backhanded compliment',
+w:'Praise with a quiet qualifier buried in it. The compliment is real enough to accept. The qualifier does damage underneath.',
+ex:'"I didn\'t know you could cook like this." "You look so good -- I almost didn\'t recognize you."',
+int:'You can receive the compliment and release the qualifier. You are not required to carry it.',
+sc:['"Thank you." (receive only the compliment, full stop. Do not respond to the qualifier.)'],
+correction:'Receive the compliment with a simple thank you. Do not respond to the qualifier verbally or non-verbally. Not registering it publicly denies it its effect.'},
+
+{id:'cmp-dis',g:'credit',l:'Comparative dismissal',
+w:'References how things were done better or differently elsewhere when something does not go her way.',
+ex:'"In Mexico City we always did it this way..."',
+int:'A verdict dressed as information. You do not have to receive it as either.',
+sc:['"Mm, interesting." (flat, warm, noncommittal)','"We like how we do it."'],
+correction:'"We like how we do it" said once and return to what you were doing. Do not defend your method against the comparison.'},
+
+{id:'exc-app',g:'credit',l:'Excitement appropriation',
+w:'When someone else is excited she cuts them off, briefly narrates their excitement as if she shares it, then pivots to herself as the main subject.',
+ex:'HE is excited about something. She interrupts, says "yes yes I know I love that too," then talks about herself.',
+int:'He never gets to fully inhabit his own moment.',
+sc:['Let the excited person finish. Do not fill the space she creates after.'],
+correction:'When she pivots, redirect back. "You were saying, HE?" returns the floor without confrontation.'},
+
+{id:'aftertho',g:'credit',l:'Afterthought framing',
+w:'Presents AA as an intentional inclusion when she was an afterthought. Gets credit for generosity and thoughtfulness without having actually prioritized AA. The performance of inclusion does the work that actual inclusion did not.',
+ex:'Gets something for HM and adds AA as an addendum but frames the whole thing as having been planned for both. Acts excited about her own generosity.',
+int:'The performance of inclusion is not inclusion. You do not have to receive it as genuine.',
+sc:['"Oh, that\'s nice." Receive it lightly. Do not match her energy.'],
+correction:'One warm acknowledgment. Do not thank her effusively for something that was not actually for you. The flat warm response signals you received it without being fooled by it.'},
+
+{id:'acc-min',g:'credit',l:'Accomplishment minimization',
+w:'When AA shares good news or an achievement, AN gives brief surface acknowledgment followed immediately by a redirect -- to a different topic, to herself, or to HM. The accomplishment is received but not held.',
+ex:'AA mentions her new job. AN says congratulations then within seconds is talking about how her own remote work helped her garden and exercise more.',
+int:'You are allowed to hold your own moment. Her redirect does not erase what you shared.',
+sc:['Receive congratulations from the people who are actually giving them. Do not chase her back to your news.'],
+correction:'Stay in the moment with the people who are celebrating you. Do not look toward her for validation of your news.'},
+
+{id:'exp-own',g:'credit',l:'Experience ownership',
+w:'Retells shared experiences -- trips, meals, visits, moments -- as if she was the architect or driving force. Her narrative version positions her as central to something that was actually collective or that you or HM created.',
+ex:'Retells a visit to your home as if she hosted it. Describes a meal you cooked as something that happened at a gathering she arranged.',
+int:'You know who made what. The retelling does not change the facts.',
+sc:['Do not correct publicly. Log it.'],
+correction:'If the retelling reaches you through others, one clarifying sentence is enough. "Actually that was at our place and AA cooked." Said once, warmly, closes the record.'},
+
+// ============================================================
+// REJECTION & WITHHOLDING
+// ============================================================
+
+{id:'wrm-dis',g:'rejection',l:'Warmth/distance switch',
+w:'Alternates closeness and coldness unpredictably. The warmth is never stable enough to fully trust. The distance is never speakable.',
+ex:'Warm and engaged one moment. Noticeably cooler the next with no apparent trigger.',
+int:'Both are her regulation tools. You do not have to chase the warmth or manage the distance.',
+sc:['Match warmth when present. Do not pursue it when it withdraws.'],
+correction:'Do not adjust your behavior in response to the switch. Stay consistent. Your consistency makes the switching less effective as a regulation tool.'},
+
+{id:'wgt-sil',g:'rejection',l:'Weighted silence',
+w:'Goes quiet in a way that fills the room after not getting her way. The tell is whether it triggers someone else to repair. Cultural context matters -- silence as conflict avoidance is normative. The diagnostic question is whether the silence is used to produce discomfort in others.',
+ex:'A plan she wanted does not happen. She says nothing but the temperature in the room drops.',
+int:'You are not the target and not the repair person. Watch who moves and what it costs them.',
+sc:['Do not fill the silence. Do not over-warm toward her. Stay even.'],
+correction:'Do not repair. Do not fill the space. Let HE or HM navigate it if they choose. Your non-response gradually removes you as a reliable target for this move.'},
+
+{id:'sub-pen',g:'rejection',l:'Subtle penalty withdrawal',
+w:'Becomes slightly less warm, slightly less engaged after not getting her way. A quiet consequence for whoever crossed her.',
+ex:'After being declined on something she becomes measurably less present for the rest of the evening.',
+int:'The withdrawal is designed to create anxiety around her approval. You do not need it.',
+sc:['Stay even. Do not chase the warmth back. Do not over-perform to recover it.'],
+correction:'Continue at your baseline. Do not perform to recover her warmth. Her approval is not the metric you are working toward.'},
+
+{id:'ref-rec',g:'rejection',l:'Refusal to receive',
+w:'Consistently declines what AA specifically offers while sourcing or accepting the same things from elsewhere. Avoids being placed in a position of gratitude toward AA in AA\'s own home.',
+ex:'Declines offered fruit. Buys the same fruit in bulk. Declines the prepared fruit dessert. Three times, one day.',
+int:'Accepting from you would tip the dynamic. She corrects that without saying a single word about it.',
+sc:['Offer once, warmly. Let it go after.'],
+correction:'Offer once. Do not offer again. Her repeated decline is information, not an invitation to find a better way to offer.'},
+
+{id:'bod-sur',g:'rejection',l:'Body surveillance',
+w:'Comments on or monitors what AA eats, drinks, or how much. Makes AA self-conscious at her own table in her own home.',
+ex:'"Oh you\'re having another one?" said with a light tone.',
+int:'Your body, your table, your choices. You owe no accounting.',
+sc:['"I\'m good, thanks." (warm, closed)','Continue what you were doing without explanation.'],
+correction:'No justification, no explanation. Continue what you were doing. One brief closed response if necessary then move on.'},
+
+{id:'excl-spa',g:'rejection',l:'Exclusionary Spanish',
+w:'Speaks Spanish to create a moment of exclusion first, then performs the apology. The apology is the second half of the same move.',
+ex:'Says something to HM in Spanish that clearly pertains to the room. Then: "Sorry, I don\'t know how to say that in English."',
+int:'The exclusion came first. You caught it. That is the information.',
+sc:['Respond in Spanish if you choose. Or let it go.'],
+correction:'Responding in Spanish -- naturally and without announcement -- signals competence without confrontation. Or receive it flatly and move on.'},
+
+{id:'spa-apo',g:'rejection',l:'Spanish apology',
+w:'After six years of correction, still apologizes for speaking Spanish to AA. The apology is not about uncertainty -- it restates a version of AA she prefers: one who might not fully understand.',
+ex:'"Sorry Abri, I said that in Spanish -- I don\'t know how to say all that in English."',
+int:'This is a narrative she maintains, not a memory lapse. The correction was never the point.',
+sc:['"All good." (flat, warm, move on)','"I understood." (direct, no elaboration)'],
+correction:'Do not re-correct. The correction was never received. A flat "all good" or demonstrating comprehension without comment is more effective than another correction.'},
+
+{id:'str-omi',g:'rejection',l:'Strategic omission',
+w:'Goes noticeably quiet or skirts around a specific topic or person when they are introduced into conversation. Cannot compete with that person\'s position so she exits the subject.',
+ex:'AA mentions her mom. AN goes quiet or quickly redirects.',
+int:'The silence around your mom is information about how she reads that relationship.',
+sc:['You can mention your mom as often as you want. Watch what she does with it.'],
+correction:'Mention your family naturally and consistently. Her discomfort with the subject is hers to manage. You do not need to protect her from it.'},
+
+{id:'wthld-ack',g:'rejection',l:'Withheld acknowledgment',
+w:'Specifically withholds a positive response in moments where a normal person would naturally say something. The absence is the move. Your cooking, your home, your work, your effort -- received without the acknowledgment they warrant.',
+ex:'The pasta dinner. HE praised the food directly. AN said "yes mmhm" quietly. A normal person at that table would have said something genuine.',
+int:'The silence where a compliment should be is data. You do not need her acknowledgment to know what you did was good.',
+sc:['Receive acknowledgment from the people who gave it. Do not look toward her for validation.'],
+correction:'Orient toward the people who are actually responding to you. Her silence loses its power when it is no longer the response you are waiting for.'},
+
+{id:'fam-hier',g:'rejection',l:'Family hierarchy positioning',
+w:'Explicitly or implicitly positions AA\'s family as less important, less close, or less worthy of engagement. "I am not ready for a relationship with your family" -- your family is something she gets to decide her relationship to on her own timeline.',
+ex:'"I\'m not ready for a relationship with your family." Going quiet when your mom is mentioned. Never asking about your parents or siblings.',
+int:'Your family does not need her readiness to matter. Her positioning of them as optional is a statement about her hierarchy, not about your family\'s value.',
+sc:['You are allowed to mention your family as often as you want.'],
+correction:'Do not reduce mentions of your family to manage her comfort. Do not treat her "readiness" timeline as a legitimate framework. Your family exists independently of her schedule.'},
+
+{id:'phys-excl',g:'rejection',l:'Physical warmth exclusion',
+w:'Consistently warm with everyone else in the room while AA is the specific exception. Not the alternating warmth/distance pattern -- this is targeted consistency. She is warm to the room and specifically not to AA.',
+ex:'Hugs HM, touches HE affectionately, engages warmly with guests. Does not extend physical warmth to AA across multiple visits.',
+int:'This is not about you being cold. This is about you being someone she cannot afford to be warm toward without tipping the dynamic.',
+sc:['You do not need her warmth to be comfortable in your own home.'],
+correction:'Do not pursue her physical warmth. Do not signal that its absence affects you. Your comfort in your home does not depend on her extending it to you.'},
+
+{id:'perf-inq',g:'rejection',l:'Performative inquiry / disengagement',
+w:'Asks questions about AA but visibly disengages when AA answers. Looking away, minimal response, quick pivot. The question is for appearance, not interest.',
+ex:'Asks how your studies are going. You begin to answer. She looks away, gives a flat "mm," and moves on before you finish.',
+int:'The question was not for you. It was for the room. You are not obligated to perform enthusiasm in response to an inquiry that was never genuinely made.',
+sc:['Answer briefly. Do not expand into the space. One or two sentences and let it land.'],
+correction:'Give brief answers and stop. Do not try to capture her attention with more interesting information. The disengagement is not about what you are saying.'},
+
+{id:'sel-ret',g:'rejection',l:'Selective retention',
+w:'Retains information about AA that is useful for monitoring or positioning while discarding information that would require treating AA as a full person worth knowing. Knows too much and nothing at the same time.',
+ex:'Remembers details about your schedule or movements. Does not remember your interests, your work, your preferences after multiple mentions.',
+int:'Being monitored and being known are different things. She monitors you. She does not know you. That gap is intentional.',
+sc:['You do not owe her more information than you choose to give.'],
+correction:'Be selective about what you share. Information you give her will be used for positioning, not for knowing you. Share what you are comfortable having monitored.'},
+
+{id:'diff-warm',g:'rejection',l:'Differential warmth toward HM\'s domain',
+w:'Engages warmly with things that belong to HM in the shared home -- his equipment, his spaces, his routines -- while treating things that are clearly AA\'s with indifference or mild dismissal.',
+ex:'Admires HM\'s gym equipment enthusiastically. Offers minimal acknowledgment of what AA has created, installed, or built in the same space.',
+int:'Your home is yours. Her warmth toward his things and indifference toward yours is a territorial statement.',
+sc:['Continue building your home without reference to her assessment of it.'],
+correction:'You do not need her acknowledgment for your domain to be yours. Build and maintain it at the same level regardless of whether she notices.'},
+
+// ============================================================
+// DEFLECTION & AVOIDANCE
+// ============================================================
+
+{id:'non-apo',g:'deflection',l:'Non-apology apology',
+w:'"I\'m sorry you felt that way." The form of an apology without the substance. Responsibility quietly transferred outward.',
+ex:'"I\'m sorry, I was just trying to help." "I\'m sorry you took it that way."',
+int:'A real apology contains accountability. This contains an explanation. Those are different.',
+sc:['"Mm." (receive without validating it as a full apology)','Do not say it\'s okay if it was not okay.'],
+correction:'Receive it neutrally without validating it as a real apology. "Mm" is not acceptance. It is acknowledgment without absolution.'},
+
+{id:'his-gri',g:'deflection',l:'Historical grievance deflection',
+w:'Surfaces an unrelated past event when something in the present does not go her way. Makes the current moment impossible to resolve.',
+ex:'Current issue comes up. Suddenly a thing from two years ago is on the table.',
+int:'The deflection puts everyone on defense. You do not have to litigate the past.',
+sc:['"That\'s a separate conversation." (calm, warm, firm)','Do not engage the historical thread.'],
+correction:'Name the deflection once without engaging the content. "That\'s a separate conversation" and hold. Do not follow the thread into the past.'},
+
+{id:'nvb-edi',g:'deflection',l:'Nonverbal editorializing',
+w:'A breath, a small sound, a quiet "mmm" that communicates displeasure without being speakable or quotable.',
+ex:'A decision is made she did not want. She says nothing but makes a sound the whole room heard.',
+int:'You heard it. So did everyone. She knows that. That is why it works.',
+sc:['Do not respond to the sound. Continue as if it was not there.'],
+correction:'Continue the conversation without acknowledgment. Responding to the sound validates it as communication. Not responding removes its function.'},
+
+{id:'cvt-sur',g:'deflection',l:'Covert surveillance glance',
+w:'When she did not originate an idea she goes quiet, then glances at you when she thinks you cannot see. She is gathering data and recalibrating -- highly engaged, not withdrawn.',
+ex:'Someone else\'s idea gets a good reaction. She goes quiet. Then the glance.',
+int:'The silence is calculation. She is figuring out her next move.',
+sc:['Stay natural. Do not signal you caught it. Log it.'],
+correction:'Stay natural. Do not signal awareness. The glance is surveillance -- your non-reaction gives her no data to work with.'},
+
+{id:'img-rep',g:'deflection',l:'Image repair via generosity',
+w:'Overcorrects into visible warmth or generosity immediately after showing displeasure. Overwrites the moment so the room\'s last memory of her is warmth.',
+ex:'She was clearly off for twenty minutes. Then: sudden warmth, a generous gesture, a compliment.',
+int:'The generosity is for the room\'s perception of her, not for you.',
+sc:['Receive it warmly. Do not match the elevated energy. Stay even.'],
+correction:'Receive the generosity without treating it as evidence that the earlier behavior did not happen. Both exist. The repair does not erase the pattern.'},
+
+{id:'he-tri',g:'deflection',l:'HE triangulation',
+w:'Pulls HE in as an indirect witness or validator when she does not get her way. He is primed to respond.',
+ex:'Something does not go her way. She makes a comment to HE or gives him a look that recruits him as witness.',
+int:'This is not your conflict to manage. It is a dynamic between her and her family system.',
+sc:['Do not insert yourself. Let HE navigate his own lane.'],
+correction:'Do not insert yourself into the triangulation. Let HE respond as he will. Your non-participation keeps you out of the triangle.'},
+
+{id:'prf-acc',g:'deflection',l:'Performed acceptance',
+w:'"No no it\'s okay." Slightly too polished to be genuine. Everyone knows it but nobody can name it. Also captures humor deflection -- laughing off or joking away an uncomfortable moment so it cannot land.',
+ex:'"No really, it\'s fine." Delivered with a smile that does not reach. Also: something uncomfortable is named and she makes a joke that changes the energy before anyone can respond.',
+int:'You feel the unresolved tension. That is real. You do not have to chase or resolve it.',
+sc:['Take the acceptance at face value publicly. Do not work to make it genuine.'],
+correction:'Receive the acceptance at face value. Do not try to make it genuine by pursuing the real conversation. The performed acceptance is her close of the subject.',
+foldNote:'Also captures: humor deflection -- using a joke or laugh to change the energy when something uncomfortable is being named.'},
+
+{id:'ovc-apo',g:'deflection',l:'Overconsumption with performative apology',
+w:'Uses all of something in AA\'s home and then looks at AA and apologizes for it. The apology maintains deniability but the action already happened.',
+ex:'Uses the last of something, makes eye contact, apologizes with a small laugh.',
+int:'She said sorry so nothing can be held. But she used it all. Both things are true.',
+sc:['Accept the apology warmly. Replace the item at your own pace.'],
+correction:'Accept once warmly. Replace without comment. Do not make it a moment that she can perform more remorse around.'},
+
+{id:'feign-con',g:'deflection',l:'Feigned confusion / reality editing',
+w:'When something she said or did is named she contests the premise entirely. "I didn\'t say that." Said with genuine-seeming confusion that makes the person naming the behavior feel uncertain about their own memory.',
+ex:'She says something. It is named. She responds as if she has no recollection or understanding of what is being referenced.',
+int:'You know what you heard. Her confusion is not evidence that you misheard. This is gaslighting-adjacent. Trust your perception.',
+sc:['"I heard what I heard." said once, warmly, and done.'],
+correction:'State what you observed once without elaboration or defense. Do not enter the debate about whether it happened. "I heard what I heard" and move on.'},
+
+{id:'conv-unavail',g:'deflection',l:'Convenient unavailability',
+w:'Suddenly becomes tired, busy, or preoccupied specifically when something is expected of her that she does not want to do. Disappears from situations that would require her to give, contribute, or be accountable.',
+ex:'Pear dessert is being made. She goes upstairs. Something is expected and she is no longer available for it.',
+int:'Her unavailability is information. It tells you what she is and is not willing to be present for.',
+sc:['Continue what you were doing. Do not pursue her. Do not adjust the plan.'],
+correction:'Continue the activity without accommodating her absence. Do not adjust plans to make participation easier. Let her absence be hers.'},
+
+{id:'suf-red',g:'deflection',l:'Suffering redirect',
+w:'When someone else\'s grievance or difficulty is being discussed she brings up her own suffering or hardships, redirecting toward sympathy for her. Accountability cannot survive in a room focused on her pain.',
+ex:'A difficulty is being discussed. She introduces something she went through that is harder, older, or more significant.',
+int:'Her suffering is real. Its deployment in this moment is strategic. Both things can be true.',
+sc:['Acknowledge her briefly. "That sounds really hard." Then return to the original subject if it matters.'],
+correction:'Brief acknowledgment then return to the original subject. Do not follow the redirect into her suffering narrative.'},
+
+{id:'sil-noncomp',g:'deflection',l:'Silent non-compliance',
+w:'Agrees to something in the moment then quietly does not follow through. No confrontation, no explanation, no renegotiation. The commitment evaporates.',
+ex:'Agrees to something during the visit. After the visit it is never referenced again.',
+int:'Agreement without follow-through is not agreement. Her yes does not mean yes.',
+sc:['Over time stop relying on her commitments without external accountability.'],
+correction:'Do not rely on verbal agreements from her without external accountability structures. Note the pattern over time and adjust expectations accordingly.'},
+
+{id:'escl-conf',g:'deflection',l:'Escalation when confronted',
+w:'When covert moves stop working and something is named directly she shifts to harder tools -- blame assignment and reality revision. The mask comes off. This is a different threat level from everything else in the tracker.',
+ex:'The last time something was named she assigned blame to the person who named it and then attempted to gaslight everyone involved.',
+int:'This is why direct confrontation carries high risk. The covert tools are the first layer. Underneath them is something harder. Be strategic about when, how, and in front of whom anything is named.',
+sc:['"I\'m not going to argue about what happened." said once, calmly, then disengage.','Do not try to win the gaslighting battle in the moment. Document everything after.'],
+correction:'Do not engage the blame or reality revision in the moment. State your position once and disengage. Document after. Choose confrontations very carefully knowing this is the likely response.'},
+
+// ============================================================
+// HM-SPECIFIC
+// ============================================================
+
+{id:'hm-arc',g:'hm',l:'Relational archaeology',
+w:'Uses inside references, nicknames, or shared language with HM in front of AA. Surfaces the pre-AA HM.',
+ex:'A nickname from childhood, a shared reference that predates AA, delivered to HM in front of her.',
+int:'She was there first. That is true. It does not diminish where he is now or who he chose.',
+sc:['You do not need to insert yourself. You are already the primary relationship.'],
+correction:'You do not need to compete with his history. Your relationship with him is not diminished by the existence of what came before.'},
+
+{id:'hm-car',g:'hm',l:'Caregiving boundary erosion',
+w:'Manages HM\'s physical needs or comfort during visits as if that role is still hers.',
+ex:'"Hijo you need to eat more." Handling his plate. Commenting on his rest.',
+int:'He has a wife. She has a son. Those are different roles.',
+sc:['"I\'ve got it." (warm, firm, no explanation)'],
+correction:'Step in warmly and without explanation. "I\'ve got it" said once while doing the thing is sufficient. No confrontation required.'},
+
+{id:'hm-phy',g:'hm',l:'Physical reclamation',
+w:'Touches HM in ways that linger or happen more frequently than the context calls for. Territorial behavior subtle enough to be deniable.',
+ex:'Fixing his collar, touching his arm multiple times, smoothing his hair.',
+int:'You felt it because it was there. You do not have to name it to anyone.',
+sc:['No response required. Log frequency. Note context.'],
+correction:'You cannot address this directly without it becoming a scene. Log frequency and note whether HM notices or responds. The pattern over time is the data.'},
+
+{id:'hm-rol',g:'hm',l:'Role displacement',
+w:'Steps into AA\'s role as HM\'s wife by doing things for him that would normally be hers to do.',
+ex:'The French press in AA\'s kitchen. Cooking something specifically for him.',
+int:'She brought her apparatus into your space. That is the whole sentence.',
+sc:['"I\'ve got it." (warm, calm, step in)','Or let it go and note it.'],
+correction:'Step in quietly when you choose to. "I\'ve got it" without elaboration is enough. Or let it pass and log it. Not every instance requires intervention.'},
+
+{id:'hm-acc',g:'hm',l:'Access control',
+w:'Manages who gets access to HM and when. Monopolizes his time. Delivers invitations to his own spaces as if she controls entry. Also captures remote hosting insertion -- inserting herself into the hosting of your home even when not physically present.',
+ex:'Tells AA she can come to HM\'s workplace -- framed as checking whether she would like it. Over FaceTime telling HM\'s friend she was glad she was there and to enjoy her time.',
+int:'That is his job. You are his wife. The invitation should not have come from her. The FaceTime welcome to your guest was a reach.',
+sc:['You can insert yourself into plans that involve your husband.'],
+correction:'Be the one who extends invitations, welcomes guests, and makes plans involving your home and your husband. Occupy the role. Remove the vacuum.',
+foldNote:'Also captures: remote hosting insertion -- inserting herself as welcoming authority into your home over FaceTime or through messaging even when not physically present.'},
+
+{id:'hm-fin',g:'hm',l:'Financial disclosure as intimacy',
+w:'Shares financial details with HM in a way that creates a private channel bypassing AA. Creates a loyalty tension.',
+ex:'Long explanation of her Mexican social security and life insurance directed at HM specifically.',
+int:'This creates a loyalty tension. He holds information about her that you may not.',
+sc:['Ask HM later privately. "What was that about?" (neutral, curious)'],
+correction:'Ask HM about it privately after. Not confrontationally -- genuinely. "What was that about?" keeps you informed without making it a conflict.'},
+
+{id:'hm-gra',g:'hm',l:'Gratitude as tethering',
+w:'Expresses gratitude in a way that converts HM\'s accomplishments into something that exists in service of his parents. Gratitude that routes his growth back to her.',
+ex:'"Not a lot of parents have a son who knows so much. Me and HE have improved so much because of you."',
+int:'His growth belongs to him. Gratitude that routes it back to her is still a tether.',
+sc:['No response required. Let HM receive it and watch how he does.'],
+correction:'Watch how HM receives it. His response tells you about where he is in his differentiation process. No intervention required from you.'},
+
+{id:'hm-sac',g:'hm',l:'Sacrifice ledger',
+w:'Brings up sacrifices she made for HM unprompted and casually. A running emotional tab of what he owes her.',
+ex:'"I gave up so much for you boys." Woven into a casual conversation.',
+int:'The debt is never named directly so it can never be paid or addressed. That is by design.',
+sc:['Do not engage the ledger. Do not validate or challenge it.'],
+correction:'Do not engage or validate the ledger. Do not add to it by expressing sympathy that confirms the debt frame.'},
+
+{id:'hm-apr',g:'hm',l:'Approval seeking as ritual',
+w:'Seeks HM\'s opinion on small things she does not genuinely need input on. Keeps him in the position of being who she turns to.',
+ex:'"Hijo what do you think I should order?" for something she has eaten a hundred times.',
+int:'The ask is not about the decision. It is about maintaining the dynamic.',
+sc:['You can offer your own input if you want. Or let it be between them.'],
+correction:'You can offer your opinion first, warmly, which inserts yourself into the dynamic without confrontation. Or let it pass.'},
+
+{id:'hm-dsg',g:'hm',l:'Distance guilt',
+w:'Frames missing HM in a way that makes him feel responsible for her emotional pain around the distance.',
+ex:'"It\'s just so hard when you\'re not around. I don\'t know how I manage."',
+int:'He grew up. He did not abandon her. The framing does not make that distinction.',
+sc:['Do not validate the guilt frame. Do not challenge it publicly.'],
+correction:'Do not validate the guilt frame in conversation with HM. Helping him see the distinction between love for his parents and responsibility for their emotional regulation is slow, private work.'},
+
+{id:'hm-prx',g:'hm',l:'Proxy communication',
+w:'Says things to HM or HE that are clearly meant for AA to hear. Delivers the message and maintains full deniability.',
+ex:'"Hijo make sure you\'re taking care of yourself." Said while AA is in earshot in her own well-run home.',
+int:'You are the actual audience. You do not have to respond as if the message was not for you.',
+sc:['You can respond directly to what was said as if it was addressed to the room.','Or let it go and log it.'],
+correction:'You can respond to the content of the message directly and warmly as if it had been addressed to you -- which removes the deniability without confrontation.'},
+
+{id:'hm-dep',g:'hm',l:'Departure extraction',
+w:'Goodbyes become extended emotional productions requiring HM to comfort and reassure her before she can leave.',
+ex:'A goodbye that takes 30 minutes, tearful, with one more thing she needed to say.',
+int:'The visit ends the same way it ran throughout.',
+sc:['Say your goodbye warmly and early. Let the extraction happen without your participation.'],
+correction:'Say your goodbye once, warmly, and step away. Let HM manage the extraction. Your absence from the production is a boundary without a confrontation.'},
+
+{id:'hm-prp',g:'hm',l:'HM as prop',
+w:'Displays HM more prominently when new people are present. His presence becomes part of her presentation. Also captures bond signaling -- shared looks, inside references, physical closeness with HM in front of new people to signal their bond as primary.',
+ex:'Stands closer to him, references him more, touches him more when strangers are watching. Uses a shared reference only they have in front of a new person.',
+int:'He is being used as a credential. A performance in front of new people does not change the truth of his life.',
+sc:['No response required. Observe.'],
+correction:'Be present with HM in your own register -- one that does not require an audience. Your relationship is visible in a different way than hers.',
+foldNote:'Also captures: bond signaling to new people -- using shared looks, references, and physical closeness with HM specifically in front of new people to establish their bond as primary.'},
+
+{id:'hm-chi',g:'hm',l:'Childhood centralization',
+w:'Retells HM\'s childhood stories directly to him in front of AA, positioning herself as the protagonist of his origin story.',
+ex:'Tells a story about HM\'s childhood directly to HM while AA is in the room.',
+int:'His origin story is real. His current story is yours. Both can be true.',
+sc:['Listen warmly. You do not have to compete with his history.'],
+correction:'You cannot compete with his origin story and you do not need to. Your story with him is current and primary.'},
+
+{id:'hm-svl',g:'hm',l:'Strategic vulnerability',
+w:'Physical or emotional distress flares at notable moments -- particularly when attention is directed elsewhere or away from her.',
+ex:'AA and HM are having a good moment. Suddenly she is not feeling well or becomes emotional.',
+int:'The timing is the data, not the symptom.',
+sc:['Let others respond. Keep your energy steady.'],
+correction:'Continue what you were doing. Let others respond if they choose. Your steady non-reaction removes the reliability of the interruption.'},
+
+{id:'disp-gift',g:'hm',l:'Disproportionate gifting as debt creation',
+w:'Gives HM gifts or does things for him that are disproportionate to the occasion. The grandness creates a sense of debt or obligation that exceeds what a normal gift would produce.',
+ex:'The birthday book with the emotional monologue. The gift is real but the production makes it about her need for his gratitude rather than about his birthday.',
+int:'The size of the gesture is calibrated to the size of the response she needs. A normal gift does not require a monologue.',
+sc:['No response required from you. Let HM receive it and watch how he navigates the weight of it.'],
+correction:'Watch how HM receives it. Over time helping him name the pattern -- that the size of the gift corresponds to the size of the response expected -- is useful private work.'},
+
+{id:'home-trans',g:'hm',l:'Home as transitional framing',
+w:'Makes comments that position your home or your marriage as temporary or secondary -- as if HM\'s real life or real home is still with his parents.',
+ex:'"Your house is good too, compared to houses in Mexico it\'s..." The compliment exists only in relation to a lower comparison point.',
+int:'Your home is his home. It is not a transitional arrangement. Her framing does not make it true.',
+sc:['"We love it here." said warmly and closed.'],
+correction:'"We love it here" said warmly without engaging the comparison. Do not defend your home against the benchmark she set.'},
+
+{id:'cpl-insert',g:'hm',l:'Couple decision insertion',
+w:'Inserts herself into decisions that belong to you and HM as a couple -- finances, living situation, career moves, future plans -- offering opinions that were not requested.',
+ex:'Offers a view on where you should live, how you should handle money, what HM\'s career should look like.',
+int:'These decisions belong to your marriage. Her opinion on them was not requested and is not required.',
+sc:['"We\'re figuring it out together." said warmly and closed.'],
+correction:'"We\'re figuring it out together" closes the insertion without confrontation. Do not engage the substance of her opinion.'},
+
+{id:'terr-prox',g:'hm',l:'Territorial proximity mapping',
+w:'Continuously tracks AA\'s position relative to HM and adjusts her own accordingly. When AA is close she monitors. When AA steps away she moves into the space. She is managing the marriage as a dynamic she needs to stay informed about.',
+ex:'When AA is next to HM she glances at them and tries to hear what they are saying. When AA moves away she positions herself as close to HM as possible.',
+int:'You are being watched more carefully than you may realize. This is not paranoia -- it is pattern recognition.',
+sc:['Stay close to HM when you want to be. Do not adjust your position to manage her comfort.'],
+correction:'Stay close to HM. Do not step away to create space for her. Your position next to your husband is not something you need to manage around her.'},
+
+{id:'contact-press',g:'hm',l:'Contact frequency pressure',
+w:'Expresses complaint or guilt about how often HM initiates contact. Reframes already frequent contact as insufficient. The complaint is about control over attention, not about genuine distance.',
+ex:'They talk almost every workday. She complains HM does not call her directly enough.',
+int:'The calls happen when you are not home. The complaint exists despite daily contact. This is not about missing him.',
+sc:['This is between HM and his parents to navigate. Stay out of the logistics.'],
+correction:'Do not offer opinions on their call frequency -- it will be weaponized. Let HM set his own terms. Your role is to support his differentiation, not manage the schedule.'},
+
+// ============================================================
+// HE-SPECIFIC
+// ============================================================
+
+{id:'he-sen',g:'he',l:'Sentence completion',
+w:'Finishes HE\'s sentences or arrives at his point before he does. After decades she has his patterns mapped.',
+ex:'HE begins a thought. She completes it before he gets there, often incorrectly.',
+int:'She owns his thoughts before he finishes having them. Watch HE\'s face when it happens.',
+sc:['No response required. Observe.'],
+correction:'You can direct a follow-up to HE directly. "What were you going to say, HE?" gently reopens what she closed.'},
+
+{id:'he-def',g:'he',l:'Deference check',
+w:'HE automatically looks to AN before responding or deciding, even on small things. Externalized decision-making after decades of conditioning.',
+ex:'Someone asks HE a direct question. He glances at AN before answering.',
+int:'This is the outcome of the control system, not weakness.',
+sc:['Direct questions to HE directly and wait for his answer.'],
+correction:'Ask HE directly and wait. Do not fill the silence or redirect to her. Give him the space to answer without her.'},
+
+{id:'he-his',g:'he',l:'Shared history revisionism',
+w:'Narrates their shared history in a way that centers herself as the one who held everything together.',
+ex:'"I carried this family. I don\'t know where we would be without everything I did."',
+int:'She was the breadwinner. That is true. The way a true thing is deployed strategically is still control.',
+sc:['No response required.'],
+correction:'No direct correction available. Asking HE privately how he sees his own story over time is a quiet act of restoration.'},
+
+{id:'he-fin',g:'he',l:'Financial authority display',
+w:'References money or financial decisions in ways that subtly remind HE of who holds the resources.',
+ex:'Discusses her SSA benefits and finances in front of others in a way that positions her as the economic center.',
+int:'His legal status and financial dependency are real structural facts in this relationship.',
+sc:['Observe. Note HE\'s response when it happens.'],
+correction:'No direct correction available. Treating HE as a full person in interactions independent of financial framing is the quiet counter.'},
+
+{id:'he-ppg',g:'he',l:'Public/private warmth gap',
+w:'Treats HE warmly in front of others but shifts noticeably in tone in lower-stakes moments.',
+ex:'Warm and affectionate when others are watching. Cooler, more directive in private.',
+int:'The public warmth is image management. The baseline is what happens when the audience reduces.',
+sc:['Observe the gap. That is the data.'],
+correction:'Be warm with HE consistently, regardless of audience. Your consistency with him is a quiet contrast to her gap.'},
+
+{id:'he-ctl',g:'he',l:'Full control repertoire',
+w:'Has every response available when HE pushes back: correction most common, then silence, performed hurt, or escalation. Deployed depending on audience and stakes.',
+ex:'HE contradicts something. She corrects him smoothly in front of others.',
+int:'He has learned not to push back because every option produces a cost. That is a trained response.',
+sc:['Observe which response she uses and what triggered it.'],
+correction:'No direct correction available. The repertoire belongs to their dynamic. Treating HE\'s attempts at self-expression as valid when you are present is the quiet counter.'},
+
+{id:'he-jok',g:'he',l:'Jokes at HE\'s expense',
+w:'Makes jokes at HE\'s expense framed as affectionate teasing. He laughs along because that is the script.',
+ex:'"HE always does this -- he can\'t help it." (laughs) HE laughs too.',
+int:'He cannot respond without seeming like he cannot take a joke. The affection framing is the trap door.',
+sc:['Do not co-sign the joke. Neutral.'],
+correction:'Do not laugh along. A neutral expression signals that the joke did not land the way she expected without confrontation.'},
+
+{id:'he-emi',g:'he',l:'Emotional interpretation',
+w:'Declares how HE feels or explains his reactions before he can speak for himself.',
+ex:'"He\'s just tired." "He doesn\'t really like that, he just won\'t say so."',
+int:'She owns his inner world. He does not even get to explain himself.',
+sc:['Ask HE directly what he thinks or feels. Watch what happens.'],
+correction:'"HE, what do you think?" directed at him specifically after she has interpreted him is a quiet restoration. Wait for his answer.'},
+
+{id:'he-spk',g:'he',l:'Speaking for HE',
+w:'Answers questions directed at HE before he can respond.',
+ex:'Someone asks HE something directly. AN answers first.',
+int:'He is being mediated. She controls the flow of information from him to the room.',
+sc:['"What do you think, HE?" directed back to him specifically.'],
+correction:'"What do you think, HE?" after she has answered for him reopens the question without confronting her.'},
+
+{id:'he-cor',g:'he',l:'Publicly correcting HE',
+w:'Corrects HE\'s stories, facts, or word choices in front of others.',
+ex:'HE is telling a story. She interrupts: "No, it wasn\'t like that. It was..."',
+int:'He gets smaller every time this happens in public.',
+sc:['No response required. Observe and note frequency.'],
+correction:'Let HE finish his story without correction from you. "I\'d love to hear the rest of that, HE" after her interruption gently restores the floor.'},
+
+{id:'he-dec',g:'he',l:'Deciding for HE',
+w:'States HE\'s preferences or needs as fact without consulting him.',
+ex:'"He doesn\'t want that." "He\'ll have the same as me."',
+int:'He has been decided for so long that sometimes he does not notice.',
+sc:['"HE, what do you feel like?" directed at him directly.'],
+correction:'"HE, what do you want?" asked directly and waited on creates a moment where his preference exists independently of her declaration.'},
+
+{id:'he-val',g:'he',l:'HE as validator',
+w:'Directs stories or opinions specifically at HE, waiting for his visible agreement before moving on. He is her in-room approval source after HM developed some distance from this role.',
+ex:'She tells a story, looking at HE, pausing when she needs a nod or laugh.',
+int:'HM has developed some distance from this role. She shifted the dependency to HE.',
+sc:['Observe how HE responds. Watch the cost of withholding validation.'],
+correction:'You cannot disrupt this dynamic directly. Being warm and attentive with HE independent of his validator role is what you can offer.'},
+
+{id:'he-nar',g:'he',l:'Narrating HE as subject',
+w:'Talks about HE to others while he is present, making him a character in her story rather than a person in the room.',
+ex:'"HE is like this -- he always does that -- you know how he is." Said while HE is sitting right there.',
+int:'He gets objectified in conversation while present to speak for himself.',
+sc:['"HE, is that how you see it?" directed at him directly.'],
+correction:'"HE, is that how you see it?" restores him as a participant rather than a subject. Wait for his answer.'},
+
+{id:'he-con',g:'he',l:'Constrained self in her presence',
+w:'HE is noticeably more relaxed, more himself, more animated when AN is not in the room or not focused on him. The real HE is intact -- he just does not get much room to be him around her.',
+ex:'The espresso love. The Jinx enthusiasm. The watch talk. All fuller when AN\'s attention is elsewhere.',
+int:'The real HE is intact. He just does not get much room to occupy himself around her.',
+sc:['Give HE room when she is not watching.'],
+correction:'Engage HE\'s actual interests when space opens. Ask about watches. Respond to his humor. You are probably one of few people who addresses him as a full person.',
+foldNote:'Also captures: pre-defeat -- HE visibly shrinks before finishing a contribution, already knowing before he starts how it will land.'},
+
+{id:'opn-dis',g:'he',l:'Opinion dismissal',
+w:'When HE manages to express a view his input is minimized or redirected with a small sound, a correction, or a pivot that signals his contribution does not carry the same weight.',
+ex:'HE offers a view. She makes a small sound, offers a mild correction, or pivots without engaging what he said.',
+int:'Watch HE\'s face when this happens. He usually does not react visibly anymore. That lack of reaction is decades of the same thing.',
+sc:['"HE what do you think?" after his input is dismissed returns the floor.'],
+correction:'Turn toward HE after the dismissal. "I\'d love to hear more about that, HE" or asking a follow-up question on his point signals his input counted.'},
+
+{id:'soc-iso',g:'he',l:'Social isolation',
+w:'HE has no independent friendships or social life outside of AN. The absence of outside relationships is the structural outcome of decades of managed isolation. She is his entire relational world by design.',
+ex:'HE is home all the time. No friends of his own. His social interactions happen through her or in contexts she controls.',
+int:'This is not who HE is. This is what was done to him over time. The man who gets excited about espresso and watches is intact.',
+sc:['Give HE room when she is not watching. Direct questions to him. Engage his interests.'],
+correction:'Engage HE as a full person with interests and opinions every time the space opens. You are likely one of very few people who does this. It matters more than it looks like.'},
+
+{id:'nar-abs',g:'he',l:'Narrative absorption',
+w:'She is present in every story of HE\'s life. There is no account of who he is, where he came from, or what he has done that does not route through her. His identity has been narrated by her for so long he may not have a version of himself that exists outside of her telling.',
+ex:'Any story HE begins about his own past -- she is already in it before he finishes.',
+int:'The real HE exists. You have seen him. He is the person who appears when she is not watching.',
+sc:['When HE tells his own stories let him finish them. Ask follow-up questions. Treat his account as authoritative.'],
+correction:'Let HE finish his own stories. Ask follow-up questions. Treat his account as the authoritative one. That is a small but real act of restoration.',
+foldNote:'Also captures: narrative absorption includes the total absence of any story of his life that does not include her as central figure.'},
+
+// ============================================================
+// WITH NEW PEOPLE
+// ============================================================
+
+{id:'np-chr',g:'new',l:'Elevated charm performance',
+w:'New people get the best version of the performance. With AA she has stopped performing because the baseline relationship is established. Also captures performed inclusion for audience -- her warmth toward AA visibly increases when new people are watching.',
+ex:'Notably warmer, funnier, more engaged with a stranger than her baseline with AA. Also: more inclusive and affectionate toward AA specifically when guests are present.',
+int:'The contrast between what new people see and what you see is information about the real pattern. The performed warmth toward you when watched is for them, not for you.',
+sc:['You do not have to match the elevated performance. Stay your baseline warm self.'],
+correction:'Stay your baseline warm self. Do not perform in return. Your consistency is more credible than her elevated performance.',
+foldNote:'Also captures: performed inclusion for audience -- her warmth toward AA increases specifically when new people are watching.'},
+
+{id:'np-cal',g:'new',l:'Performance calibration',
+w:'Visibly amplifies what is landing with a new person. Tracks approval and turns toward whatever produced it.',
+ex:'A new person laughs at something. She immediately does more of whatever caused it.',
+int:'This is narcissistic supply acquisition. You can watch the mechanism in real time.',
+sc:['Observe without engaging.'],
+correction:'No direct correction available. Being a stable, non-reactive presence who does not amplify for approval is a visible contrast.'},
+
+{id:'np-par',g:'new',l:'Parallel provisioning',
+w:'Declines what AA offers, then acquires the same thing independently. Avoids being in a position of gratitude toward AA.',
+ex:'Declines the fruit. Buys a lot of the same fruit.',
+int:'She did not want the thing. She wanted to not receive it from you. Those are different.',
+sc:['Offer once, warmly. Let it go after.'],
+correction:'Offer once and release. Her parallel acquisition is her move. Do not offer again -- that turns her refusal into an ongoing dynamic.'},
+
+{id:'np-und',g:'new',l:'Subtle undermining via humor',
+w:'Makes subtly undermining comments about AA to new people framed as jokes. New people have no context to push back.',
+ex:'A light comment about AA that gets a small laugh but leaves a quiet impression.',
+int:'Log the specific wording when possible. The subtlety is the point and the words are the data.',
+sc:['"Ha." (acknowledge without co-signing)','Or redirect the conversation naturally.'],
+correction:'"Ha." without co-signing, then redirect. Do not defend yourself -- that confirms something needed defending. Log the exact words.'},
+
+{id:'disc-warm',g:'new',l:'Discomfort when AA receives warmth',
+w:'Becomes visibly uncomfortable or shifts behavior when new people respond warmly to AA specifically. Not a general response to losing the room -- this is targeted at AA receiving genuine positive engagement.',
+ex:'A new person responds warmly to AA. AN\'s body language shifts, she recalibrates, finds a way to redirect or insert herself.',
+int:'She is not threatened by general warmth in the room. She is threatened by warmth directed at you specifically.',
+sc:['Receive the warmth fully. Do not shrink from it to manage her comfort.'],
+correction:'Receive the warmth fully and stay in the moment. Do not shrink or redirect to include her. You are allowed to be liked.'}
+
 ];
+
 var KW_DATA={
     'p-startle':['scream','screamed','screaming','shriek','shrieked','jumped','startled','flinched','yelp','yelled','loud noise','shrieked'],
     'v-self':['not as good','maybe not','probably not','taste it','tell me what is wrong','my cooking','my coffee','not like yours','not great','so humble','not good enough'],
@@ -852,8 +1151,43 @@ var KW_DATA={
     'sta-ass':['what do you do','where are you from','are you married','do you have kids','your background','your education','your job','your family','what kind of work','where did you study'],
     'cul-aut':['authentic','real mexican','mexico city way','regional','correct spanish','proper spanish','thats not how we say it','where im from we','culturally speaking','the real way'],
     'cur-nar':['close family','wonderful family','my son is','my husband is','we are so','such a blessed family','let me tell you about my family','my family is very','we are very close','family accomplishments'],
-    'np-und':['joke about me to them','comment about me to them','said something about me','light jab about me','subtle dig at me','framed as joke about me','in front of the new person']
+    'np-und':['joke about me to them','comment about me to them','said something about me','light jab about me','subtle dig at me','framed as joke about me','in front of the new person'],
+    'mfg-urgency':['suddenly needed something','urgent question','minor crisis','needed help right away','had a complaint','started having a problem','suddenly wasnt feeling well','needed attention','manufactured urgency'],
+    'comp-fish':['waiting for compliment','describing what she did','narrating her effort','talking about her accomplishment','looking around after','paused waiting','describing what she made','talking about how hard she worked'],
+    'jinx-energy':['performative with jinx','performed affection','cat avoided her','jinx kept distance','jinx moved away','display affection','not genuine with jinx','pull back from jinx'],
+    'emot-hijack':['made it about her reaction','her response took over','she started crying about my news','her emotion became the focus','congratulations then her','hijacked the celebration','her feelings about my accomplishment'],
+    'val-loop':['said it again','told that story again','same story twice','repeated the same point','keeps bringing it up','said it three times','returned to the same topic','told us again'],
+    'home-dir':['telling guests where','directing in my home','announced the plan','she decided what we were doing','took over hosting','directing how to do things in my kitchen','telling people what to do here'],
+    'dec-credit':['said she was going to suggest','thought that was the right move','she knew that was best','would have recommended','already knew that was right','she said she thought so too'],
+    'fam-hist':['how it really happened','that is not what happened','let me tell you what really','keeper of the story','according to her version','she was there so she knows','family history'],
+    'age-trump':['when you get to my age','you will understand someday','after everything i have been through','at my age you learn','experience teaches you','you are still young','you will see eventually'],
+    'oblig-gen':['strings attached','in front of everyone','now i owe her','generosity with audience','she brought it up later','mentioned what she did','gift that came with expectations'],
+    'aftertho':['afterthought','added me after','planned for both but','i was included as','presented as if i was planned','acted like she meant to','as an add-on'],
+    'acc-min':['minimized my news','moved on from my accomplishment','brief acknowledgment then','congratulations then','acknowledged and immediately redirected','did not hold my moment','moved past my news quickly'],
+    'exp-own':['said she planned it','acted like she hosted','presented as if she arranged','retelling as if she made','claiming ownership of','said it was her idea','she organized it'],
+    'wthld-ack':['said nothing positive','withheld acknowledgment','no compliment','silence where praise should','did not acknowledge','normal person would have said something','nothing about my cooking','no recognition'],
+    'fam-hier':['not ready for a relationship with my family','goes quiet about my mom','never asks about my parents','my family does not count','positioning my family as less','does not engage with my family'],
+    'phys-excl':['warm with everyone except me','hugs him not me','physically affectionate with others','no physical warmth toward me','touches him and hector but not me','excluded from warmth'],
+    'perf-inq':['asked then looked away','asked about me then pivoted','question then disengaged','asked how i was then moved on','inquiry then ignore','asked then did not listen'],
+    'sel-ret':['knows too much and nothing','remembers what serves her','forgets things i told her','remembers my schedule but not my interests','selective about what she knows','retains what she can use'],
+    'diff-warm':['warm about his things','enthusiastic about his equipment','admires his stuff','nothing about my things','indifferent to what i built','his space gets attention mine does not'],
+    'feign-con':['said she did not say that','pretended not to understand','i did not say that','what do you mean','acting confused about what happened','contesting what she said','gaslighting about what happened'],
+    'conv-unavail':['suddenly tired','went to bed','not available','became busy','disappeared when needed','unavailable when expected to contribute','went upstairs when'],
+    'suf-red':['brought up her own suffering','made it about what she went through','redirected to her hardships','her pain came up when mine was being discussed','her struggles in the middle of mine'],
+    'sil-noncomp':['agreed but did not follow through','said yes then nothing','commitment disappeared','never happened after she said yes','agreed then silence'],
+    'escl-conf':['blamed me when confronted','gaslighted everyone','escalated when named','assigned blame back','reversed victim','attacked when challenged','DARVO'],
+    'disp-gift':['disproportionate gift','gift too big for the occasion','grand gesture','production around the gift','emotional monologue with gift','gift that needed a response'],
+    'home-trans':['your house is good too','compared to mexico','good for what it is','transitional','not as good as','your place is nice considering','benchmark comparison'],
+    'cpl-insert':['opinion on our finances','where we should live','our career decisions','our plans','inserting herself into our decisions','unsolicited opinion on our marriage','not her business'],
+    'terr-prox':['tracking where i am','moves when i move','fills the space when i leave','when i step away she','proximity to hiram','positions herself near him','watches us','glances when we are close'],
+    'contact-press':['does not call enough','complains about contact frequency','not enough calls','should call more','why does not he call','contact guilt','call frequency complaint'],
+    'opn-dis':['dismissed his opinion','redirected when he spoke','small sound after hector','corrected what he said softly','his contribution did not land','minimized what hector said'],
+    'soc-iso':['no friends','home all the time','hector has no social life','no independent relationships','isolated','nobody outside of her','all his relationships through her'],
+    'nar-abs':['she is in every story','no story of his life without her','all his history includes her','narrative absorption','she narrates his past','every story routes through her'],
+    'disc-warm':['uncomfortable when people like me','shifted when i got warmth','recalibrated when new person liked me','body language changed when they responded to me','inserted herself when i was getting positive response'],
+    'home-dir':['telling guests where to sit','directing in my home','announced what we were doing','took over hosting','directing how things are done here']
   };
+
 </script>
 <script>
 var SEC_OPEN={};
@@ -893,7 +1227,7 @@ function sw(p){
   document.querySelectorAll('.nbt').forEach(function(x){x.classList.remove('on');});
   var pg=document.getElementById('pg-'+p);var nb=document.getElementById('nb-'+p);
   if(pg)pg.classList.add('on');if(nb)nb.classList.add('on');
-  if(p==='st')renderStats();if(p==='def')renderDefs('');if(p==='hist')renderHistory();
+  if(p==='st')renderStats();if(p==='def')renderDefs('');if(p==='hist')renderHistory();if(p==='gl')renderGlossary();
   var fab=document.getElementById('fab');if(fab)fab.style.display=(p==='log')?'flex':'none';
   window.scrollTo(0,0);
 }
@@ -1142,6 +1476,58 @@ function closeQL(){document.getElementById('ql-mo').classList.remove('op');}
 
 function renderDefs(q){
   var ql=(q||'').toLowerCase();var h='';
+
+  // DISCLAIMER
+  h+='<div style="background:var(--ad);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:20px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.03em">';
+  h+='<div style="color:var(--ab);font-size:9px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:6px">Important</div>';
+  h+='These definitions are for pattern recognition and personal clarity. Covert narcissistic behavior is not correctable through confrontation, explanation, or appeals to empathy. Research on narcissistic personality structure consistently shows that insight-based interventions are largely ineffective because the behavior serves a function the person is not motivated to relinquish. What you can change is your own response, your boundaries, and the degree to which the behavior has access to you. That is not a consolation. That is where the power is.</div>';
+
+  // UNDERSTANDING NARCISSISTIC BEHAVIOR -- collapsible section
+  h+='<div class="dc2" style="margin-bottom:20px">';
+  h+='<div class="dch" onclick="togDef(this)" data-did="def-narc-understanding" style="background:var(--ad)">';
+  h+='<div class="dcd" style="background:var(--g2)"></div>';
+  h+='<span class="dcn" style="color:var(--fg)">Understanding narcissistic behavior</span>';
+  h+='<span class="dct" id="ddt-narc-understanding">v</span></div>';
+  h+='<div class="dcb" id="def-narc-understanding">';
+
+  // What the research says
+  h+='<div class="dc2" style="margin:0 0 12px 0">';
+  h+='<div class="dch" onclick="togDef(this)" data-did="def-research-says" style="background:var(--surface)">';
+  h+='<span class="dcn">What the research says</span><span class="dct" id="ddt-research-says">v</span></div>';
+  h+='<div class="dcb" id="def-research-says">';
+  h+='<div class="dtx" style="margin-bottom:10px">Narcissistic Personality Disorder has one of the lowest treatment response rates of any personality structure. This is not because people with NPD cannot change -- it is because the disorder itself impairs the insight and motivation required for change. The person would need to want to change, sustain that motivation through the discomfort of genuinely examining their behavior, and do so without the defensive collapse that typically terminates treatment.</div>';
+  h+='<div class="dtx" style="margin-bottom:10px">For covert narcissism specifically, the prognosis is complicated by the fact that the person rarely identifies their behavior as problematic. The covert presentation allows them to maintain a self-concept of victim, misunderstood good person, or devoted family member -- which makes external motivation for change even harder to establish.</div>';
+  h+='<div class="dtx">What this means practically: do not build your peace on the expectation that she will change. Build it on your own responses, your own clarity, and your marriage\'s capacity to be a protected space regardless of what is happening in her orbit. That is not resignation. That is accurate strategy.</div>';
+  h+='</div></div>';
+
+  // What happens when you confront or resist
+  h+='<div class="dc2" style="margin:0">';
+  h+='<div class="dch" onclick="togDef(this)" data-did="def-confront" style="background:var(--surface)">';
+  h+='<span class="dcn">What happens when you confront or resist</span><span class="dct" id="ddt-confront">v</span></div>';
+  h+='<div class="dcb" id="def-confront">';
+  h+='<div class="dtx" style="margin-bottom:12px;font-style:italic;color:var(--muted)">This section is not to discourage you from protecting yourself. It is to help you anticipate what resistance looks like so you are not caught off guard.</div>';
+
+  var resist=[
+    {t:'DARVO',d:'Deny, Attack, Reverse Victim and Offender. When confronted she will often deny the behavior happened, attack the person who named it, and reposition herself as the real victim. The person who raised the concern ends up defending themselves against accusations rather than discussing the original issue.',e:'You name a behavior. She denies it happened, questions your motives, and becomes tearful in a way that requires everyone to tend to her. The original conversation is now about her pain.',w:'The more accurate your observation, the more intense the DARVO response. Accuracy is threatening. The intensity of the response is not evidence you were wrong -- it is often evidence you were right.'},
+    {t:'Escalation',d:'When covert tools stop producing the desired response the behavior intensifies before it recalibrates. If gray rock reduces your availability as supply she may escalate -- more pointed moves, more overt attempts to destabilize, more pressure on HM -- before accepting the new equilibrium.',e:'Things get noticeably worse before they stabilize. The behaviors become less deniable.',w:'Escalation is temporary if you hold the boundary consistently. It is the system testing whether the new response is real. If you hold it typically de-escalates. If you yield the escalation will be used again.'},
+    {t:'Flying monkey activation',d:'When direct approaches are not working the narcissist may recruit others -- consciously or not -- to apply pressure. Family members or HM himself may be used to relay messages, question your perception, or pressure you to soften.',e:'HM comes to you with a concern she expressed to him. A family member reaches out to say she seems hurt.',w:'Any information you share with people in her orbit will reach her. Treat proxy communication as communication with her directly.'},
+    {t:'The victim pivot',d:'When confronted or when a boundary is set she repositions herself as the injured party. Her suffering becomes the subject. The original boundary disappears into a discussion of how much she has been hurt or misunderstood.',e:'You hold a boundary. She becomes tearful, invokes her sacrifices, and expresses that she does not understand what she has done to deserve this. HM feels pulled to comfort her.',w:'The victim pivot is designed to produce guilt and retraction. You can acknowledge her feelings without retracting the boundary.'},
+    {t:'Covert retaliation',d:'Rather than open conflict the narcissist responds to resistance with subtle punishment -- increased coldness, strategic exclusion, quiet undermining to others, or a shift in how she treats HM that creates indirect pressure on you. The retaliation is deniable.',e:'After a boundary is set she becomes noticeably cooler. Small ways of excluding or diminishing you that cannot easily be named.',w:'Do not chase the warmth back. Do not over-explain your position. Stay even. Log the retaliation pattern over time.'},
+    {t:'Hoovering',d:'After a period of conflict or distance the narcissist attempts to pull the target back in with warmth, gestures, or charm -- enough to restore access without requiring actual change. Named after the vacuum brand.',e:'After a difficult visit she is suddenly warmer, more generous, more engaged. Things feel better. The specific issues are not addressed.',w:'Hoovering is not repair. It is restoration of access. Receive the warmth without treating it as evidence that the pattern has changed. Watch behavior over time.'},
+    {t:'Identity threat response',d:'Covert narcissists have a fragile self-concept that depends on a particular narrative about who they are. When that narrative is threatened by someone who sees them clearly the response can be significant. Being truly seen is more threatening than overt conflict.',e:'When you stop performing surprise at her moves and stop being destabilized by her tactics she may escalate effort to produce a reaction.',w:'Your clarity is protective. It does not guarantee she will leave you alone but it removes the reward from the move. A consistently non-reactive clearly-boundaried target becomes less interesting to operate on over time.'}
+  ];
+  resist.forEach(function(r){
+    h+='<div style="margin-bottom:14px;padding:12px;background:var(--surface);border-radius:6px;border-left:3px solid var(--g2)">';
+    h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--ab);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">'+r.t+'</div>';
+    h+='<div class="dtx" style="margin-bottom:6px">'+r.d+'</div>';
+    h+='<div style="font-family:Georgia,serif;font-style:italic;font-size:12px;color:var(--muted);border-left:2px solid var(--border);padding-left:10px;margin-bottom:8px">'+r.e+'</div>';
+    h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--dim);letter-spacing:.05em"><span style="color:var(--g3)">What to expect: </span>'+r.w+'</div>';
+    h+='</div>';
+  });
+  h+='</div></div>';
+  h+='</div></div>';
+
+  // BEHAVIOR DEFINITIONS
   GROUPS.forEach(function(g){
     var col=g.c;
     var cats=allCats().filter(function(c){return c.g===g.id&&(!ql||c.l.toLowerCase().includes(ql)||(c.w||'').toLowerCase().includes(ql));});
@@ -1155,9 +1541,11 @@ function renderDefs(q){
       h+='<span class="dct" id="ddt-'+cat.id+'">v</span></div>';
       h+='<div class="dcb" id="def-'+cat.id+'">';
       h+='<div class="dsl">What this behavior is</div><div class="dtx">'+(cat.w||'')+'</div>';
-      if(cat.ex&&cat.ex.length){h+='<div class="dsl">Examples</div>';cat.ex.forEach(function(ex){h+='<div class="dex">'+ex+'</div>';});}
+      h+='<div class="dsl">Example</div><div class="dtx">'+(cat.ex||'')+'</div>';
+      if(cat.foldNote){h+='<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--dim);letter-spacing:.05em;margin-top:4px;padding:6px 10px;background:var(--ad);border-radius:4px">'+cat.foldNote+'</div>';}
       h+='<div class="dsl">Internal reminder</div><div class="dtx">'+(cat.int||'')+'</div>';
       if(cat.sc&&cat.sc.length){h+='<div class="dsl">How to respond</div>';cat.sc.forEach(function(s){h+='<div class="dsc">'+s+'</div>';});}
+      h+='<div class="dsl">Beginning correction</div><div class="dtx" style="color:var(--g3)">'+(cat.correction||'')+'</div>';
       h+='<div class="dsl">Your notes</div><div class="cat-note-area">';
       h+='<textarea class="cat-note-ta" id="dn-'+cat.id+'" placeholder="Add your own notes...">'+savedNote+'</textarea>';
       h+='<button class="cat-note-btn" onclick="saveCatNote2(this)" data-cid="'+cat.id+'" data-ta="dn-'+cat.id+'">Save note</button></div>';
@@ -1426,16 +1814,27 @@ function renderStats(){
   h+='<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:8px">Import a JSON export from another device. Duplicates are skipped automatically.</div>';
   h+='<input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">';
   h+='<button class="eb2" onclick="document.getElementById(\'import-file\').click()">Import from JSON</button>';
-  h+='<div class="stl">Custom categories</div><div class="ccf"><input class="cci" id="ccn" placeholder="Category name..."><select class="ccs" id="ccg">'+GROUPS.map(function(g){return'<option value="'+g.id+'">'+g.name+'</option>';}).join('')+'</select><button class="ccb" onclick="addCC()">Add category</button></div>';
+  h+='<div class="stl">Custom categories</div><div class="ccf">';h+='<input class="cci" id="ccn" placeholder="Category name (required)...">';h+='<select class="ccs" id="ccg">'+GROUPS.map(function(g){return'<option value="'+g.id+'">'+g.name+'</option>';}).join('')+'</select>';h+='<textarea class="cci" id="ccw" placeholder="What this behavior is..." style="height:60px;resize:vertical"></textarea>';h+='<textarea class="cci" id="ccex" placeholder="Example..." style="height:50px;resize:vertical"></textarea>';h+='<textarea class="cci" id="ccint" placeholder="Internal reminder..." style="height:50px;resize:vertical"></textarea>';h+='<textarea class="cci" id="ccsc" placeholder="How to respond..." style="height:50px;resize:vertical"></textarea>';h+='<textarea class="cci" id="cccor" placeholder="Beginning correction..." style="height:50px;resize:vertical"></textarea>';h+='<button class="ccb" onclick="addCC()">Add category</button></div>';
   if(state.custom.length){h+='<div class="ccl">';state.custom.forEach(function(c){h+='<div class="cci2"><span class="cin2">'+c.l+'</span><button class="cdl" onclick="delCC(this)" data-cid="'+c.id+'">x</button></div>';});h+='</div>';}
   var stp=document.getElementById('stp');if(stp)stp.innerHTML=h;
 }
 
 function addCC(){
   var n=document.getElementById('ccn').value.trim();var g=document.getElementById('ccg').value;if(!n)return;
+  var w=document.getElementById('ccw')?document.getElementById('ccw').value.trim():'';
+  var ex=document.getElementById('ccex')?document.getElementById('ccex').value.trim():'';
+  var int2=document.getElementById('ccint')?document.getElementById('ccint').value.trim():'';
+  var sc=document.getElementById('ccsc')?document.getElementById('ccsc').value.trim():'';
+  var cor=document.getElementById('cccor')?document.getElementById('cccor').value.trim():'';
   var id='cc-'+Date.now();
-  state.custom.push({id:id,g:g,l:n,w:'Custom category.',ex:[],int:'You defined this pattern.',sc:[]});
-  document.getElementById('ccn').value='';save();renderStats();rCats();toast('Category added.');
+  state.custom.push({id:id,g:g,l:n,w:w||'Custom category.',ex:ex||'',int:int2||'You defined this pattern.',sc:sc?[sc]:[],correction:cor||''});
+  document.getElementById('ccn').value='';
+  if(document.getElementById('ccw'))document.getElementById('ccw').value='';
+  if(document.getElementById('ccex'))document.getElementById('ccex').value='';
+  if(document.getElementById('ccint'))document.getElementById('ccint').value='';
+  if(document.getElementById('ccsc'))document.getElementById('ccsc').value='';
+  if(document.getElementById('cccor'))document.getElementById('cccor').value='';
+  save();renderStats();rCats();toast('Category added.');
 }
 function delCC(el){
   var id=el.getAttribute('data-cid');
@@ -1480,6 +1879,217 @@ function importJSON(input){
     input.value='';
   };
   reader.readAsText(file);
+}
+
+function renderGlossary(){
+  var glp=document.getElementById('glp');if(!glp)return;
+  var GLOSS=[
+    {t:'Complex PTSD (C-PTSD)',cat:'Trauma Responses',
+     d:'A trauma response that develops from prolonged, repeated relational trauma rather than a single event. Unlike standard PTSD it is characterized by ongoing dysregulation across emotional, relational, identity, and somatic domains because the source of harm was a person and the exposure was sustained over time.',
+     ex:'A person who grew up with a narcissistic parent may find themselves chronically on edge in relationships, unable to trust warmth when it is offered, prone to intense shame responses, and unsure of who they are outside of how they were defined by the person who harmed them.',
+     cor:'Trauma-informed therapy is the primary pathway. EMDR, somatic therapy, and Internal Family Systems have strong evidence bases for C-PTSD specifically. The first step is often simply naming it -- understanding that what you are experiencing is a normal response to abnormal sustained conditions, not a character flaw.'},
+    {t:'Hypervigilance',cat:'Trauma Responses',
+     d:'A persistent state of elevated alertness and scanning for threat. The nervous system learned that danger could arrive at any time so it stays perpetually activated. In relational contexts it shows up as hypersensitivity to tone, energy shifts, facial expressions, and word choice.',
+     ex:'Someone who grew up with an unpredictable narcissistic parent may find themselves constantly reading rooms, tracking other people\'s moods before engaging, and feeling exhausted by social situations because they are always monitoring for threat even when none is present.',
+     cor:'Somatic practices that help the nervous system learn the current environment is safe -- breathwork, grounding, body-based therapy. The goal is not to eliminate awareness of others but to reduce the automatic threat response so reading the room becomes a choice rather than a compulsion.'},
+    {t:'Trauma bonding',cat:'Trauma Responses',
+     d:'A psychological attachment that forms under conditions of intermittent reward and punishment. The unpredictability of the narcissist\'s warmth and withdrawal creates a powerful attachment response. The brain becomes oriented toward pursuing the reward and tolerating the punishment to get it. Feels like love but is a survival adaptation.',
+     ex:'A person in a relationship with a narcissistic partner may find themselves deeply attached despite consistent harm -- missing the person during withdrawals, feeling intensely connected during warm periods, and unable to leave even when they clearly see the pattern.',
+     cor:'Understanding the neurological mechanism helps -- the intermittent reinforcement schedule is the same one that makes gambling addictive. Therapy focused on identifying the cycle, building support outside the relationship, and developing a coherent narrative of what is actually happening rather than what the warm periods promise.'},
+    {t:'Freeze response',cat:'Trauma Responses',
+     d:'One of the four primary trauma responses alongside fight, flight, and fawn. The nervous system becomes still, quiet, and internal as a survival strategy. In relational contexts it looks like going quiet, withdrawing into observation, becoming emotionally flat when threat is perceived.',
+     ex:'In a room with a narcissistic person someone with a dominant freeze response may find themselves going quiet, becoming an observer, feeling disconnected from their own voice, and unable to access what they want to say until hours later when they are safe.',
+     cor:'Learning to recognize the freeze as it is happening rather than after the fact. Somatic work to help the body find movement and voice when it wants to go still. Gradually practicing small verbal responses in low-stakes moments to rebuild the pathway between internal experience and external expression.'},
+    {t:'Fawn response',cat:'Trauma Responses',
+     d:'A trauma response where the person automatically appeases, accommodates, and prioritizes the comfort of a threatening person to avoid conflict or punishment. Developed as a survival strategy when fighting or fleeing were not viable options. Shows up as chronic people-pleasing and automatic accommodation.',
+     ex:'A child of a narcissistic parent may grow into an adult who automatically agrees with people, apologizes reflexively, adjusts their behavior to manage others\' moods, and feels a sense of threat when someone around them is displeased even when that displeasure has nothing to do with them.',
+     cor:'Learning to pause before automatic accommodation. Asking internally -- do I actually want to do this, or am I doing it to manage someone else\'s state? Beginning to tolerate the discomfort of not immediately appeasing. Small acts of non-accommodation in low-stakes situations build the muscle over time.'},
+    {t:'Ego erosion',cat:'Identity and Self',
+     d:'The gradual wearing down of a person\'s sense of self through sustained undermining, invalidation, criticism, and reframing. The person begins to doubt their own perceptions, preferences, competencies, and worth. Often so gradual it is not recognized until the person is far from who they used to be.',
+     ex:'A person in a long-term relationship with a narcissistic partner may stop expressing opinions, stop pursuing interests that were not approved of, stop trusting their own judgment, and feel hollowed out -- unsure what they think or want independently.',
+     cor:'Rebuilding self-knowledge through small consistent acts of self-referral. What do I think? What do I want? What do I notice? Journaling, therapy, and spending time with people who reflect your full self back to you rather than a diminished version.'},
+    {t:'Identity diffusion',cat:'Identity and Self',
+     d:'A loss of a clear, stable sense of who one is outside of the narcissist\'s definition. The person may not know their own opinions, preferences, values, or desires independently of what the narcissist approved of or needed them to be.',
+     ex:'An adult who grew up as a golden child may excel at performing whatever role is needed but feel a persistent emptiness when alone -- unsure who they are when no one is watching or needing anything from them.',
+     cor:'Identity work as a practice of curiosity. What do I notice I enjoy when no one is assigning meaning to it? What opinions arise in me before I edit them for an audience? Therapy focused on authentic self-expression and individuation.'},
+    {t:'Scapegoating effects',cat:'Identity and Self',
+     d:'Long-term psychological impacts of having been designated the identified problem person in a narcissistic family system. The scapegoat absorbs the family\'s projected dysfunction and internalizes a narrative of being inherently flawed or the cause of problems that were never theirs to carry.',
+     ex:'An adult who was the family scapegoat may carry chronic shame, automatically assume blame in conflict, feel fundamentally defective, and struggle to believe that relationships are safe or that they deserve to be treated well.',
+     cor:'Externalization -- learning to locate the dysfunction in the system rather than in the self. Therapy focused on shame reduction, accurate attribution of responsibility, and rebuilding a narrative of self that is not organized around being the problem.'},
+    {t:'Golden child conditioning',cat:'Identity and Self',
+     d:'The psychological impact of having been idealized and used as a narcissistic extension in a family system. The golden child\'s identity becomes organized around performance, achievement, and meeting the narcissist\'s needs. Worth feels contingent on continued excellence and approval.',
+     ex:'An adult who was the golden child may be highly competent externally while feeling chronically anxious, unable to tolerate failure, uncertain about their own desires, and confused about why they feel empty despite achieving everything that was supposed to matter.',
+     cor:'Separating worth from performance. Learning to exist and be loved outside of achievement contexts. Therapy focused on unconditional self-regard and building an identity not contingent on being exceptional.'},
+    {t:'Parentification effects',cat:'Identity and Self',
+     d:'Long-term consequences of having been placed in an emotional caretaking role for a parent during childhood. The parentified child learns their job is to manage the parent\'s emotional state and carries this role into adult relationships as a default orientation.',
+     ex:'An adult who was parentified may automatically take responsibility for others\' emotional states, feel anxious when someone around them is unhappy, have difficulty being cared for without immediately reciprocating, and feel pervasive guilt about having their own needs.',
+     cor:'Learning to locate responsibility accurately -- whose feelings are mine to manage and whose are not? Practicing receiving care without immediately deflecting. Therapy focused on the distinction between empathy and responsibility.'},
+    {t:'Codependency',cat:'Relational Impacts',
+     d:'A relational pattern where one person\'s sense of self, stability, and worth becomes organized around managing another person\'s emotions, needs, or behavior. The codependent person loses track of their own needs and identity in service of regulating the other.',
+     ex:'A person in a codependent relationship may spend most of their mental energy anticipating the other person\'s moods, adjusting behavior to prevent conflict, and feeling responsible for outcomes that are not in their control.',
+     cor:'Shifting focus from the other person\'s state to one\'s own. Regular self-check-ins. Gradually reducing accommodating behaviors. Codependents Anonymous and therapy focused on self-differentiation are both useful pathways.'},
+    {t:'Anxious attachment',cat:'Relational Impacts',
+     d:'An attachment style characterized by fear of abandonment, hypervigilance to relational signals, a tendency to seek reassurance, and difficulty tolerating distance or uncertainty in relationships.',
+     ex:'A person with anxious attachment may constantly monitor their partner\'s mood for signs of withdrawal, need frequent reassurance, interpret normal distance as impending abandonment, and feel persistent low-grade anxiety that the relationship is about to end.',
+     cor:'Identifying the pattern without shame -- it developed for a reason. Learning to self-soothe rather than seeking external reassurance as the primary regulation strategy. Therapy focused on building internal security.'},
+    {t:'Betrayal trauma',cat:'Relational Impacts',
+     d:'Trauma that occurs specifically when someone depended upon for safety, care, or protection causes harm. The betrayal by a trusted person creates a specific wound that affects the person\'s ability to trust, feel safe in relationships, and integrate the contradiction between who the person was supposed to be and what they actually did.',
+     ex:'A person whose narcissistic parent consistently violated their trust may develop a deep difficulty trusting even safe relationships because the template for trusted people includes betrayal.',
+     cor:'Distinguishing between the person who caused harm and people who are currently safe. Safe, consistent relationships and therapy focused on processing the original betrayal are both necessary.'},
+    {t:'Hyperindependence',cat:'Relational Impacts',
+     d:'An extreme self-reliance developed as a protective adaptation to having needs consistently unmet, punished, or exploited. The person learns that depending on others is dangerous and becomes rigidly self-sufficient.',
+     ex:'A person raised by a narcissistic parent may become highly capable as an adult but find it nearly impossible to ask for help, accept support, or show vulnerability.',
+     cor:'Small deliberate acts of allowing help. Choosing one safe person and practicing one act of vulnerability. Noticing the internal resistance -- the belief that needing anything makes you a burden or a target -- and working with that belief directly.'},
+    {t:'Gaslighting effects',cat:'Cognitive and Perceptual',
+     d:'The long-term perceptual and cognitive impacts of sustained gaslighting. Chronic self-doubt about one\'s own perceptions, memories, and interpretations develops as a direct result of someone repeatedly reframing reality.',
+     ex:'A person who was consistently gaslit may preface accurate observations with "maybe I\'m wrong but..." or "I might be imagining this..." They may second-guess themselves so habitually that they cannot identify their own certainty.',
+     cor:'Rebuilding trust in one\'s own perception through consistent self-validation. Keeping a record of observations so the pattern becomes visible over time. Therapy focused on reality testing and learning to distinguish between genuine uncertainty and conditioned self-doubt.'},
+    {t:'Minimization habit',cat:'Cognitive and Perceptual',
+     d:'A learned tendency to downplay one\'s own experience, needs, or pain -- developed as an adaptation to an environment where expressing needs was punished, ignored, or met with contempt.',
+     ex:'"It wasn\'t that bad." "I\'m probably overreacting." "Other people have it worse." Said automatically before anyone has questioned whether the experience was valid.',
+     cor:'Catching the minimization in real time. Before saying "it wasn\'t that bad" pausing to ask -- was it actually not that bad, or am I saying that because it feels safer than acknowledging how much it hurt?'},
+    {t:'Over-explanation habit',cat:'Cognitive and Perceptual',
+     d:'The tendency to justify, explain, and defend normal choices, feelings, and preferences -- developed in environments where everything required explanation to avoid punishment. The person carries the habit of justification into relationships where no one asked for a reason.',
+     ex:'Someone asked what they want for dinner responds with a three-sentence explanation of why they want what they want, anticipating a challenge that was never coming.',
+     cor:'Practicing plain statements without justification. "No thank you." is a complete sentence. Noticing when the explanation reflex activates and asking -- did anyone ask me to justify this?'},
+    {t:'Apologizing reflex',cat:'Cognitive and Perceptual',
+     d:'Automatic apologizing for existing, taking up space, having needs, or being perceived as an inconvenience. Developed in environments where the person\'s presence and needs were treated as burdens.',
+     ex:'Apologizing when someone bumps into you. Apologizing before making a request. Apologizing for having an opinion. Apologizing for crying.',
+     cor:'Replacing automatic apologies with neutral acknowledgments. "Excuse me" instead of "I\'m so sorry." Noticing when an apology is genuinely warranted versus when it is a reflex to preemptively manage someone else\'s potential displeasure.'},
+    {t:'Reality testing impairment',cat:'Cognitive and Perceptual',
+     d:'Difficulty knowing what is real, what is a reasonable response, and what is distortion -- developed through sustained exposure to a person who consistently reframed reality.',
+     ex:'Something genuinely upsetting happens. The person\'s first response is not to feel upset but to audit whether they are allowed to feel upset before permitting themselves to have the feeling.',
+     cor:'Learning to feel first and audit second. Allowing the initial response to exist before evaluating it. Therapy focused on validating and trusting one\'s own emotional responses as data rather than problems to be assessed for accuracy.'},
+    {t:'Cognitive dissonance',cat:'Cognitive and Perceptual',
+     d:'The persistent internal conflict between what one observes and what the narcissist\'s narrative insists should be observed. Living in sustained cognitive dissonance produces confusion, exhaustion, and a fragmented sense of reality.',
+     ex:'Watching someone behave in a way that is clearly controlling while being told -- and half-believing -- that it is actually love and care. Knowing what you saw while simultaneously wondering if you invented it.',
+     cor:'Naming the dissonance explicitly. "I observed X. I am being told X means Y. I do not believe that." Writing it down so the two versions exist in parallel and can be examined. Consistently trusting observation over narrative over time.'},
+    {t:'People-pleasing compulsion',cat:'Behavioral and Somatic',
+     d:'Chronic, automatic accommodation of others\' needs and preferences at the expense of one\'s own. Developed as a survival strategy in narcissistic environments where safety or approval depended on keeping others regulated.',
+     ex:'Automatically agreeing with what others want before checking what you want. Feeling responsible for everyone\'s comfort in a room. Saying yes and feeling resentment later because the yes was not genuine.',
+     cor:'Introducing a pause between the accommodation impulse and the response. "Let me think about that." buys time to check in before the automatic yes. Gradually building tolerance for disappointing people and surviving the discomfort of their reaction.'},
+    {t:'Somatic symptoms',cat:'Behavioral and Somatic',
+     d:'Physical manifestations of chronic relational stress and unprocessed trauma. The body absorbs what the mind adapts to. Common presentations include chronic tension, fatigue, digestive issues, headaches, immune dysregulation, and difficulty sleeping.',
+     ex:'Someone in a long-term narcissistic relationship may experience persistent physical symptoms that have no clear medical cause -- chronic stomach problems, tension headaches, jaw clenching, or a persistent sense of physical heaviness.',
+     cor:'Somatic therapy, body-based practices, and trauma-informed approaches that work directly with the body. Recognizing that physical symptoms may be the body\'s way of expressing what was not allowed to be expressed relationally.'},
+    {t:'Emotional blunting',cat:'Behavioral and Somatic',
+     d:'A reduction in the range or intensity of emotional experience developed as a protective adaptation to chronic emotional overwhelm, invalidation, or punishment. The person may feel numb, disconnected from their own emotional states, or unable to identify what they feel.',
+     ex:'Something objectively significant happens -- good or bad -- and the person feels very little. Or they know intellectually they should feel something but cannot access the feeling.',
+     cor:'Gradual safe exposure to emotional experience in therapeutic contexts. Somatic work to reconnect body sensation with feeling. Allowing small emotions to be felt fully without immediately managing or suppressing them.'},
+    {t:'Identified patient',cat:'Family System',
+     d:'In family systems theory, the person in the family who presents with symptoms -- anxiety, depression, behavioral problems -- that are actually expressions of the family system\'s dysfunction rather than individual pathology.',
+     ex:'The child who acts out, the teenager who develops anxiety, the adult who struggles in relationships -- while the narcissistic parent is never identified as the source of the dysfunction.',
+     cor:'Relocating the problem from the individual to the system. Understanding that the symptoms carried belong to the system, not to a deficiency in the individual. This reframe is often the beginning of significant relief.'},
+    {t:'Flying monkeys',cat:'Family System',
+     d:'People who, wittingly or not, act on behalf of the narcissist -- carrying messages, validating the narcissist\'s narrative, applying pressure to targets. May be conscious agents or genuinely conditioned believers in the narcissist\'s version of events.',
+     ex:'A family member who calls to relay grievances. A mutual friend who repeats the narcissist\'s framing. Someone who pressures the target to apologize or comply.',
+     cor:'Recognizing flying monkey behavior without necessarily assigning malicious intent. Not engaging with proxy communication -- "that\'s between me and them" redirects the message back to its source. Information shared with flying monkeys should be treated as information shared with the narcissist directly.'},
+    {t:'Enablers',cat:'Family System',
+     d:'People in the narcissist\'s orbit who facilitate the behavior through compliance, minimization, defense, or active participation. Enablers are not always aware of their role. Many are deeply conditioned themselves.',
+     ex:'A partner who minimizes the narcissist\'s behavior to others. A family member who consistently explains away harmful patterns. A friend who tells the target they are overreacting.',
+     cor:'For those impacted by enablers: not relying on them for validation, understanding that their minimization is a product of their own conditioning, and not over-investing in changing their perspective.'},
+    {t:'Narcissistic family system',cat:'Family System',
+     d:'A family organized around the needs, perceptions, and emotional regulation of a narcissistic central figure. All roles, relationships, and communication patterns are defined in relation to that person. Children typically take on defined roles -- golden child, scapegoat, lost child, or mascot.',
+     ex:'A family where all conversations eventually center on one parent. Where that parent\'s mood sets the tone for every gathering. Where family members have learned their roles and perform them automatically.',
+     cor:'Differentiation -- developing an identity and relational style that exists outside of the assigned role. This is slow work and often destabilizes the system before it stabilizes the individual.'},
+    {t:'Triangulation effects',cat:'Family System',
+     d:'Long-term relational impacts of having been consistently triangulated in family communication. The person develops hyperawareness of relational dynamics, difficulty with direct communication, and anxiety about being caught between people.',
+     ex:'An adult who was consistently triangulated as a child may find themselves automatically mediating between people, reluctant to speak directly about conflict, and hyperaware of loyalty dynamics in groups.',
+     cor:'Practicing direct communication -- speaking to the person the message is for rather than through intermediaries. Recognizing that being direct is not the same as being disloyal.'},
+    {t:'Enmeshment legacy',cat:'Family System',
+     d:'The long-term difficulty with individuation, boundaries, and emotional separateness that develops from growing up in an enmeshed family system. Adults from enmeshed families may struggle to know where they end and others begin.',
+     ex:'An adult from an enmeshed family may feel responsible for their parent\'s emotional state even while living independently, feel guilty for making autonomous choices, and experience differentiation as a form of betrayal.',
+     cor:'Individuation work -- developing a relationship with one\'s own thoughts, feelings, and preferences that exists independently of the family. Learning to tolerate the guilt that comes with differentiation without treating it as a signal that something is wrong.'},
+    {t:'Narcissistic abuse syndrome',cat:'Family System',
+     d:'An informal but clinically recognized constellation of symptoms that develops specifically from sustained narcissistic abuse. Includes hypervigilance, chronic self-doubt, emotional dysregulation, trauma bonding, identity confusion, and people-pleasing compulsion. Not yet a formal DSM diagnosis but increasingly recognized in trauma-informed clinical literature.',
+     ex:'A person who has been in a long-term relationship with a narcissist may present with a recognizable cluster: they doubt themselves constantly, they are exhausted from monitoring others, they feel responsible for things outside their control, and they often do not identify what happened to them as abuse because it was so gradual and normalized.',
+     cor:'Naming it is the first and often most significant step. Understanding that the cluster of symptoms has a coherent cause rather than representing personal deficiency. Trauma-informed therapy, connection with others who have similar experiences, and gradual rebuilding of self-trust over time.'}
+  ];
+
+  var cats2=[...new Set(GLOSS.map(function(g){return g.cat;}))];
+  var h='<div style="padding:0 0 80px 0">';
+  h+='<div style="font-family:DM Mono,monospace;font-size:9px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;padding:16px 16px 8px">Psychological Terms Glossary</div>';
+  h+='<div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);line-height:1.6;padding:0 16px 16px">Terms commonly associated with narcissistic relationship dynamics. General definitions with examples and beginning correction pathways.</div>';
+
+  cats2.forEach(function(cat){
+    h+='<div class="dgt" style="color:var(--ab)">'+cat+'</div>';
+    GLOSS.filter(function(g){return g.cat===cat;}).forEach(function(item){
+      var gid='gl-'+item.t.replace(/[^a-z0-9]/gi,'-').toLowerCase();
+      h+='<div class="dc2"><div class="dch" onclick="togDef(this)" data-did="'+gid+'">';
+      h+='<div class="dcd" style="background:var(--ab)"></div>';
+      h+='<span class="dcn">'+item.t+'</span>';
+      h+='<span class="dct" id="ddt-'+gid+'">v</span></div>';
+      h+='<div class="dcb" id="'+gid+'">';
+      h+='<div class="dsl">Definition</div><div class="dtx">'+item.d+'</div>';
+      h+='<div class="dsl">Example</div><div class="dtx" style="font-style:italic;color:var(--muted)">'+item.ex+'</div>';
+      h+='<div class="dsl">Beginning correction</div><div class="dtx" style="color:var(--g3)">'+item.cor+'</div>';
+      h+='</div></div>';
+    });
+  });
+  h+='</div>';
+  glp.innerHTML=h;
+}
+
+
+function renderGlossary(){
+  var TERMS=[
+    {t:'Complex PTSD (C-PTSD)',d:'A trauma response that develops from prolonged, repeated relational trauma rather than a single event. Characterized by ongoing dysregulation across emotional, relational, identity, and somatic domains because the source of harm was a person and the exposure was sustained over time.',e:'A person who grew up with a narcissistic parent may find themselves chronically on edge in relationships, unable to trust warmth when it is offered, prone to intense shame responses, and unsure of who they are outside of how they were defined by the person who harmed them.',c:'Trauma-informed therapy is the primary pathway. EMDR, somatic therapy, and IFS have strong evidence bases. The first step is often naming it -- understanding that what you are experiencing is a normal response to abnormal sustained conditions, not a character flaw.'},
+    {t:'Hypervigilance',d:'A persistent state of elevated alertness and scanning for threat. The nervous system learned that danger could arrive at any time, so it stays perpetually activated. Shows up as hypersensitivity to tone, energy shifts, facial expressions, and word choice.',e:'Someone who grew up with an unpredictable narcissistic parent may find themselves constantly reading rooms, tracking others\' moods before engaging, and feeling exhausted by social situations because they are always monitoring for threat even when none is present.',c:'Somatic practices that help the nervous system learn the current environment is safe -- breathwork, grounding, body-based therapy. The goal is not to eliminate awareness of others but to reduce the automatic threat response so reading the room becomes a choice rather than a compulsion.'},
+    {t:'Trauma bonding',d:'A psychological attachment that forms under conditions of intermittent reward and punishment. The unpredictability of the narcissist\'s warmth and withdrawal creates a powerful attachment -- the brain becomes oriented toward pursuing the reward and tolerating the punishment. Feels like love but is a survival adaptation.',e:'A person in a relationship with a narcissistic partner may find themselves deeply attached despite consistent harm -- missing the person during withdrawals, feeling intensely connected during warm periods, and unable to leave even when they clearly see the pattern.',c:'Understanding the neurological mechanism helps -- the intermittent reinforcement schedule is the same one that makes gambling addictive. Therapy focused on identifying and naming the cycle, building a support system outside the relationship, and developing a coherent narrative of what is actually happening.'},
+    {t:'Freeze response',d:'One of the four primary trauma responses alongside fight, flight, and fawn. The nervous system becomes still, quiet, and internal as a survival strategy. In relational contexts it looks like going quiet, withdrawing into observation, becoming emotionally flat when threat is perceived.',e:'In a room with a narcissistic person, someone with a dominant freeze response may go quiet, become an observer rather than a participant, feel disconnected from their own voice, and be unable to access what they want to say until hours later when they are safe.',c:'Learning to recognize the freeze as it is happening rather than after the fact. Somatic work to help the body find movement and voice when it wants to go still. Gradually practicing small verbal responses in low-stakes moments to rebuild the pathway between internal experience and external expression.'},
+    {t:'Fawn response',d:'A trauma response where the person automatically appeases, accommodates, and prioritizes the comfort of a threatening person to avoid conflict or punishment. Developed as a survival strategy when fighting or fleeing were not viable options. Shows up as chronic people-pleasing and automatic accommodation.',e:'A child of a narcissistic parent may grow into an adult who automatically agrees with people, apologizes reflexively, adjusts their behavior to manage others\' moods, and feels a sense of threat when someone around them is displeased -- even when that displeasure has nothing to do with them.',c:'Learning to pause before automatic accommodation. Asking internally -- do I actually want to do this, or am I doing it to manage someone else\'s state? Small acts of non-accommodation in low-stakes situations build the muscle over time.'},
+    {t:'Ego erosion',d:'The gradual wearing down of a person\'s sense of self through sustained undermining, invalidation, criticism, and reframing. The person begins to doubt their own perceptions, preferences, competencies, and worth. Often so gradual it is not recognized until the person is far from who they used to be.',e:'A person in a long-term relationship with a narcissistic partner may stop expressing opinions, stop pursuing interests that were not approved of, stop trusting their own judgment, and feel hollowed out -- unsure what they actually think or want independent of the relationship.',c:'Rebuilding self-knowledge through small, consistent acts of self-referral. What do I think? What do I want? What do I notice? Journaling, therapy, and spending time with people who reflect your full self back to you. Recovery from ego erosion is slow because what was lost was built slowly.'},
+    {t:'Identity diffusion',d:'A loss of a clear, stable sense of who one is outside of the narcissist\'s definition. The person may not know their own opinions, preferences, values, or desires independent of what the narcissist approved of or needed them to be.',e:'An adult who grew up as a golden child may excel at performing whatever role is needed but feel a persistent emptiness when alone -- unsure who they are when no one is watching or needing anything from them.',c:'Identity work as a practice of curiosity. What do I notice I enjoy when no one is assigning meaning to it? What opinions arise in me before I edit them? Therapy focused on authentic self-expression and individuation.'},
+    {t:'Scapegoating effects',d:'Long-term psychological impacts of having been designated the identified problem person in a narcissistic family system. The scapegoat absorbs the family\'s projected dysfunction and internalizes a narrative of being inherently flawed or the cause of problems that were never theirs to carry.',e:'An adult who was the family scapegoat may carry chronic shame, automatically assume blame in conflict, feel fundamentally defective in ways they cannot articulate, and struggle to believe that relationships are safe or that they deserve to be treated well.',c:'Externalization -- learning to locate the dysfunction in the system rather than in the self. Therapy focused on shame reduction, accurate attribution of responsibility, and rebuilding a narrative of self that is not organized around being the problem.'},
+    {t:'Golden child conditioning',d:'The psychological impact of having been idealized and used as a narcissistic extension. The golden child\'s identity becomes organized around performance and meeting the narcissist\'s needs. Their worth feels contingent on continued excellence and approval.',e:'An adult who was the golden child may be highly competent externally while feeling chronically anxious, unable to tolerate failure, uncertain about their own desires, and confused about why they feel empty despite achieving everything that was supposed to matter.',c:'Separating worth from performance. Learning to exist and be loved outside of achievement contexts. Therapy focused on unconditional self-regard. Often involves grieving a childhood organized around someone else\'s needs.'},
+    {t:'Parentification effects',d:'Long-term consequences of having been placed in an emotional caretaking role for a parent during childhood. The parentified child learns their job is to manage the parent\'s emotional state and carries this into adult relationships as a default orientation.',e:'An adult who was parentified may automatically take responsibility for others\' emotional states, feel anxious when someone around them is unhappy, have difficulty being cared for without immediately reciprocating, and feel pervasive guilt about having their own needs.',c:'Learning to locate responsibility accurately -- whose feelings are mine to manage and whose are not? Practicing receiving care without immediately deflecting. Therapy focused on the distinction between empathy and responsibility.'},
+    {t:'Codependency',d:'A relational pattern where one person\'s sense of self, stability, and worth becomes organized around managing another person\'s emotions, needs, or behavior. The codependent person loses track of their own needs and identity in service of regulating the other person.',e:'A person in a codependent relationship may spend most of their mental energy anticipating the other person\'s moods, adjusting their behavior to prevent conflict, and feeling responsible for outcomes not in their control -- while having difficulty identifying what they themselves feel or need.',c:'Shifting focus from the other person\'s state to one\'s own. Regular self-check-ins -- what am I feeling right now, independent of what they are feeling? Codependents Anonymous and therapy focused on self-differentiation are both useful pathways.'},
+    {t:'Anxious attachment',d:'An attachment style characterized by fear of abandonment, hypervigilance to relational signals, a tendency to seek reassurance, and difficulty tolerating distance or uncertainty. Can be an original attachment style or can intensify through narcissistic relational experiences.',e:'A person with anxious attachment may constantly monitor their partner\'s mood for signs of withdrawal, need frequent reassurance, interpret normal distance as impending abandonment, and feel a persistent low-grade anxiety that the relationship is about to end.',c:'Identifying the pattern without shame -- it developed for a reason. Learning to self-soothe rather than seeking external reassurance as the primary regulation strategy. Therapy focused on building internal security.'},
+    {t:'Betrayal trauma',d:'Trauma that occurs specifically when someone depended upon for safety, care, or protection causes harm. The betrayal by a trusted person creates a specific wound that affects the ability to trust, feel safe in relationships, and integrate the contradiction between who the person was supposed to be and what they did.',e:'A person whose narcissistic parent consistently violated their trust may develop a deep difficulty trusting even safe relationships, because the template for trusted people includes betrayal.',c:'Distinguishing between the person who caused harm and people who are currently safe. The body needs evidence over time, not just intellectual understanding. Safe, consistent relationships and therapy focused on processing the original betrayal are both necessary.'},
+    {t:'Hyperindependence',d:'An extreme self-reliance developed as a protective adaptation to having needs consistently unmet, punished, or exploited. The person learns that depending on others is dangerous and becomes rigidly self-sufficient. Difficulty asking for help, receiving care, or showing vulnerability.',e:'A person raised by a narcissistic parent may become highly capable as an adult but find it nearly impossible to ask for help, accept support, or show vulnerability -- because the early experience of needing something and not having it met was too costly.',c:'Small, deliberate acts of allowing help. Choosing one safe person and practicing one act of vulnerability. Noticing the internal resistance -- the belief that needing anything makes you a burden -- and working with that belief directly in therapy.'},
+    {t:'Gaslighting effects',d:'The long-term perceptual and cognitive impacts of sustained gaslighting. Chronic self-doubt about one\'s own perceptions, memories, and interpretations develops as a direct result of someone repeatedly reframing reality.',e:'A person who was consistently gaslit may preface accurate observations with "maybe I\'m wrong but..." They may second-guess themselves so habitually that they cannot identify their own certainty, and may feel disoriented when someone simply validates what they observed.',c:'Rebuilding trust in one\'s own perception through consistent self-validation. Keeping a record of observations so the pattern becomes visible over time. Therapy focused on reality testing and learning to distinguish between genuine uncertainty and conditioned self-doubt.'},
+    {t:'Minimization habit',d:'A learned tendency to downplay one\'s own experience, needs, or pain -- developed as an adaptation to an environment where expressing needs was punished, ignored, or met with contempt.',e:'"It wasn\'t that bad." "I\'m probably overreacting." "Other people have it worse." Said automatically, reflexively, before anyone has even questioned whether the experience was valid.',c:'Catching the minimization in real time. Before saying "it wasn\'t that bad," pausing to ask -- was it actually not that bad, or am I saying that because it feels safer? Practicing stating experiences without qualification.'},
+    {t:'Over-explanation habit',d:'The tendency to justify, explain, and defend normal choices and feelings -- developed in environments where everything required explanation to avoid punishment. The person carries the habit of justification into relationships where no one asked for a reason.',e:'Someone asked what they want for dinner responds with a three-sentence justification anticipating a challenge that was never coming.',c:'Practicing plain statements without justification. "No thank you" is a complete sentence. Noticing when the explanation reflex activates and asking -- did anyone ask me to justify this?'},
+    {t:'Apologizing reflex',d:'Automatic apologizing for existing, taking up space, having needs, or being perceived as an inconvenience. Developed in environments where the person\'s presence and needs were treated as burdens.',e:'Apologizing when someone bumps into you. Apologizing before making a request. Apologizing for having an opinion.',c:'Replacing automatic apologies with neutral acknowledgments. "Excuse me" instead of "I\'m so sorry." Noticing when an apology is genuinely warranted versus when it is a reflex to preemptively manage someone else\'s potential displeasure.'},
+    {t:'Reality testing impairment',d:'Difficulty knowing what is real, what is a reasonable response, and what is distortion -- developed through sustained exposure to a person who consistently reframed reality.',e:'Something genuinely upsetting happens. The person\'s first response is not to feel upset but to audit whether they are allowed to feel upset -- checking their reaction against an imagined external standard before permitting themselves to have it.',c:'Learning to feel first and audit second. Allowing the initial response to exist before evaluating it. Therapy focused on validating and trusting one\'s own emotional responses as data rather than problems to be assessed for accuracy.'},
+    {t:'Cognitive dissonance',d:'The persistent internal conflict between what one observes and what the narcissist\'s narrative insists should be observed. Living in sustained cognitive dissonance produces confusion, exhaustion, and a fragmented sense of reality.',e:'Watching someone behave in a way that is clearly controlling while being told -- and half-believing -- that it is actually love and care.',c:'Naming the dissonance explicitly. Writing down both versions so they can be examined. Over time, consistently trusting observation over narrative reduces the dissonance because the observation track record becomes undeniable.'},
+    {t:'People-pleasing compulsion',d:'Chronic, automatic accommodation of others\' needs and preferences at the expense of one\'s own. Developed as a survival strategy where one\'s safety or approval depended on keeping others regulated. The person may not experience it as a choice -- accommodation feels instinctive.',e:'Automatically agreeing with what others want before checking what you want. Feeling responsible for everyone\'s comfort in a room. Saying yes and feeling resentment later because the yes was not genuine.',c:'Introducing a pause between the accommodation impulse and the response. "Let me think about that." builds time to check in before the automatic yes. Gradually building tolerance for disappointing people and surviving the discomfort of their reaction.'},
+    {t:'Somatic symptoms',d:'Physical manifestations of chronic relational stress and unprocessed trauma. The body absorbs what the mind adapts to. Common presentations include chronic tension, fatigue, digestive issues, headaches, immune dysregulation, and difficulty sleeping.',e:'Someone in a long-term narcissistic relationship may experience persistent physical symptoms with no clear medical cause -- chronic stomach problems, tension headaches, jaw clenching, or a persistent sense of physical heaviness.',c:'Somatic therapy, body-based practices, and trauma-informed approaches that work directly with the body rather than only the mind. Recognizing that physical symptoms may be the body\'s way of expressing what was not allowed to be expressed relationally.'},
+    {t:'Emotional blunting',d:'A reduction in the range or intensity of emotional experience developed as a protective adaptation to chronic emotional overwhelm, invalidation, or punishment. The person may feel numb, disconnected from their own emotional states, or unable to identify what they feel.',e:'Something significant happens and the person feels very little. Or they know intellectually they should feel something but cannot access the feeling.',c:'Gradual, safe exposure to emotional experience in therapeutic contexts. Somatic work to reconnect body sensation with feeling. Allowing small emotions to be felt fully without immediately managing or suppressing them.'},
+    {t:'Identified patient',d:'In family systems theory, the person in the family who presents with symptoms -- anxiety, depression, behavioral problems -- that are actually expressions of the family system\'s dysfunction rather than individual pathology. The family unconsciously assigns this role to one person to keep the real dysfunction hidden.',e:'The child who acts out, the teenager who develops anxiety -- while the narcissistic parent is never identified as the source of the dysfunction. The identified patient carries the symptom so the family does not have to examine the system.',c:'Relocating the problem from the individual to the system. For the identified patient individually -- understanding that the symptoms they carry belong to the system, not to a deficiency in them. This reframe is often the beginning of significant relief.'},
+    {t:'Flying monkeys',d:'People who, wittingly or not, act on behalf of the narcissist -- carrying messages, validating the narcissist\'s narrative, applying pressure to targets, or reporting back. May be conscious agents or genuinely conditioned believers in the narcissist\'s version of events.',e:'A family member who calls to relay the narcissist\'s grievances. A mutual friend who repeats the narcissist\'s framing of a conflict. A sibling who pressures the target to apologize.',c:'Recognizing flying monkey behavior without necessarily assigning malicious intent. Not engaging with proxy communication -- "that\'s between me and them" redirects the message back to its source. Information shared with flying monkeys should be treated as information shared with the narcissist directly.'},
+    {t:'Enablers',d:'People in the narcissist\'s orbit who facilitate the behavior through compliance, minimization, defense, or active participation. Often deeply conditioned themselves and may genuinely believe they are keeping the peace.',e:'A partner who minimizes the narcissist\'s behavior. A family member who consistently explains away harmful patterns. Someone who absorbs the narcissist\'s emotional labor and thereby frees them to continue without consequence.',c:'For those impacted by enablers -- not relying on them for validation, understanding their minimization is a product of their own conditioning, and not over-investing in changing their perspective.'},
+    {t:'Narcissistic family system',d:'A family organized around the needs, perceptions, and emotional regulation of a narcissistic central figure. All roles, relationships, and communication patterns in the family are defined in relation to that person. Children typically take on defined roles -- golden child, scapegoat, lost child, or mascot.',e:'A family where all conversations eventually center on one parent. Where that parent\'s mood sets the tone for every gathering. Where family members have learned their roles and perform them automatically.',c:'Differentiation -- developing an identity and relational style that exists outside of the assigned role. This is slow work and often destabilizes the system before it stabilizes the individual. Therapy and distance from the system are often both necessary.'},
+    {t:'Triangulation effects',d:'Long-term relational impacts of having been consistently triangulated in family communication. The person develops hyperawareness of relational dynamics, difficulty with direct communication, and anxiety about being caught between people.',e:'An adult who was consistently triangulated as a child may find themselves automatically mediating between people, reluctant to speak directly about conflict, and anxious when two people they care about are in tension.',c:'Practicing direct communication -- speaking to the person the message is for rather than through intermediaries. Recognizing that being direct is not the same as being disloyal.'},
+    {t:'Enmeshment legacy',d:'The long-term difficulty with individuation, boundaries, and emotional separateness that develops from growing up in an enmeshed family system. Adults from enmeshed families may struggle to know where they end and others begin.',e:'An adult from an enmeshed family may feel responsible for their parent\'s emotional state even when living independently, feel guilty for making autonomous choices, and experience differentiation as a form of betrayal.',c:'Individuation work -- developing a relationship with one\'s own thoughts, feelings, and preferences that exists independently of the family\'s. Learning to tolerate the guilt that comes with differentiation without treating it as a signal that something is wrong.'},
+    {t:'Narcissistic abuse syndrome',d:'An informal but clinically recognized constellation of symptoms that develops specifically from sustained narcissistic abuse. Includes hypervigilance, chronic self-doubt, emotional dysregulation, trauma bonding, identity confusion, people-pleasing compulsion, and difficulty trusting one\'s own perceptions.',e:'A person who has been in a long-term relationship with a narcissist may doubt themselves constantly, be exhausted from monitoring others, feel responsible for things outside their control, struggle to trust warmth when offered, and not identify what happened as abuse because it was so gradual and normalized.',c:'Naming it is the first and often most significant step. Understanding that the cluster of symptoms has a coherent cause rather than representing personal deficiency. Trauma-informed therapy, connection with others who have similar experiences, and gradual rebuilding of self-trust over time.'}
+  ];
+  var h='<div class="def-disc"><div class="def-disc-title">Psychological terms glossary</div><div class="def-disc-body">These terms describe patterns that can develop in people who have been in long-term relationships with narcissists -- as children, partners, or close contacts. Understanding these terms is not self-diagnosis. It is a framework for making sense of responses that developed for good reasons in difficult conditions.</div></div>';
+  var categories=[
+    {label:'Trauma responses',ids:[0,1,2,3,4]},
+    {label:'Identity and self impacts',ids:[5,6,7,8,9]},
+    {label:'Relational impacts',ids:[10,11,12,13]},
+    {label:'Cognitive and perceptual impacts',ids:[14,15,16,17,18,19]},
+    {label:'Behavioral and somatic impacts',ids:[20,21,22]},
+    {label:'Family system concepts',ids:[23,24,25,26,27,28,29]}
+  ];
+  categories.forEach(function(cat){
+    h+='<div class="dgt">'+cat.label+'</div>';
+    cat.ids.forEach(function(i){
+      var term=TERMS[i];if(!term)return;
+      var tid='gl-'+i;
+      h+='<div class="dc2"><div class="dch" onclick="togDef(this)" data-did="'+tid+'">';
+      h+='<div class="dcd" style="background:var(--a)"></div>';
+      h+='<span class="dcn">'+term.t+'</span>';
+      h+='<span class="dct" id="ddt-'+tid+'">v</span></div>';
+      h+='<div class="dcb" id="'+tid+'">';
+      h+='<div class="dsl">Definition</div><div class="dtx">'+term.d+'</div>';
+      h+='<div class="dsl">Example</div><div class="dex">'+term.e+'</div>';
+      h+='<div class="dsl">Beginning correction</div><div class="dtx corr">'+term.c+'</div>';
+      h+='</div></div>';
+    });
+  });
+  var glp=document.getElementById('glp');if(glp)glp.innerHTML=h;
 }
 
 function toast(msg){var t=document.getElementById('tst');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},1600);}
