@@ -1422,6 +1422,10 @@ function renderStats(){
   h+='<div class="stl">By group</div>';
   GROUPS.forEach(function(g){var cnt=grpCts[g.id]||0;h+='<div class="fr"><div class="fd" style="background:'+gc(g.c)+'"></div><div class="fla">'+g.name+'</div><div class="fbt"><div class="fbf" style="width:'+Math.round((cnt/gmx)*100)+'%;background:'+gc(g.c)+'"></div></div><div class="fnu">'+cnt+'</div></div>';});
   h+='<div class="stl">Export</div><button class="eb2" onclick="expJSON()">Download as JSON</button><button class="eb2" onclick="expCSV()">Download as CSV</button>';
+  h+='<div class="stl">Import</div>';
+  h+='<div style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em;margin-bottom:8px">Import a JSON export from another device. Duplicates are skipped automatically.</div>';
+  h+='<input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">';
+  h+='<button class="eb2" onclick="document.getElementById(\'import-file\').click()">Import from JSON</button>';
   h+='<div class="stl">Custom categories</div><div class="ccf"><input class="cci" id="ccn" placeholder="Category name..."><select class="ccs" id="ccg">'+GROUPS.map(function(g){return'<option value="'+g.id+'">'+g.name+'</option>';}).join('')+'</select><button class="ccb" onclick="addCC()">Add category</button></div>';
   if(state.custom.length){h+='<div class="ccl">';state.custom.forEach(function(c){h+='<div class="cci2"><span class="cin2">'+c.l+'</span><button class="cdl" onclick="delCC(this)" data-cid="'+c.id+'">x</button></div>';});h+='</div>';}
   var stp=document.getElementById('stp');if(stp)stp.innerHTML=h;
@@ -1449,6 +1453,33 @@ function expCSV(){
   var csv=rows.map(function(r){return r.join(',');}).join('\n');
   var b=new Blob([csv],{type:'text/csv'});var u=URL.createObjectURL(b);
   var a=document.createElement('a');a.href=u;a.download='tcn-export.csv';a.click();URL.revokeObjectURL(u);
+}
+
+function importJSON(input){
+  var file=input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      var incoming=data.entries||[];
+      if(!Array.isArray(incoming)||incoming.length===0){toast('No entries found in file.');return;}
+      var existingIds=new Set(state.entries.map(function(e){return e.id;}));
+      var added=0;
+      incoming.forEach(function(en){
+        if(!existingIds.has(en.id)){
+          state.entries.push(en);
+          existingIds.add(en.id);
+          added++;
+        }
+      });
+      state.entries.sort(function(a,b){return new Date(b.ts)-new Date(a.ts);});
+      save();rAll();renderStats();
+      toast('Imported '+added+' new entr'+(added===1?'y':'ies')+'.');
+    }catch(err){toast('Could not read file. Make sure it is a valid JSON export.');}
+    input.value='';
+  };
+  reader.readAsText(file);
 }
 
 function toast(msg){var t=document.getElementById('tst');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},1600);}
