@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f1ec" />
+  <title>The Covert Narcissist Project</title>
+  <style>
+    :root {
+      --bg: #f4f1ec;
+      --bg-elevated: #faf8f5;
+      --ink: #2c2a26;
+      --ink-muted: #5c5850;
+      --line: #e0dbd2;
+      --accent: #6b7f6e;
+      --accent-soft: #e8ede9;
+      --danger-soft: #f3e8e6;
+      --space-xs: 0.5rem;
+      --space-sm: 0.75rem;
+      --space-md: 1.25rem;
+      --space-lg: 2rem;
+      --space-xl: 3rem;
+      --radius: 12px;
+      --font: "Georgia", "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+      --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --touch: 48px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { font-size: 100%; -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      letter-spacing: 0.01em;
+    }
+
+    .app {
+      max-width: 28rem;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-md) var(--space-md) calc(var(--space-lg) + env(safe-area-inset-bottom));
+    }
+
+    header {
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--line);
+      margin-bottom: var(--space-lg);
+    }
+
+    h1 {
+      font-family: var(--font);
+      font-size: 1.35rem;
+      font-weight: 400;
+      margin: 0 0 var(--space-xs);
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+
+    .tagline {
+      margin: 0;
+      font-size: 0.9375rem;
+      color: var(--ink-muted);
+      font-weight: 400;
+    }
+
+    nav.tabs {
+      display: flex;
+      gap: 0.25rem;
+      margin-top: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    nav.tabs button {
+      flex: 1;
+      min-width: 4.5rem;
+      min-height: var(--touch);
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--ink-muted);
+      font-size: 0.8125rem;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    nav.tabs button[aria-selected="true"] {
+      background: var(--bg-elevated);
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    nav.tabs button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    main { flex: 1; display: flex; flex-direction: column; }
+
+    .panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+    }
+
+    .panel[hidden] { display: none !important; }
+
+    label.sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    .input-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    textarea.what {
+      width: 100%;
+      min-height: 9rem;
+      padding: var(--space-md);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 1.0625rem;
+      line-height: 1.55;
+      resize: vertical;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    textarea.what:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    textarea.what::placeholder { color: var(--ink-muted); opacity: 0.85; }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .btn {
+      min-height: var(--touch);
+      padding: 0 var(--space-md);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--bg-elevated);
+      color: var(--ink);
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .btn-primary:hover { opacity: 0.92; }
+
+    .btn-quiet {
+      background: transparent;
+      border-color: transparent;
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .btn-quiet:hover { color: var(--ink); }
+
+    .hint {
+      font-size: 0.875rem;
+      color: var(--ink-muted);
+      margin: 0;
+    }
+
+    .modal-sheet .hint a {
+      color: var(--accent);
+    }
+
+    .status {
+      padding: var(--space-md);
+      border-radius: var(--radius);
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-size: 0.9375rem;
+    }
+
+    .status.error { background: var(--danger-soft); }
+
+    .match-card {
+      padding: var(--space-md);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--bg-elevated);
+    }
+
+    .match-card h2 {
+      font-family: var(--font);
+      font-size: 1.125rem;
+      font-weight: 400;
+      margin: 0 0 var(--space-sm);
+    }
+
+    .match-meta {
+      font-size: 0.875rem;
+      color: var(--ink-muted);
+      margin: 0 0 var(--space-md);
+    }
+
+    details.behavior-depth {
+      margin-top: var(--space-md);
+      border-top: 1px solid var(--line);
+      padding-top: var(--space-md);
+    }
+
+    details.behavior-depth summary {
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 0.9375rem;
+      min-height: var(--touch);
+      display: flex;
+      align-items: center;
+    }
+
+    .depth-block {
+      margin-top: var(--space-sm);
+      font-size: 0.9375rem;
+      color: var(--ink-muted);
+    }
+
+    .depth-block h3 {
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      margin: var(--space-md) 0 var(--space-xs);
+      font-weight: 600;
+    }
+
+    .depth-block p { margin: 0 0 var(--space-sm); }
+
+    .blurb-label {
+      display: block;
+      font-size: 0.9375rem;
+      color: var(--ink-muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    footer.app-footer {
+      margin-top: auto;
+      padding-top: var(--space-xl);
+      font-size: 0.8125rem;
+      color: var(--ink-muted);
+    }
+
+    footer.app-footer button.link {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      padding: 0;
+      min-height: var(--touch);
+    }
+
+    /* Full-screen overlays */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      text-align: center;
+    }
+
+    .overlay[hidden] { display: none !important; }
+
+    .overlay-inner {
+      max-width: 22rem;
+    }
+
+    .overlay h2.affirm {
+      font-family: var(--font);
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.35;
+      margin: 0 0 var(--space-md);
+      color: var(--ink);
+    }
+
+    .overlay p.gentle {
+      margin: 0 0 var(--space-lg);
+      color: var(--ink-muted);
+      font-size: 1rem;
+    }
+
+    .overlay .delayed-nav {
+      margin-top: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .overlay .delayed-nav.visible { opacity: 1; }
+
+    /* Regulation modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 42, 38, 0.35);
+      z-index: 60;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding: var(--space-md);
+      padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+    }
+
+    .modal-backdrop[hidden] { display: none !important; }
+
+    .modal-sheet {
+      width: 100%;
+      max-width: 28rem;
+      max-height: 85dvh;
+      overflow: auto;
+      background: var(--bg-elevated);
+      border-radius: var(--radius) var(--radius) 0 0;
+      border: 1px solid var(--line);
+      padding: var(--space-lg);
+      box-shadow: 0 -8px 32px rgba(44, 42, 38, 0.08);
+    }
+
+    .modal-sheet h3 {
+      font-family: var(--font);
+      font-weight: 400;
+      font-size: 1.2rem;
+      margin: 0 0 var(--space-md);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: var(--space-md);
+      right: var(--space-md);
+      min-width: var(--touch);
+      min-height: var(--touch);
+      border: none;
+      background: transparent;
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+      color: var(--ink-muted);
+      border-radius: var(--radius);
+    }
+
+    .modal-wrap {
+      position: relative;
+      padding-top: 2.25rem;
+    }
+
+    /* Breathing visuals */
+    .breath-box {
+      width: 140px;
+      height: 140px;
+      margin: var(--space-lg) auto;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+    }
+
+    .breath-box.animating {
+      animation: boxBreath 16s infinite ease-in-out;
+    }
+
+    @keyframes boxBreath {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      12.5% { transform: scale(1.08); }
+      25% { transform: scale(1.08); }
+      37.5% { transform: scale(1); }
+      50% { transform: scale(1); }
+      62.5% { transform: scale(0.92); }
+      75% { transform: scale(0.92); }
+      87.5% { transform: scale(1); }
+    }
+
+    .breath-circle {
+      width: 160px;
+      height: 160px;
+      margin: var(--space-lg) auto;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: center;
+      padding: var(--space-sm);
+    }
+
+    .breath-circle.animating {
+      animation: circle478 19s infinite ease-in-out;
+    }
+
+    @keyframes circle478 {
+      0%, 100% { transform: scale(1); }
+      21% { transform: scale(1.12); }
+      58% { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    .breath-label { font-size: 0.75rem; color: var(--ink-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .ground-steps {
+      text-align: left;
+      margin: var(--space-md) 0;
+    }
+
+    .ground-steps li { margin-bottom: var(--space-md); }
+
+    .affirmation-text {
+      font-family: var(--font);
+      font-size: 1.125rem;
+      line-height: 1.5;
+      color: var(--ink);
+      margin: var(--space-md) 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .breath-box.animating, .breath-circle.animating {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>The Covert Narcissist Project</h1>
+      <p class="tagline">One thing at a time.</p>
+      <nav class="tabs" role="tablist" aria-label="Main sections">
+        <button type="button" role="tab" aria-selected="true" aria-controls="panel-now" id="tab-now">Now</button>
+        <button type="button" role="tab" aria-selected="false" disabled>Process</button>
+        <button type="button" role="tab" aria-selected="false" disabled>Learn</button>
+        <button type="button" role="tab" aria-selected="false" disabled>Review</button>
+      </nav>
+    </header>
+
+    <main>
+      <div id="panel-now" role="tabpanel" aria-labelledby="tab-now" class="panel">
+        <!-- Step: input -->
+        <section id="step-input" class="input-block">
+          <label class="sr-only" for="user-input">What happened?</label>
+          <textarea
+            id="user-input"
+            class="what"
+            name="what-happened"
+            autocomplete="off"
+            autocorrect="on"
+            spellcheck="true"
+            rows="6"
+            placeholder="What happened?"
+          ></textarea>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-match">Log it</button>
+            <p class="hint">You can also press Enter to continue.</p>
+          </div>
+        </section>
+
+        <!-- Step: matching -->
+        <section id="step-matching" class="input-block" hidden>
+          <p class="status" id="matching-status">Finding language for what you described…</p>
+        </section>
+
+        <!-- Step: result + blurb -->
+        <section id="step-result" class="input-block" hidden>
+          <div id="match-container"></div>
+          <label class="blurb-label" for="optional-blurb">Anything you want to add? (optional)</label>
+          <textarea id="optional-blurb" class="what" rows="3" placeholder="Optional note — only if you want to."></textarea>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-save-log">Save this moment</button>
+            <button type="button" class="btn btn-quiet" id="btn-start-over">Start over</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <button type="button" class="link" id="btn-api-key">Groq API key</button>
+      ·
+      <span id="library-status">Loading library…</span>
+    </footer>
+  </div>
+
+  <!-- API key modal -->
+  <div class="modal-backdrop" id="api-modal" hidden role="dialog" aria-modal="true" aria-labelledby="api-modal-title">
+    <div class="modal-sheet modal-wrap">
+      <button type="button" class="modal-close" id="api-modal-close" aria-label="Close">×</button>
+      <h3 id="api-modal-title">Groq API key</h3>
+      <p class="hint">Stored only on this device (browser). Get a key from <a href="https://console.groq.com/" target="_blank" rel="noopener noreferrer">Groq Console</a>. Uses Llama 3.1 8B Instant.</p>
+      <label class="sr-only" for="api-key-input">API key</label>
+      <textarea id="api-key-input" class="what" rows="2" placeholder="Paste key here" style="min-height: 4rem;"></textarea>
+      <div class="actions" style="margin-top: var(--space-md);">
+        <button type="button" class="btn btn-primary" id="api-key-save">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation overlay -->
+  <div class="overlay" id="overlay-confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-heading">
+    <div class="overlay-inner">
+      <h2 class="affirm" id="confirm-heading">What happened to you was real.</h2>
+      <p class="gentle">Take a moment if you need one.</p>
+      <button type="button" class="btn btn-primary" id="btn-open-regulation">Open a grounding exercise</button>
+      <div class="delayed-nav" id="confirm-nav">
+        <button type="button" class="btn" id="btn-new-entry">Log something else</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Regulation modal -->
+  <div class="modal-backdrop" id="regulation-modal" hidden role="dialog" aria-modal="true" aria-labelledby="regulation-title-el">
+    <div class="modal-sheet modal-wrap">
+      <button type="button" class="modal-close" id="regulation-close" aria-label="Close">×</button>
+      <div id="regulation-content"></div>
+    </div>
+  </div>
+
+  <!-- Optional before this script: <script>window.GROQ_API_KEY = '…';</script> or config.js (see SPEC.md). -->
+  <script>
+(function () {
+  'use strict';
+
+  var STORAGE_KEY_LOGS = 'tcnp_logs';
+  var STORAGE_KEY_API = 'tcnp_groq_api_key';
+  var GROQ_CHAT_URL = 'https://api.groq.com/openai/v1/chat/completions';
+  var GROQ_MODEL = 'llama-3.1-8b-instant';
+
+  var state = {
+    library: null,
+    behaviors: [],
+    userDescription: '',
+    matchResult: null,
+    matchedBehavior: null,
+    flaggedForReview: false,
+    confirmTimer: null
+  };
+
+  var NS_PLAIN = {
+    fight: 'Your body is hot and activated right now',
+    flight: 'Your body wants to move or escape',
+    freeze: 'Your body has gone quiet and foggy',
+    collapse: 'Your body is flat and depleted',
+    fawn: 'Your body is in appeasement mode'
+  };
+
+  function $(id) { return document.getElementById(id); }
+
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function uuid() {
+    if (crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0;
+      var v = c === 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  function getApiKey() {
+    if (typeof window.GROQ_API_KEY === 'string' && window.GROQ_API_KEY.trim()) {
+      return window.GROQ_API_KEY.trim();
+    }
+    try {
+      return localStorage.getItem(STORAGE_KEY_API) || '';
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function setApiKey(key) {
+    try {
+      localStorage.setItem(STORAGE_KEY_API, key.trim());
+    } catch (e) { /* ignore */ }
+  }
+
+  function loadLogs() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY_LOGS);
+      if (!raw) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveLog(entry) {
+    var logs = loadLogs();
+    logs.push(entry);
+    try {
+      localStorage.setItem(STORAGE_KEY_LOGS, JSON.stringify(logs));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function buildPromptList(behaviors) {
+    return behaviors.map(function (b) {
+      return {
+        id: b.id,
+        plain_language_label: b.plain_language_label,
+        plain_language_description: b.plain_language_description
+      };
+    });
+  }
+
+  function showStep(name) {
+    $('step-input').hidden = name !== 'input';
+    $('step-matching').hidden = name !== 'matching';
+    $('step-result').hidden = name !== 'result';
+  }
+
+  function parseMatchJsonFromModel(text) {
+    if (!text || typeof text !== 'string') return null;
+    var t = text.trim();
+    var jsonMatch = t.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (jsonMatch) t = jsonMatch[1].trim();
+    try {
+      return JSON.parse(t);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function callGroqMatch(userInput, behaviorListJson) {
+    var key = getApiKey();
+    if (!key) {
+      throw new Error('Add a Groq API key using the link in the footer.');
+    }
+    var prompt =
+      'You are a clinical behavior matching assistant for an app about covert narcissistic abuse patterns.\n\n' +
+      'The user has described something that happened: ' + JSON.stringify(userInput) + '\n\n' +
+      'Match this to the single most relevant behavior from this list:\n' +
+      behaviorListJson +
+      '\n\nReturn ONLY a JSON object with:\n' +
+      '{\n' +
+      '  "matched_id": "the behavior id or null if no match",\n' +
+      '  "confidence": "high | medium | low",\n' +
+      '  "reasoning": "one sentence explanation"\n' +
+      '}\n\n' +
+      'If nothing matches clearly, return matched_id as null.';
+
+    var res = await fetch(GROQ_CHAT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + key
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.2,
+        max_tokens: 512
+      })
+    });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) {
+      var errMsg =
+        (data.error && data.error.message) ||
+        data.message ||
+        res.statusText ||
+        'Request failed';
+      throw new Error(errMsg);
+    }
+    var choice = data.choices && data.choices[0] && data.choices[0].message;
+    var content = choice && choice.content;
+    if (!content || typeof content !== 'string') {
+      throw new Error('No response from model. Try again.');
+    }
+    return parseMatchJsonFromModel(content);
+  }
+
+  function findBehaviorById(id) {
+    if (!id) return null;
+    for (var i = 0; i < state.behaviors.length; i++) {
+      if (state.behaviors[i].id === id) return state.behaviors[i];
+    }
+    return null;
+  }
+
+  function renderMatchUI() {
+    var container = $('match-container');
+    container.innerHTML = '';
+    var g = state.matchResult;
+    var b = state.matchedBehavior;
+    var flagged = state.flaggedForReview;
+
+    var card = document.createElement('div');
+    card.className = 'match-card';
+
+    if (flagged || !b) {
+      var h2 = document.createElement('h2');
+      h2.textContent = 'We didn’t find a name for this yet.';
+      card.appendChild(h2);
+      var p = document.createElement('p');
+      p.className = 'match-meta';
+      p.textContent = 'It’s still logged. You can label it later when you’re ready.';
+      card.appendChild(p);
+      if (g && g.reasoning) {
+        var r = document.createElement('p');
+        r.className = 'hint';
+        r.textContent = g.reasoning;
+        card.appendChild(r);
+      }
+    } else {
+      var title = document.createElement('h2');
+      title.textContent = b.plain_language_label;
+      card.appendChild(title);
+      var conf = (g && g.confidence) ? g.confidence : 'medium';
+      var meta = document.createElement('p');
+      meta.className = 'match-meta';
+      meta.textContent = 'This pattern was recognized. Confidence: ' + conf + '.';
+      card.appendChild(meta);
+      if (g && g.reasoning) {
+        var rs = document.createElement('p');
+        rs.className = 'hint';
+        rs.style.marginTop = 'var(--space-sm)';
+        rs.textContent = g.reasoning;
+        card.appendChild(rs);
+      }
+      var ns = b.nervous_system_state;
+      if (ns && NS_PLAIN[ns]) {
+        var nsP = document.createElement('p');
+        nsP.className = 'hint';
+        nsP.style.marginTop = 'var(--space-md)';
+        nsP.textContent = NS_PLAIN[ns];
+        card.appendChild(nsP);
+      }
+
+      var details = document.createElement('details');
+      details.className = 'behavior-depth';
+      var sum = document.createElement('summary');
+      sum.textContent = 'Full entry';
+      details.appendChild(sum);
+      var depth = document.createElement('div');
+      depth.className = 'depth-block';
+      depth.innerHTML =
+        '<h3>Description</h3><p>' + escapeHtml(b.plain_language_description) + '</p>' +
+        '<h3>Example</h3><p>' + escapeHtml(b.example) + '</p>' +
+        '<h3>Internal reframe</h3><p>' + escapeHtml(b.internal_reframe) + '</p>' +
+        '<h3>Response script</h3><p>' + escapeHtml(b.response_script) + '</p>';
+      if (b.depth_layer) {
+        depth.innerHTML +=
+          '<h3>Context</h3><p>' + escapeHtml(b.depth_layer.theoretical_grounding || '') + '</p>' +
+          '<h3>Function</h3><p>' + escapeHtml(b.depth_layer.function || '') + '</p>' +
+          '<h3>How it differs</h3><p>' + escapeHtml(b.depth_layer.differential || '') + '</p>';
+      }
+      details.appendChild(depth);
+      card.appendChild(details);
+    }
+
+    var wrong = document.createElement('button');
+    wrong.type = 'button';
+    wrong.className = 'btn btn-quiet';
+    wrong.style.marginTop = 'var(--space-md)';
+    wrong.textContent = 'This label doesn’t fit';
+    wrong.addEventListener('click', function () {
+      state.matchedBehavior = null;
+      state.flaggedForReview = true;
+      state.matchResult = { matched_id: null, confidence: 'low', reasoning: 'User indicated the suggested label did not fit.' };
+      renderMatchUI();
+    });
+    card.appendChild(wrong);
+
+    container.appendChild(card);
+  }
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function getRegulationTechnique(behavior) {
+    if (!behavior || !behavior.regulation_technique) return '5_4_3_2_1_grounding';
+    return behavior.regulation_technique;
+  }
+
+  function openRegulationModal() {
+    var tech = getRegulationTechnique(state.matchedBehavior);
+    if (!state.matchedBehavior) tech = '5_4_3_2_1_grounding';
+    $('regulation-content').innerHTML = renderRegulation(tech);
+    $('regulation-modal').hidden = false;
+    initRegulationInteractions(tech);
+  }
+
+  function closeRegulationModal() {
+    $('regulation-modal').hidden = true;
+    $('regulation-content').innerHTML = '';
+  }
+
+  function renderRegulation(tech) {
+    var h = '<h3 id="regulation-title-el">' + regulationTitle(tech) + '</h3><p class="hint">' + regulationIntro(tech) + '</p>';
+    if (tech === 'box_breathing') {
+      h += '<div class="breath-box' + (prefersReducedMotion() ? '' : ' animating') + '" id="breath-visual" aria-live="polite"><span id="breath-count">4</span></div>';
+      h += '<p class="hint">In for 4 · hold 4 · out for 4 · hold 4. Follow the square.</p>';
+      if (prefersReducedMotion()) {
+        h += '<p class="hint">Animation reduced. Breathe at your own pace.</p>';
+      }
+    } else if (tech === '4_7_8_breathing') {
+      h += '<div class="breath-circle' + (prefersReducedMotion() ? '' : ' animating') + '" id="breath-visual-478"><span class="breath-label" id="phase-label">In</span><span id="breath-count-478">4</span></div>';
+      h += '<p class="hint">In for 4 · hold for 7 · out for 8.</p>';
+      if (prefersReducedMotion()) {
+        h += '<p class="hint">Animation reduced. Count at your own pace.</p>';
+      }
+    } else if (tech === '5_4_3_2_1_grounding') {
+      h += '<ol class="ground-steps" id="ground-steps"></ol>';
+      h += '<button type="button" class="btn btn-primary" id="ground-next">Next</button>';
+    } else if (tech === 'body_scan') {
+      h += '<div id="body-scan-steps"></div>';
+      h += '<button type="button" class="btn btn-primary" id="body-next">Next</button>';
+    } else if (tech === 'grounding_affirmation') {
+      h += '<p class="affirmation-text">You are here. Your perceptions count. You do not have to shrink yourself to stay safe in this moment.</p>';
+      h += '<p class="hint">Read slowly. Repeat if it helps.</p>';
+    }
+    return h;
+  }
+
+  function regulationTitle(tech) {
+    if (tech === 'box_breathing') return 'Box breathing';
+    if (tech === '4_7_8_breathing') return '4-7-8 breathing';
+    if (tech === '5_4_3_2_1_grounding') return '5-4-3-2-1 grounding';
+    if (tech === 'body_scan') return 'Body scan';
+    if (tech === 'grounding_affirmation') return 'Grounding statement';
+    return 'Grounding';
+  }
+
+  function regulationIntro(tech) {
+    if (tech === 'box_breathing') return 'Slow, even breathing can help your nervous system settle.';
+    if (tech === '4_7_8_breathing') return 'A longer exhale can signal safety to the body.';
+    if (tech === '5_4_3_2_1_grounding') return 'Name what your senses pick up, one category at a time.';
+    if (tech === 'body_scan') return 'Move attention through the body without forcing anything.';
+    if (tech === 'grounding_affirmation') return 'A few steady words can anchor you after appeasing or freezing.';
+    return '';
+  }
+
+  var groundPrompts = [
+    'Name five things you can see.',
+    'Name four things you can hear.',
+    'Name three things you can touch.',
+    'Name two things you can smell (or two textures if smell is faint).',
+    'Name one thing you can taste (or one breath).'
+  ];
+
+  var bodySteps = [
+    'Notice your feet — contact with the floor or shoes. No need to change anything.',
+    'Notice your legs — heaviness or lightness.',
+    'Notice your belly — rise and fall of breath if you can.',
+    'Notice your hands — temperature, tension, or ease.',
+    'Notice your shoulders — without forcing them down.',
+    'Notice your face and jaw — softening is optional.',
+    'Rest attention on the whole body for a few breaths. Stop when you’re ready.'
+  ];
+
+  function initRegulationInteractions(tech) {
+    if (tech === 'box_breathing' && !prefersReducedMotion()) {
+      var phases = [
+        { label: 'In', dur: 4000 },
+        { label: 'Hold', dur: 4000 },
+        { label: 'Out', dur: 4000 },
+        { label: 'Hold', dur: 4000 }
+      ];
+      var idx = 0;
+      var el = $('breath-count');
+      var start = Date.now();
+      var phaseStart = start;
+      function tick() {
+        if (!$('breath-count')) return;
+        var now = Date.now();
+        var p = phases[idx];
+        var elapsed = now - phaseStart;
+        if (elapsed >= p.dur) {
+          idx = (idx + 1) % phases.length;
+          phaseStart = now;
+          p = phases[idx];
+          elapsed = 0;
+        }
+        var remain = Math.ceil((p.dur - elapsed) / 1000);
+        if (remain < 1) remain = 1;
+        el.textContent = String(remain);
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    if (tech === '4_7_8_breathing' && !prefersReducedMotion()) {
+      var seq = [
+        { label: 'In', total: 4000 },
+        { label: 'Hold', total: 7000 },
+        { label: 'Out', total: 8000 }
+      ];
+      var i = 0;
+      var phaseStart = Date.now();
+      function tick478() {
+        if (!$('breath-count-478')) return;
+        var now = Date.now();
+        var cur = seq[i];
+        var elapsed = now - phaseStart;
+        if (elapsed >= cur.total) {
+          i = (i + 1) % seq.length;
+          phaseStart = now;
+          cur = seq[i];
+          elapsed = 0;
+        }
+        var label = $('phase-label');
+        if (label) label.textContent = cur.label;
+        var remain = Math.ceil((cur.total - elapsed) / 1000);
+        if (remain < 1) remain = 1;
+        $('breath-count-478').textContent = String(remain);
+        requestAnimationFrame(tick478);
+      }
+      requestAnimationFrame(tick478);
+    }
+
+    if (tech === '5_4_3_2_1_grounding') {
+      var stepEl = $('ground-steps');
+      var btn = $('ground-next');
+      var step = 0;
+      function showGround() {
+        stepEl.innerHTML = '';
+        if (step >= groundPrompts.length) {
+          stepEl.innerHTML = '<li>That’s enough. Stay as long as you like.</li>';
+          btn.textContent = 'Close';
+          btn.onclick = function () { closeRegulationModal(); };
+          return;
+        }
+        var li = document.createElement('li');
+        li.textContent = groundPrompts[step];
+        stepEl.appendChild(li);
+        btn.textContent = step === groundPrompts.length - 1 ? 'Finish' : 'Next';
+        btn.onclick = function () {
+          step++;
+          showGround();
+        };
+      }
+      showGround();
+    }
+
+    if (tech === 'body_scan') {
+      var wrap = $('body-scan-steps');
+      var btnB = $('body-next');
+      var bi = 0;
+      function showBody() {
+        wrap.innerHTML = '';
+        if (bi >= bodySteps.length) {
+          wrap.innerHTML = '<p class="affirmation-text">Pause here. End when you want.</p>';
+          btnB.textContent = 'Close';
+          btnB.onclick = function () { closeRegulationModal(); };
+          return;
+        }
+        var p = document.createElement('p');
+        p.className = 'affirmation-text';
+        p.style.fontSize = '1rem';
+        p.textContent = bodySteps[bi];
+        wrap.appendChild(p);
+        btnB.textContent = bi === bodySteps.length - 1 ? 'Finish' : 'Next';
+        btnB.onclick = function () {
+          bi++;
+          showBody();
+        };
+      }
+      showBody();
+    }
+  }
+
+  function showConfirmationOverlay() {
+    $('overlay-confirm').hidden = false;
+    $('confirm-nav').classList.remove('visible');
+    if (state.confirmTimer) clearTimeout(state.confirmTimer);
+    state.confirmTimer = setTimeout(function () {
+      $('confirm-nav').classList.add('visible');
+    }, 2500);
+  }
+
+  function hideConfirmationOverlay() {
+    $('overlay-confirm').hidden = true;
+    $('confirm-nav').classList.remove('visible');
+    if (state.confirmTimer) {
+      clearTimeout(state.confirmTimer);
+      state.confirmTimer = null;
+    }
+  }
+
+  function resetFlow() {
+    state.userDescription = '';
+    state.matchResult = null;
+    state.matchedBehavior = null;
+    state.flaggedForReview = false;
+    $('user-input').value = '';
+    $('optional-blurb').value = '';
+    showStep('input');
+    hideConfirmationOverlay();
+    closeRegulationModal();
+  }
+
+  async function onMatch() {
+    var text = $('user-input').value.trim();
+    if (!text) return;
+    if (!state.behaviors.length) {
+      alert('Behavior library is not loaded. Serve this folder with a local server so behavior_library.json can load.');
+      return;
+    }
+    state.userDescription = text;
+    showStep('matching');
+    $('matching-status').textContent = 'Finding language for what you described…';
+    $('matching-status').classList.remove('error');
+
+    try {
+      var list = buildPromptList(state.behaviors);
+      var listJson = JSON.stringify(list);
+      var parsed = await callGroqMatch(text, listJson);
+      if (!parsed || typeof parsed.matched_id === 'undefined') {
+        state.matchResult = { matched_id: null, confidence: 'low', reasoning: 'Could not parse match.' };
+        state.matchedBehavior = null;
+        state.flaggedForReview = true;
+      } else if (parsed.matched_id === null || parsed.matched_id === 'null') {
+        state.matchResult = parsed;
+        state.matchedBehavior = null;
+        state.flaggedForReview = true;
+      } else {
+        state.matchResult = parsed;
+        state.matchedBehavior = findBehaviorById(String(parsed.matched_id));
+        state.flaggedForReview = !state.matchedBehavior;
+        if (!state.matchedBehavior) state.matchResult.matched_id = null;
+      }
+      showStep('result');
+      renderMatchUI();
+    } catch (err) {
+      $('matching-status').textContent = err.message || 'Something went wrong.';
+      $('matching-status').classList.add('error');
+      showStep('matching');
+    }
+  }
+
+  function onSaveLog() {
+    var blurb = $('optional-blurb').value.trim() || null;
+    var entry = {
+      id: uuid(),
+      timestamp: new Date().toISOString(),
+      user_description: state.userDescription,
+      matched_behavior_id: state.matchedBehavior ? state.matchedBehavior.id : null,
+      flagged_for_review: state.flaggedForReview,
+      blurb: blurb,
+      intensity: null,
+      who_was_present: null,
+      linked_journal_ids: [],
+      created_at: new Date().toISOString()
+    };
+    saveLog(entry);
+    showConfirmationOverlay();
+  }
+
+  async function initLibrary() {
+    var statusEl = $('library-status');
+    try {
+      var res = await fetch('behavior_library.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Could not load behavior_library.json');
+      state.library = await res.json();
+      state.behaviors = state.library.behaviors || [];
+      statusEl.textContent = state.behaviors.length + ' behaviors loaded';
+    } catch (e) {
+      statusEl.textContent = 'Library failed to load — use a local server';
+      console.error(e);
+    }
+  }
+
+  $('btn-match').addEventListener('click', onMatch);
+  $('user-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onMatch();
+    }
+  });
+
+  $('btn-save-log').addEventListener('click', onSaveLog);
+  $('btn-start-over').addEventListener('click', resetFlow);
+
+  $('btn-open-regulation').addEventListener('click', openRegulationModal);
+  $('regulation-close').addEventListener('click', closeRegulationModal);
+  $('btn-new-entry').addEventListener('click', resetFlow);
+
+  $('btn-api-key').addEventListener('click', function () {
+    $('api-key-input').value = getApiKey();
+    $('api-modal').hidden = false;
+  });
+  $('api-modal-close').addEventListener('click', function () { $('api-modal').hidden = true; });
+  $('api-key-save').addEventListener('click', function () {
+    setApiKey($('api-key-input').value);
+    $('api-modal').hidden = true;
+  });
+  $('api-modal').addEventListener('click', function (e) {
+    if (e.target === $('api-modal')) $('api-modal').hidden = true;
+  });
+
+  initLibrary();
+})();
+  </script>
+</body>
+</html>
+
